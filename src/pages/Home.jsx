@@ -5,23 +5,24 @@ import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Search, Plus, FileText, Receipt, Users, DollarSign, TrendingUp, Calendar } from "lucide-react";
+import { Search, Plus, FileText, Receipt, Users, DollarSign, TrendingUp, Calendar, Menu, Bell, Settings } from "lucide-react";
 
 const Home = () => {
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState("");
 
   const stats = [
-    { title: "Total Invoices", value: "24", icon: FileText, change: "+12%", color: "text-blue-600" },
-    { title: "Total Revenue", value: "$12,547", icon: DollarSign, change: "+8%", color: "text-green-600" },
-    { title: "Outstanding", value: "3", icon: TrendingUp, change: "-5%", color: "text-amber-600" },
-    { title: "This Month", value: "$4,321", icon: Calendar, change: "+15%", color: "text-purple-600" },
+    { title: "Total Invoices", value: "156", icon: FileText, change: "+12%", trend: "up" },
+    { title: "Total Revenue", value: "$45,231", icon: DollarSign, change: "+18%", trend: "up" },
+    { title: "Outstanding", value: "23", icon: TrendingUp, change: "-5%", trend: "down" },
+    { title: "This Month", value: "$12,543", icon: Calendar, change: "+25%", trend: "up" },
   ];
 
   const recentInvoices = [
-    { number: "INV-001", customer: "Acme Corp", date: "2024-01-15", amount: "$1,250", status: "Paid" },
-    { number: "INV-002", customer: "Tech Solutions", date: "2024-01-14", amount: "$850", status: "Outstanding" },
-    { number: "INV-003", customer: "Digital Agency", date: "2024-01-13", amount: "$2,100", status: "Paid" },
+    { number: "INV-1001", customer: "Acme Corporation", date: "Jan 15, 2024", amount: "$3,250", status: "Paid", priority: "high" },
+    { number: "INV-1002", customer: "Tech Solutions Inc", date: "Jan 14, 2024", amount: "$1,850", status: "Pending", priority: "medium" },
+    { number: "INV-1003", customer: "Digital Agency Ltd", date: "Jan 13, 2024", amount: "$4,100", status: "Overdue", priority: "high" },
+    { number: "INV-1004", customer: "StartUp Co", date: "Jan 12, 2024", amount: "$750", status: "Paid", priority: "low" },
   ];
 
   return (
@@ -75,8 +76,8 @@ const Home = () => {
               Create Receipt
             </Button>
             <Button 
-              onClick={() => navigate('/')}
-              className="gap-2 btn-primary"
+              onClick={() => navigate('/invoice')}
+              className="gap-2"
             >
               <Plus className="h-4 w-4" />
               New Invoice
@@ -93,10 +94,10 @@ const Home = () => {
                   <div>
                     <p className="text-muted-foreground text-sm font-medium">{stat.title}</p>
                     <p className="text-2xl font-bold mt-1">{stat.value}</p>
-                    <p className={`text-sm font-medium mt-1 ${stat.color}`}>{stat.change}</p>
+                    <p className={`text-sm font-medium mt-1 ${stat.trend === 'up' ? 'text-green-600' : 'text-red-500'}`}>{stat.change}</p>
                   </div>
-                  <div className={`p-3 rounded-lg bg-gradient-to-r from-primary/10 to-secondary/10`}>
-                    <stat.icon className={`h-5 w-5 ${stat.color}`} />
+                  <div className="p-3 rounded-lg bg-gradient-to-r from-primary/10 to-secondary/10">
+                    <stat.icon className={`h-5 w-5 ${stat.trend === 'up' ? 'text-green-600' : 'text-red-500'}`} />
                   </div>
                 </div>
               </CardContent>
@@ -121,8 +122,8 @@ const Home = () => {
                 <Tabs defaultValue="all" className="space-y-4">
                   <div className="flex flex-col md:flex-row gap-4 items-start md:items-center justify-between">
                     <TabsList className="grid w-full md:w-auto grid-cols-4">
-                      <TabsTrigger value="all">All (0)</TabsTrigger>
-                      <TabsTrigger value="outstanding">Outstanding (0)</TabsTrigger>
+                      <TabsTrigger value="all">All ({recentInvoices.length})</TabsTrigger>
+                      <TabsTrigger value="outstanding">Outstanding (2)</TabsTrigger>
                       <TabsTrigger value="drafts">Drafts (0)</TabsTrigger>
                       <TabsTrigger value="more">More</TabsTrigger>
                     </TabsList>
@@ -136,7 +137,7 @@ const Home = () => {
                           className="pl-10"
                         />
                       </div>
-                      <Button className="gap-2">
+                      <Button onClick={() => navigate('/invoice')} className="gap-2">
                         <Plus className="h-4 w-4" />
                         New Invoice
                       </Button>
@@ -154,38 +155,28 @@ const Home = () => {
                         <div>STATUS</div>
                       </div>
                       
-                      {recentInvoices.length === 0 ? (
-                        <div className="flex flex-col items-center justify-center py-16 px-4">
-                          <div className="w-16 h-16 bg-muted rounded-lg flex items-center justify-center mb-4">
-                            <FileText className="h-8 w-8 text-muted-foreground" />
-                          </div>
-                          <h3 className="text-lg font-semibold mb-2">No invoices</h3>
-                          <p className="text-muted-foreground text-center mb-6">
-                            No invoices for this selection. Your invoices will appear here.
-                          </p>
-                          <Button onClick={() => navigate('/')} className="gap-2">
-                            <Plus className="h-4 w-4" />
-                            Create Your First Invoice
-                          </Button>
-                        </div>
-                      ) : (
-                        <div className="divide-y">
-                          {recentInvoices.map((invoice, index) => (
-                            <div key={index} className="grid grid-cols-6 gap-4 p-4 hover:bg-muted/50 transition-smooth">
-                              <div className="font-medium">{invoice.number}</div>
-                              <div>{invoice.customer}</div>
-                              <div className="text-muted-foreground">{invoice.date}</div>
-                              <div className="text-muted-foreground">-</div>
-                              <div className="font-medium">{invoice.amount}</div>
-                              <div>
-                                <Badge variant={invoice.status === "Paid" ? "default" : "secondary"}>
-                                  {invoice.status}
-                                </Badge>
-                              </div>
+                      <div className="divide-y">
+                        {recentInvoices.map((invoice, index) => (
+                          <div key={index} className="grid grid-cols-6 gap-4 p-4 hover:bg-muted/50 transition-smooth cursor-pointer">
+                            <div className="font-medium">{invoice.number}</div>
+                            <div>{invoice.customer}</div>
+                            <div className="text-muted-foreground">{invoice.date}</div>
+                            <div className="text-muted-foreground">Due in 30 days</div>
+                            <div className="font-medium">{invoice.amount}</div>
+                            <div>
+                              <Badge 
+                                variant={
+                                  invoice.status === "Paid" ? "default" : 
+                                  invoice.status === "Overdue" ? "destructive" : 
+                                  "secondary"
+                                }
+                              >
+                                {invoice.status}
+                              </Badge>
                             </div>
-                          ))}
-                        </div>
-                      )}
+                          </div>
+                        ))}
+                      </div>
                     </div>
                   </TabsContent>
                 </Tabs>
@@ -203,7 +194,7 @@ const Home = () => {
               </CardHeader>
               <CardContent className="space-y-4">
                 <Button 
-                  onClick={() => navigate('/')}
+                  onClick={() => navigate('/invoice')}
                   className="w-full justify-start gap-3" 
                   variant="outline"
                 >
