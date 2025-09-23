@@ -9,8 +9,8 @@ const Header = () => {
   const navItems = [
     { label: 'Home', to: '/' },
      { label: 'About', to: '/about' },
-        { label: 'Receipt', to: '/receipt' },
-           { label: 'Invoice', to: '/invoice' },
+   { label: 'Receipt', to: '/receipt' },
+      { label: 'Invoice', to: '/invoice' },
     { label: 'Help', to: '/help' },
   
   ];

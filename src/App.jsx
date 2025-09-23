@@ -8,6 +8,7 @@ import ReceiptPage from "./pages/ReceiptPage";
 import Index from "./pages/Index";
 import Home from "./pages/Home";
 import About from "./pages/About";
+import Premium from "./pages/Premium";
 import Footer from "./components/Footer";
 import Header from "./components/Header";
 import NotFound from "./pages/NotFound";
@@ -28,6 +29,7 @@ const App = () => (
           <Route path="/invoice" element={<Index />} />
           <Route path="/template" element={<TemplatePage />} />
           <Route path="/receipt" element={<ReceiptPage />} />
+          <Route path="/premium" element={<Premium />} />
           <Route path="/about" element={<About />} />
           <Route path="*" element={<NotFound />} />
         </Routes>

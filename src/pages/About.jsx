@@ -1,94 +1,126 @@
-import { } from 'react';
-import { Button } from "@/components/ui/button";
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { Check, Clock, FileText, Award, UserCheck, ChevronDown } from 'lucide-react';
 
+const steps = [
+  { title: 'Create', desc: 'Quickly fill in Bill To / Ship To and line items.', icon: FileText },
+  { title: 'Customize', desc: 'Switch templates and preview before exporting.', icon: Award },
+  { title: 'Send', desc: 'Generate PDF and share with clients instantly.', icon: UserCheck }
+];
+
+const faqs = [
+  { q: 'Where is my data stored?', a: 'Your data is stored locally in your browser (localStorage). It does not leave your device unless you export or share the generated file.' },
+  { q: 'Can I customize templates?', a: 'Templates are prebuilt for now. You can switch between templates and future versions may include deeper styling controls.' },
+  { q: 'Are generated PDFs secure?', a: 'PDFs are generated client-side. Security depends on how you share the file (email, secure drive, etc.).' }
+];
+
+const FeatureCard = ({ title, children, icon: Icon }) => (
+  <div className="bg-card hover:shadow-elegant transition-smooth p-5 rounded-lg"> 
+    <div className="flex items-start gap-4">
+      <div className="w-12 h-12 rounded bg-muted flex items-center justify-center text-primary">
+        <Icon className="h-6 w-6" />
+      </div>
+      <div>
+        <div className="font-semibold">{title}</div>
+        <div className="text-sm text-muted-foreground mt-1">{children}</div>
+      </div>
+    </div>
+  </div>
+);
 
 const About = () => {
   const navigate = useNavigate();
+  const [openFaq, setOpenFaq] = useState(null);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/30">
-      
-      <div className="container mx-auto px-4 py-12">
-        <div className="p-8 bg-gradient-to-br  rounded-md">
-          <h1 className="text-3xl font-bold mb-4">About PayFlow</h1>
-
-          <p className="mb-6 text-muted-foreground">
-            PayFlow is a lightweight web app for creating professional invoices and receipts quickly. It provides editable templates, easy PDF generation, and a simple form-driven workflow so you can create and share documents in seconds.
-          </p>
-
-          <h2 className="text-2xl font-semibold mt-6 mb-2">Key Features</h2>
-          <ul className="list-disc list-inside mb-4 text-muted-foreground">
-            <li>Multiple invoice and receipt templates with live preview</li>
-            <li>Fill-in form for Bill To / Ship To, itemized line items, tax and totals</li>
-            <li>Generate downloadable PDF for invoices and receipts</li>
-            <li>Save draft data in your browser (localStorage) for later editing</li>
-            <li>Responsive layout suitable for desktop and mobile</li>
-          </ul>
-
-          <h2 className="text-2xl font-semibold mt-6 mb-2">How to use</h2>
-          <ol className="list-decimal list-inside mb-4 text-muted-foreground">
-            <li className="mb-2">
-              Start on the Dashboard or click &quot;New Invoice&quot; to open the invoice editor.
-            </li>
-            <li className="mb-2">
-              Fill in the <strong>Bill To</strong> and <strong>Ship To</strong> sections with the customer&apos;s details.
-            </li>
-            <li className="mb-2">
-              Add item rows using the &quot;Add Item&quot; button. For each row, enter the description, quantity, and unit price — totals update automatically.
-            </li>
-            <li className="mb-2">
-              Set tax percentage if applicable. The app calculates tax and grand total for you.
-            </li>
-            <li className="mb-2">
-              Choose a template under &quot;Choose Template Style&quot; to preview different looks. Templates are optimized for printing and PDF export.
-            </li>
-            <li className="mb-2">
-              Click &quot;Download PDF&quot; on the preview page to generate a PDF you can save or email.
-            </li>
-          </ol>
-
-          <h2 className="text-2xl font-semibold mt-6 mb-2">Generating Receipts</h2>
-          <p className="text-muted-foreground mb-4">
-            To create a receipt, use the Receipt Generator (top-right on Dashboard or via the navigation). The flow is similar to invoices: fill the purchaser information, add items, and produce a printable receipt PDF. Receipts are ideal for point-of-sale acknowledgements.
-          </p>
-
-          <h2 className="text-2xl font-semibold mt-6 mb-2">Templates</h2>
-          <p className="text-muted-foreground mb-4">
-            Templates in PayFlow are built to be simple to customize. Selecting a template changes layout and styling; your form data is reused across templates so you can switch styles without losing data.
-          </p>
-
-          <h2 className="text-2xl font-semibold mt-6 mb-2">Tips & Best Practices</h2>
-          <ul className="list-disc list-inside mb-4 text-muted-foreground">
-            <li>Save drafts locally — PayFlow stores form data in your browser so you don&apos;t lose progress.</li>
-            <li>Use descriptive line items to improve clarity for clients.</li>
-            <li>Check tax and currency settings before generating the final PDF.</li>
-            <li>Preview templates on both desktop and mobile to ensure proper layout before sharing.</li>
-          </ul>
-
-          <h2 className="text-2xl font-semibold mt-6 mb-2">FAQ</h2>
-          <div className="space-y-3 text-muted-foreground">
+    <main className="min-h-screen bg-background">
+      <section className="container mx-auto px-4 py-12">
+        <div className="rounded-xl bg-gradient-to-br from-card to-background p-8 shadow-elegant">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
             <div>
-              <strong>Q: Where is my data stored?</strong>
-              <p>Your data is stored in your browser localStorage — it never leaves your machine unless you explicitly export or share the generated PDF.</p>
-            </div>
-            <div>
-              <strong>Q: Can I customize templates?</strong>
-              <p>At the moment, templates are prebuilt. You can switch between them to get different looks. Future versions may include custom style editing.</p>
-            </div>
-            <div>
-              <strong>Q: Are generated PDFs secure?</strong>
-              <p>PDFs are generated client-side from your data; secure sharing depends on how you distribute the file (email, secure drive, etc.).</p>
-            </div>
-          </div>
+              <h1 className="text-3xl md:text-4xl font-extrabold">PayFlow — simple invoices & receipts</h1>
+              <p className="mt-4 text-muted-foreground max-w-xl">Create professional invoices and receipts in seconds. Select a template, fill your customer and item details and export a PDF — no server-side storage required.</p>
 
-          <div className="mt-8 flex gap-3">
-            <Button onClick={() => navigate('/')} className="px-4">Back to Dashboard</Button>
-            <Button onClick={() => navigate('/invoice')} variant="outline" className="px-4">Create Invoice</Button>
+              <div className="mt-6 flex flex-wrap gap-3">
+                <button onClick={() => navigate('/invoice')} className="px-4 py-2 rounded-md bg-primary text-primary-foreground font-semibold">Create Invoice</button>
+                <button onClick={() => navigate('/receipt')} className="px-4 py-2 rounded-md border border-border text-muted-foreground">Open Receipt</button>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-2 gap-4">
+              <FeatureCard title="Editable Templates" icon={FileText}>Multiple modern templates with live preview and print-optimized output.</FeatureCard>
+              <FeatureCard title="PDF Export" icon={Award}>Client-ready PDFs generated in the browser with no back-end.</FeatureCard>
+              <FeatureCard title="Auto Calculations" icon={Clock}>Automatic tax, totals and currency handling for fast invoice creation.</FeatureCard>
+              <FeatureCard title="Privacy-first" icon={UserCheck}>All data remains in your browser unless you choose to export or share it.</FeatureCard>
+            </div>
           </div>
         </div>
-      </div>
-    </div>
+      </section>
+
+      <section className="container mx-auto px-4 py-10">
+        <h2 className="text-2xl font-semibold text-center">How it works</h2>
+        <p className="text-center text-muted-foreground mt-2">A focused 3-step flow to create, customize and send invoices fast.</p>
+
+        <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-6">
+          {steps.map((s) => (
+            <div key={s.title} className="p-6 bg-card rounded-lg hover:translate-y-1 transition-smooth">
+              <div className="flex items-center gap-4">
+                <div className="w-12 h-12 rounded bg-primary/10 text-primary flex items-center justify-center">
+                  <s.icon className="h-6 w-6" />
+                </div>
+                <div>
+                  <div className="font-semibold">{s.title}</div>
+                  <div className="text-sm text-muted-foreground">{s.desc}</div>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <section className="container mx-auto px-4 py-10">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          <div>
+            <h3 className="text-xl font-semibold">Tips & Best Practices</h3>
+            <ul className="mt-4 space-y-3 text-muted-foreground">
+              <li className="flex items-start gap-3"><Check className="h-5 w-5 text-primary mt-1" /> <span>Save drafts locally to avoid losing progress.</span></li>
+              <li className="flex items-start gap-3"><Check className="h-5 w-5 text-primary mt-1" /> <span>Use clear line item descriptions for better client communication.</span></li>
+              <li className="flex items-start gap-3"><Check className="h-5 w-5 text-primary mt-1" /> <span>Verify tax and currency before exporting the final PDF.</span></li>
+            </ul>
+          </div>
+
+          <div>
+            <h3 className="text-xl font-semibold">Frequently asked questions</h3>
+            <div className="mt-4 space-y-3">
+              {faqs.map((f, idx) => (
+                <div key={f.q} className="border border-border rounded-lg overflow-hidden">
+                  <button onClick={() => setOpenFaq(openFaq === idx ? null : idx)} className="w-full text-left p-4 flex items-center justify-between">
+                    <div>
+                      <div className="font-medium">{f.q}</div>
+                    </div>
+                    <ChevronDown className={`h-5 w-5 transform transition-transform ${openFaq === idx ? 'rotate-180' : ''}`} />
+                  </button>
+                  <div className={`px-4 pb-4 transition-all ${openFaq === idx ? 'max-h-40' : 'max-h-0'} overflow-hidden text-muted-foreground`}>{f.a}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="container mx-auto px-4 py-10">
+        <div className="rounded-lg bg-card p-6 flex flex-col md:flex-row items-center justify-between gap-4">
+          <div>
+            <div className="font-semibold">Ready to create your first invoice?</div>
+            <div className="text-sm text-muted-foreground">Start from a template and generate a PDF in seconds.</div>
+          </div>
+          <div className="flex gap-3">
+            <button onClick={() => navigate('/invoice')} className="px-4 py-2 rounded-md bg-primary text-primary-foreground font-semibold">Create Invoice</button>
+            <button onClick={() => navigate('/premium')} className="px-4 py-2 rounded-md border border-border text-muted-foreground">View Pricing</button>
+          </div>
+        </div>
+      </section>
+    </main>
   );
 };
 

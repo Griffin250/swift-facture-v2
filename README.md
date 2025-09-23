@@ -89,4 +89,5 @@ We don't support custom domains (yet). If you want to deploy your project under 
     -- create an estimate
     -- create invoice
 - Dismiss checklist btn
-- 
+- Update the currency in Receipt page!
+- Premium servies. 
