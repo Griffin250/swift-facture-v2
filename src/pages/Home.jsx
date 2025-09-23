@@ -27,11 +27,11 @@ const Home = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/30">
-      {/* Navigation Header */}
+      {/* Navigation Header 
       <header className="border-b border-border bg-card/80 backdrop-blur-md sticky top-0 z-50">
         <div className="container mx-auto px-4">
           <div className="flex items-center justify-between h-16">
-            {/* Logo */}
+         
             <div className="flex items-center space-x-3">
               <div className="w-8 h-8 bg-gradient-to-r from-primary to-secondary rounded-lg flex items-center justify-center">
                 <FileText className="h-5 w-5 text-white" />
@@ -39,7 +39,7 @@ const Home = () => {
               <span className="text-xl font-bold gradient-text">PayFlow</span>
             </div>
 
-            {/* Navigation */}
+            
             <nav className="hidden md:flex items-center space-x-8">
               <a href="#" className="text-primary font-medium border-b-2 border-primary pb-1">Home</a>
               <a href="#" className="text-muted-foreground hover:text-foreground transition-smooth">Customers</a>
@@ -48,7 +48,7 @@ const Home = () => {
               <a href="#" className="text-muted-foreground hover:text-foreground transition-smooth">Reports</a>
             </nav>
 
-            {/* User Actions */}
+        
             <div className="flex items-center space-x-4">
               <Button variant="outline" size="sm">Premium</Button>
               <Button variant="ghost" size="sm">Help</Button>
@@ -57,14 +57,14 @@ const Home = () => {
           </div>
         </div>
       </header>
-
+*/}
       {/* Main Content */}
       <main className="container mx-auto px-4 py-8">
         {/* Page Header */}
         <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-8">
           <div>
-            <h1 className="text-3xl font-bold mb-2">Dashboard</h1>
-            <p className="text-muted-foreground">Manage your invoices and track your business performance</p>
+           
+           
           </div>
           <div className="flex gap-4 mt-4 md:mt-0">
             <Button 

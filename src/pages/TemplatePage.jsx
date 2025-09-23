@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { ArrowLeft, Loader2 } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import InvoiceTemplate from '../components/InvoiceTemplate';
 import { generatePDF } from '../utils/pdfGenerator';
 import { templates } from '../utils/templateRegistry';
+
 
 const TemplatePage = () => {
   const location = useLocation();
@@ -52,7 +53,7 @@ const TemplatePage = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-background to-accent/5">
+    <div className="min-h-screen bg-gradient-to-br from-sky-50 via-sky-100 to-indigo-50">
       <div className="container mx-auto px-4 py-8">
         <div className="flex justify-between items-center mb-8">
           <Button variant="outline" onClick={handleBack} className="font-semibold">
@@ -79,7 +80,7 @@ const TemplatePage = () => {
           <h1 className="text-3xl font-bold gradient-text mb-4 text-center">
             Invoice Preview
           </h1>
-          <div className="card-modern">
+          <div className="card-modern bg-blue-200">
             <h3 className="text-lg font-semibold gradient-text mb-4">Choose Template Style</h3>
             <div className="flex flex-wrap gap-3">
               {templates.map((template, index) => (

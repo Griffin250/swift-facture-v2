@@ -11,6 +11,7 @@ import { templates } from "../utils/templateRegistry";
 import { FiEdit, FiFileText, FiTrash2 } from "react-icons/fi"; // Added FiTrash2 icon
 import { RefreshCw } from "lucide-react";
 import { set, sub } from "date-fns";
+import Home from './Home';
 
 const generateRandomInvoiceNumber = () => {
   const length = Math.floor(Math.random() * 6) + 3;
@@ -309,18 +310,19 @@ const Index = () => {
   };
 
   return (
-    <div className="min-h-screen">
-      <Header />
-      <div className="container mx-auto px-4 py-8 relative">
-      <div className="fixed top-20 left-4 flex flex-col gap-3 z-40">
+    <>    <Home />
+    <div className="min-h-screen card-mordern bg-gradient-to-br from-sky-100 via-sky-200 to-indigo-20">
+
+      <div className="container mx-auto px-20 py-8 relative ">
+      <div className="fixed top-20 md:left-8 left-2 flex flex-col gap-3 z-40">
         <Button
           variant="destructive"
           size="icon"
           onClick={clearForm}
-          className="rounded-full hover:scale-110 transition-smooth"
+          className="rounded-sm p-1 hover:scale-110 transition-smooth mt-8 w-auto text-black text-md font-bold"
           title="Clear Form"
-        >
-          <FiTrash2 size={20} />
+        ><span className='hidde'> Clear Form</span>
+          <FiTrash2 className='w-6' />
         </Button>
         <Button
           variant="outline"
@@ -351,10 +353,10 @@ const Index = () => {
             },
           })
         }
-        className="fixed top-20 right-4 rounded-full z-40"
+        className="fixed top-20 right-4 rounded-md z-40 mt-8 w-auto p-2 text-black text-xl font-bold hover:scale-110 transition-smooth"
         title="Switch to Receipt Generator"
       >
-        <FiFileText size={20} />
+      <span className='hidden h'>  Receipt Generator </span> <FiFileText size={20} />
       </Button>
       <div className="flex flex-col md:flex-row gap-8">
         <div className="w-full md:w-1/2 card-modern animate-fade-in">
@@ -497,7 +499,7 @@ const Index = () => {
           </div>
         </div>
 
-        <div className="w-full md:w-1/2 card-modern overflow-y-auto animate-fade-in" style={{ animationDelay: '0.2s' }}>
+        <div className="w-full md:w-1/2 mt-12 card-modern bg-gradient-to-tr bg-slate-400 overflow-y-auto animate-fade-in" style={{ animationDelay: '0.2s' }}>
           <h2 className="text-3xl font-bold mb-6 gradient-text">
             Choose Template
           </h2>
@@ -535,6 +537,7 @@ const Index = () => {
         </div>
       </div>
     </div>
+     </>
   );
 };
 
