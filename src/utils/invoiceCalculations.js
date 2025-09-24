@@ -1,18 +1,24 @@
-export const calculateSubTotal = (items) => {
-  return items
-    .reduce((sum, item) => sum + item.quantity * item.amount, 0)
-    .toFixed(2);
+export const calculateSubTotal = (items = []) => {
+  const raw = items.reduce((sum, item) => {
+    const qty = parseFloat(item.quantity) || 0;
+    const amt = parseFloat(item.amount) || 0;
+    return sum + qty * amt;
+  }, 0);
+  // return a number rounded to 2 decimals
+  return Math.round(raw * 100) / 100;
 };
 
-export const calculateTaxAmount = (subTotal, taxPercentage) => {
-  return (parseFloat(subTotal) * (taxPercentage / 100)).toFixed(2);
+export const calculateTaxAmount = (subTotal = 0, taxPercentage = 0) => {
+  const st = parseFloat(subTotal) || 0;
+  const tax = (st * (parseFloat(taxPercentage) || 0)) / 100;
+  return Math.round(tax * 100) / 100;
 };
 
-export const calculateGrandTotal = (subTotal, taxPercentage) => {
-  return (
-    parseFloat(subTotal).toFixed(2) +
-    calculateTaxAmount(subTotal, taxPercentage)
-  );
+// Accepts subtotal and tax amount (preferred). Returns numeric grand total.
+export const calculateGrandTotal = (subTotal = 0, taxAmount = 0) => {
+  const st = parseFloat(subTotal) || 0;
+  const ta = parseFloat(taxAmount) || 0;
+  return Math.round((st + ta) * 100) / 100;
 };
 
 export const generateGSTNumber = () => {

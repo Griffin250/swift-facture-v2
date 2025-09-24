@@ -14,8 +14,8 @@ const currencies = [
 
 const BillToSection = ({ billTo, handleInputChange, selectedCurrency, setSelectedCurrency }) => {
   return (
-    <div className="mb-6 animate-fade-in ">
-      <div className="glass-card p-6 rounded-xl mb-6 elegant-shadow bg-slate-200">
+    <div className="mb-6 animate-fade-in">
+      <div className="glass-card p-6 rounded-xl mb-6 elegant-shadow">
         <div className="flex items-center space-x-2 mb-4">
           <Coins className="h-5 w-5 text-primary" />
           <h3 className="text-lg font-medium">Select Currency</h3>

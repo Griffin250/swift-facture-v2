@@ -56,7 +56,6 @@ const About = () => {
           </div>
         </div>
       </section>
-
       <section className="container mx-auto px-4 py-10">
         <h2 className="text-2xl font-semibold text-center">How it works</h2>
         <p className="text-center text-muted-foreground mt-2">A focused 3-step flow to create, customize and send invoices fast.</p>

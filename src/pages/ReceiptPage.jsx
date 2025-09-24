@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { Loader2, RefreshCw, FileText, RotateCw } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -6,11 +6,18 @@ import Receipt1 from "../components/templates/Receipt1";
 import Receipt2 from "../components/templates/Receipt2";
 import Receipt3 from "../components/templates/Receipt3";
 import Receipt4 from "../components/templates/Receipt4";
-import { formatCurrency } from "../utils/formatCurrency";
 import { generateReceiptPDF } from "../utils/receiptPDFGenerator";
 import { generateGSTNumber } from "../utils/invoiceCalculations";
 import FloatingLabelInput from "../components/FloatingLabelInput";
 import ItemDetails from "../components/ItemDetails";
+
+
+const currencyMap = {
+  USD: '$',
+  EUR: '€',
+  GBP: '£',
+  JPY: '¥'
+};
 
 
 const generateRandomInvoiceNumber = () => {
@@ -78,7 +85,10 @@ const ReceiptPage = () => {
   const [theme, setTheme] = useState("Receipt1");
   const [notes, setNotes] = useState("");
   const [footer, setFooter] = useState("Thank you");
-  const [selectedCurrency, setSelectedCurrency] = useState("INR");
+  const [selectedCurrency, setSelectedCurrency] = useState("USD");
+  // Email/print modal state
+  const [showEmailModal, setShowEmailModal] = useState(false);
+  const [showEmailNotice, setShowEmailNotice] = useState(false);
 
   const refreshFooter = () => {
     const randomIndex = Math.floor(Math.random() * footerOptions.length);
@@ -98,7 +108,7 @@ const ReceiptPage = () => {
       setTaxPercentage(parsedData.taxPercentage || 0);
       setNotes(parsedData.notes || "");
       setFooter(parsedData.footer || "Thank you");
-      setSelectedCurrency(parsedData.selectedCurrency || "INR");
+  setSelectedCurrency(parsedData.selectedCurrency || "USD");
     } else {
       // Initialize with default values if nothing in localStorage
       setInvoice((prev) => ({ ...prev, number: generateRandomInvoiceNumber() }));
@@ -125,7 +135,7 @@ const ReceiptPage = () => {
   const handleDownloadPDF = async () => {
     if (!isDownloading && receiptRef.current) {
       setIsDownloading(true);
-      const receiptData = { // Prepare receiptData object
+      const receiptData = {
         billTo,
         invoice,
         yourCompany,
@@ -135,6 +145,8 @@ const ReceiptPage = () => {
         notes,
         footer,
         selectedCurrency,
+        currencySign: (currencyMap && currencyMap[selectedCurrency]) || '',
+        grandTotal: calculateGrandTotal(),
       };
       try {
         await generateReceiptPDF(receiptRef.current, theme, receiptData);
@@ -146,9 +158,30 @@ const ReceiptPage = () => {
     }
   };
 
-  const handleBack = () => {
-    navigate("/");
+  // Print only the receipt preview
+  const handlePrint = () => {
+    if (receiptRef.current) {
+      const printContents = receiptRef.current.innerHTML;
+      const printWindow = window.open('', '', 'height=600,width=400');
+      printWindow.document.write('<html><head><title>Print Receipt</title>');
+      printWindow.document.write('<style>body{font-family:Inter,sans-serif;padding:1rem;}@media print{body{zoom:0.8;}}</style>');
+      printWindow.document.write('</head><body >');
+      printWindow.document.write(printContents);
+      printWindow.document.write('</body></html>');
+      printWindow.document.close();
+      printWindow.focus();
+      setTimeout(() => { printWindow.print(); printWindow.close(); }, 400);
+    }
   };
+
+  // Show modal and then notification for email (coming soon)
+  const handleSendEmail = () => {
+    setShowEmailModal(false);
+    setShowEmailNotice(true);
+    setTimeout(() => setShowEmailNotice(false), 2500);
+  };
+
+  // handleBack removed (not used)
 
   const handleInputChange = (setter) => (e) => {
     const { name, value } = e.target;
@@ -177,18 +210,31 @@ const ReceiptPage = () => {
   };
 
   const calculateSubTotal = () => {
-    return items.reduce((sum, item) => sum + item.total, 0).toFixed(2);
+    const raw = items.reduce((sum, item) => {
+      const qty = parseFloat(item.quantity) || 0;
+      const amt = parseFloat(item.amount) || 0;
+      return sum + qty * amt;
+    }, 0);
+    return Math.round(raw * 100) / 100; // numeric
   };
 
   const calculateTaxAmount = () => {
-    const subTotal = parseFloat(calculateSubTotal());
-    return (subTotal * (taxPercentage / 100)).toFixed(2);
+    const subTotal = calculateSubTotal();
+    const tax = (subTotal * (parseFloat(taxPercentage) || 0)) / 100;
+    return Math.round(tax * 100) / 100; // numeric
   };
 
   const calculateGrandTotal = () => {
-    const subTotal = parseFloat(calculateSubTotal());
-    const taxAmount = parseFloat(calculateTaxAmount());
-    return (subTotal + taxAmount).toFixed(2);
+    const subTotal = calculateSubTotal();
+    const taxAmount = calculateTaxAmount();
+    return Math.round((subTotal + taxAmount) * 100) / 100; // numeric
+  };
+
+  // currency display helper
+  const renderCurrency = (value) => {
+    const sign = (currencyMap && (currencyMap[selectedCurrency])) || '';
+    const num = Number(value || 0).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    return `${sign}${num}`;
   };
 
   return (
@@ -197,8 +243,8 @@ const ReceiptPage = () => {
 
       <div className="container mx-auto px-4 py-8 relative">
         <div className="flex justify-between items-center mb-8">
-          <h1 className="text-4xl font-bold gradient-text">PayFlow Receipts</h1>
-          <div className="flex items-center gap-4">
+          <h1 className="text-4xl font-bold gradient-text mb-4">PayFlow Receipts</h1>
+          <div className="flex flex-wrap items-center gap-4">
             <Button
               variant="accent"
               onClick={handleDownloadPDF}
@@ -216,6 +262,20 @@ const ReceiptPage = () => {
             </Button>
             <Button
               variant="outline"
+              onClick={() => setShowEmailModal(true)}
+              className="font-semibold"
+            >
+              Send via Email
+            </Button>
+            <Button
+              variant="outline"
+              onClick={handlePrint}
+              className="font-semibold"
+            >
+              Print Receipt
+            </Button>
+            <Button
+              variant="outline"
               onClick={() => navigate("/")}
               size="icon"
               className="rounded-full"
@@ -224,6 +284,35 @@ const ReceiptPage = () => {
               <FileText size={20} />
             </Button>
           </div>
+
+          {/* Email Modal */}
+          {showEmailModal && (
+            <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40">
+              <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-sm animate-fade-in">
+                <h3 className="text-lg font-bold mb-2">Send Receipt via Email</h3>
+                <div className="mb-4 text-gray-600">Email receipts is coming soon.</div>
+                <div className="flex gap-2">
+                  <Button
+                    onClick={handleSendEmail}
+                  >
+                    OK
+                  </Button>
+                  <Button
+                    variant="outline"
+                    onClick={() => setShowEmailModal(false)}
+                  >
+                    Cancel
+                  </Button>
+                </div>
+              </div>
+            </div>
+          )}
+          {/* Email notification */}
+          {showEmailNotice && (
+            <div className="fixed top-6 left-1/2 transform -translate-x-1/2 z-50 bg-blue-600 text-white px-6 py-3 rounded-lg shadow-lg animate-fade-in transition-all">
+              Email receipts is coming soon.
+            </div>
+          )}
         </div>
 
         <div className="flex flex-col lg:flex-row gap-8">
@@ -336,7 +425,7 @@ const ReceiptPage = () => {
               <h3 className="text-lg font-medium mb-2">Totals</h3>
               <div className="flex justify-between mb-2">
                 <span>Sub Total:</span>
-                <span>{formatCurrency(parseFloat(calculateSubTotal()), selectedCurrency)}</span>
+                <span>{renderCurrency(calculateSubTotal())}</span>
               </div>
               <div className="flex justify-between mb-2">
                 <span>Tax (%):</span>
@@ -354,11 +443,11 @@ const ReceiptPage = () => {
               </div>
               <div className="flex justify-between mb-2">
                 <span>Tax Amount:</span>
-                <span>{formatCurrency(parseFloat(calculateTaxAmount()), selectedCurrency)}</span>
+                <span>{renderCurrency(calculateTaxAmount())}</span>
               </div>
               <div className="flex justify-between font-bold">
                 <span>Grand Total:</span>
-                <span>{formatCurrency(parseFloat(calculateGrandTotal()), selectedCurrency)}</span>
+                <span>{renderCurrency(calculateGrandTotal())}</span>
               </div>
             </div>
 
@@ -393,119 +482,139 @@ const ReceiptPage = () => {
           </form>
           </div>
 
-          <div className="w-full lg:w-1/2 card-modern">
-            <h2 className="text-2xl font-semibold gradient-text mb-6">Receipt Preview</h2>
-            <div className="mb-4 flex items-center">
-              <h3 className="text-lg font-medium mr-4">Receipt Type</h3>
-              <div className="flex gap-4">
-                <label className="flex items-center">
-                  <input
-                    type="radio"
-                    name="theme"
-                    value="Receipt1"
-                    checked={theme === "Receipt1"}
-                    onChange={() => setTheme("Receipt1")}
-                    className="mr-2"
-                  />
-                  Receipt1
-                </label>
-                <label className="flex items-center">
-                  <input
-                    type="radio"
-                    name="theme"
-                    value="Receipt2"
-                    checked={theme === "Receipt2"}
-                    onChange={() => setTheme("Receipt2")}
-                    className="mr-2"
-                  />
-                  Receipt2
-                </label>
-                <label className="flex items-center">
-                  <input
-                    type="radio"
-                    name="theme"
-                    value="Receipt3"
-                    checked={theme === "Receipt3"}
-                    onChange={() => setTheme("Receipt3")}
-                    className="mr-2"
-                  />
-                  Receipt3
-                </label>
-                <label className="flex items-center">
-                  <input
-                    type="radio"
-                    name="theme"
-                    value="Receipt4"
-                    checked={theme === "Receipt4"}
-                    onChange={() => setTheme("Receipt4")}
-                    className="mr-2"
-                  />
-                  Receipt4
-                </label>
-              </div>
-            </div>
-            <div ref={receiptRef} className="w-[380px] mx-auto border shadow-lg">
-              {theme === "Receipt1" && (
-                <Receipt1
-                  data={{
-                    billTo,
-                    invoice,
-                    yourCompany,
-                    cashier,
-                    items,
-                    taxPercentage,
-                    notes,
-                    footer,
-                    selectedCurrency,
-                  }}
-                />
-              )}
-              {theme === "Receipt2" && (
-                <Receipt2
-                  data={{
-                    billTo,
-                    invoice,
-                    yourCompany,
-                    cashier,
-                    items,
-                    taxPercentage,
-                    notes,
-                    footer,
-                    selectedCurrency,
-                  }}
-                />
-              )}
-              {theme === "Receipt3" && (
-                <Receipt3
-                  data={{
-                    billTo,
-                    invoice,
-                    yourCompany,
-                    cashier,
-                    items,
-                    taxPercentage,
-                    notes,
-                    footer,
-                    selectedCurrency,
-                  }}
-                />
-              )}
-              {theme === "Receipt4" && (
-                <Receipt4
-                  data={{
-                    billTo,
-                    invoice,
-                    yourCompany,
-                    items,
-                    taxPercentage,
-                    footer,
-                    cashier,
-                    selectedCurrency,
-                  }}
-                />
-              )}
-            </div>
-          </div>
+ <div className="w-full lg:w-1/2 card-modern">
+  <h2 className="text-2xl font-bold gradient-text mb-6">Choose Receipt Format</h2>
+  
+  <div className="lg:hidden mb-4">
+    <div className="relative">
+      <select 
+        className="w-full p-3 rounded-lg border border-gray-300 bg-white shadow-sm appearance-none cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
+        value={theme}
+        onChange={(e) => setTheme(e.target.value)}
+      >
+        <option value="Receipt1">Receipt 1</option>
+        <option value="Receipt2">Receipt 2</option>
+        <option value="Receipt3">Receipt 3</option>
+        <option value="Receipt4">Receipt 4</option>
+      </select>
+      <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+        <svg className="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+          <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
+        </svg>
+      </div>
+    </div>
+  </div>
+  
+
+  <div className="hidden lg:block mb-6">
+    <h3 className="text-lg font-medium mb-3">Receipt Type</h3>
+    <div className="flex flex-wrap gap-3">
+      <label className="custom-radio">
+        <input
+          type="radio"
+          name="theme"
+          value="Receipt1"
+          checked={theme === "Receipt1"}
+          onChange={() => setTheme("Receipt1")}
+        />
+        <span className="radio-label">Receipt 1</span>
+      </label>
+      <label className="custom-radio">
+        <input
+          type="radio"
+          name="theme"
+          value="Receipt2"
+          checked={theme === "Receipt2"}
+          onChange={() => setTheme("Receipt2")}
+        />
+        <span className="radio-label">Receipt 2</span>
+      </label>
+      <label className="custom-radio">
+        <input
+          type="radio"
+          name="theme"
+          value="Receipt3"
+          checked={theme === "Receipt3"}
+          onChange={() => setTheme("Receipt3")}
+        />
+        <span className="radio-label">Receipt 3</span>
+      </label>
+      <label className="custom-radio">
+        <input
+          type="radio"
+          name="theme"
+          value="Receipt4"
+          checked={theme === "Receipt4"}
+          onChange={() => setTheme("Receipt4")}
+        />
+        <span className="radio-label">Receipt 4</span>
+      </label>
+    </div>
+  </div>
+  
+
+  <div ref={receiptRef} className="w-full max-w-[380px] mx-auto border shadow-lg rounded-lg overflow-hidden transform transition-transform duration-300 hover:scale-[1.02]">
+    {theme === "Receipt1" && (
+      <Receipt1
+        data={{
+          billTo,
+          invoice,
+          yourCompany,
+          cashier,
+          items,
+          taxPercentage,
+          notes,
+          footer,
+          selectedCurrency,
+        }}
+      />
+    )}
+    {theme === "Receipt2" && (
+      <Receipt2
+        data={{
+          billTo,
+          invoice,
+          yourCompany,
+          cashier,
+          items,
+          taxPercentage,
+          notes,
+          footer,
+          selectedCurrency,
+        }}
+      />
+    )}
+    {theme === "Receipt3" && (
+      <Receipt3
+        data={{
+          billTo,
+          invoice,
+          yourCompany,
+          cashier,
+          items,
+          taxPercentage,
+          notes,
+          footer,
+          selectedCurrency,
+        }}
+      />
+    )}
+    {theme === "Receipt4" && (
+      <Receipt4
+        data={{
+          billTo,
+          invoice,
+          yourCompany,
+          items,
+          taxPercentage,
+          footer,
+          cashier,
+          selectedCurrency,
+        }}
+      />
+    )}
+  </div>
+</div>
         </div>
       </div>
     </div>

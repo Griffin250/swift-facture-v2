@@ -6,12 +6,15 @@ import { navItems } from "./nav-items";
 import TemplatePage from "./pages/TemplatePage";
 import ReceiptPage from "./pages/ReceiptPage";
 import Index from "./pages/Index";
-import Home from "./pages/Home";
 import About from "./pages/About";
 import Premium from "./pages/Premium";
 import Footer from "./components/Footer";
 import Header from "./components/Header";
 import NotFound from "./pages/NotFound";
+import Dashboard from "./pages/Dashboard";
+import AuthPage from "./pages/AuthPage";
+import EstimatesPage from "./pages/Estimates";
+import Estimates from "./pages/Estimates";
 
 const queryClient = new QueryClient();
 
@@ -21,15 +24,18 @@ const App = () => (
       <Toaster />
       <BrowserRouter>
       <Header />
+      
         <Routes>
           {navItems.map(({ to, page }) => (
             <Route key={to} path={to} element={page} />
           ))}
-          <Route path="/" element={<Home />} />
+          <Route path="/" element={<Dashboard />} />
           <Route path="/invoice" element={<Index />} />
           <Route path="/template" element={<TemplatePage />} />
           <Route path="/receipt" element={<ReceiptPage />} />
           <Route path="/premium" element={<Premium />} />
+          <Route path="/estimates" element={<Estimates />} />
+          <Route path="/authpage" element={<AuthPage />} />
           <Route path="/about" element={<About />} />
           <Route path="*" element={<NotFound />} />
         </Routes>

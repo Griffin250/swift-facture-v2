@@ -138,3 +138,73 @@
     @apply bg-gradient-to-r from-primary via-secondary to-accent bg-clip-text text-transparent font-bold;
   }
 }
+/*.... Receipt section....*/
+ .custom-radio {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    position: relative;
+    padding-left: 2rem;
+    margin-bottom: 0.5rem;
+  }
+  
+  .custom-radio input[type="radio"] {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+  }
+  
+  .custom-radio .radio-label {
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    background-color: #f8fafc;
+    border: 2px solid #e2e8f0;
+    transition: all 0.3s ease;
+    font-weight: 500;
+    color: #4a5568;
+  }
+  
+  .custom-radio input[type="radio"]:checked + .radio-label {
+    background-color: #3b82f6;
+    border-color: #3b82f6;
+    color: white;
+    box-shadow: 0 4px 6px -1px rgba(59, 130, 246, 0.3);
+  }
+  
+  .custom-radio input[type="radio"]:focus + .radio-label {
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+  }
+  
+  .custom-radio:hover .radio-label {
+    border-color: #3b82f6;
+    transform: translateY(-1px);
+  }
+  
+  /* Card Modern Style */
+  .card-modern {
+    background: white;
+    border-radius: 1rem;
+    padding: 1.5rem;
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    transition: all 0.3s ease;
+  }
+  
+  .card-modern:hover {
+    box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.15), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  }
+  
+  /* Gradient Text */
+  .gradient-text {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  
+  /* Responsive Adjustments */
+  @media (max-width: 1023px) {
+    .card-modern {
+      padding: 1rem;
+    }
+  }

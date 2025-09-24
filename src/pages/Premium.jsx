@@ -80,23 +80,52 @@ const Premium = () => {
   return (
     <main className="container mx-auto px-4 py-12">
       <section className="text-center max-w-3xl mx-auto">
-        <h2 className="text-2xl md:text-3xl font-semibold">{billing === 'yearly' ? 'Save money with our yearly plans' : 'Get a 14-day free trial with our monthly plans'}</h2>
+        <h2 className="text-2xl md:text-3xl font-semibold">{billing === 'yearly' ? 'Save money with our yearly plans' : 'Get a 30-day free trial with our monthly plans'}</h2>
         <p className="mt-3 text-sm text-muted-foreground">
           {billing === 'yearly'
-            ? 'Save up to 15% of the price when selecting our yearly plans or switch to our monthly plans to get 14-day free trial.'
-            : 'Choose any plan to get a 14-day trial and pay only after the trial ends - you can cancel anytime. Switch to the yearly payment to get 15% off.'}
+            ? 'Save up to 15% of the price when selecting our yearly plans or switch to our monthly plans to get 30-day free trial.'
+            : 'Choose any plan to get a 30-day trial and pay only after the trial ends - you can cancel anytime. Switch to the yearly payment to get 15% off.'}
         </p>
       </section>
 
       <section className="mt-10">
-        <div className="bg-background border border-border rounded-lg p-4 flex items-center justify-between">
-          <button onClick={() => setBilling('yearly')} className={`flex-1 text-center py-2 ${billing === 'yearly' ? 'text-foreground border-b-2 border-primary font-semibold' : 'text-muted-foreground'}`}>
-            Pay yearly and save
-          </button>
-          <button onClick={() => setBilling('monthly')} className={`flex-1 text-center py-2 ${billing === 'monthly' ? 'text-foreground border-b-2 border-primary font-semibold' : 'text-muted-foreground'}`}>
-            Pay monthly and get a free trial
-          </button>
-        </div>
+       <div className="bg-background border border-border rounded-xl p-1 flex items-center gap-1">
+  <button 
+    onClick={() => setBilling('yearly')} 
+    className={`flex-1 text-center py-3 px-4 rounded-lg transition-all duration-300 ${
+      billing === 'yearly' 
+        ? 'bg-gradient-to-r from-orange-500 to-red-600 text-white font-bold shadow-lg transform scale-105' 
+        : 'text-muted-foreground bg-transparent hover:bg-gray-100'
+    }`}
+  >
+    <span className="flex items-center justify-center gap-2">
+      {billing === 'yearly' && (
+        <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
+          <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+        </svg>
+      )}
+      Pay yearly and save
+    </span>
+  </button>
+  
+  <button 
+    onClick={() => setBilling('monthly')} 
+    className={`flex-1 text-center py-3 px-4 rounded-lg transition-all duration-300 ${
+      billing === 'monthly' 
+        ? 'bg-gradient-to-r from-blue-500 to-indigo-900 text-white font-bold shadow-lg transform scale-105' 
+        : 'text-muted-foreground bg-transparent hover:bg-gray-100'
+    }`}
+  >
+    <span className="flex items-center justify-center gap-2">
+      {billing === 'monthly' && (
+        <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
+          <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+        </svg>
+      )}
+      Pay monthly and get a free trial
+    </span>
+  </button>
+</div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mt-6">
           {plans.map((p, idx) => (
@@ -130,7 +159,6 @@ const Premium = () => {
           ))}
         </div>
       </section>
-
       <section className="mt-12">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           <div>

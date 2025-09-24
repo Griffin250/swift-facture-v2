@@ -1,4 +1,4 @@
-import React from 'react';
+// React import not required with new JSX transform
 import { format } from 'date-fns';
 import BaseTemplate2 from './BaseTemplate2';
 import { calculateSubTotal, calculateTaxAmount, calculateGrandTotal } from '../../utils/invoiceCalculations';
@@ -20,67 +20,80 @@ const Receipt1 = ({ data, isPrint = false }) => {
       isPrint={isPrint}
     >
       <div
-        className="bg-white flex flex-col min-h-full"
+        className="bg-white flex flex-col min-h-full text-slate-800 border border-slate-200 rounded-xl shadow-md"
         style={{
           fontSize: isPrint ? "8px" : "14px",
-          fontFamily: "'Courier New', Courier, monospace",
+          fontFamily: isPrint
+            ? "'Courier New', Courier, monospace"
+            : "Inter, ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial",
           whiteSpace: "pre-wrap",
-          lineHeight: "1.2",
+          lineHeight: "1.25",
         }}
       >
-        <div className="flex-grow">
-          <div className="text-center font-bold mb-2">RECEIPT</div>
-          <div className="mb-2 text-center">
-            <div>{yourCompany.name || "N/A"}</div>
-            <div>{yourCompany.address || "N/A"}</div>
-            {yourCompany.phone && <div>{yourCompany.phone}</div>}
-          </div>
-            <div>Invoice: {invoice.number || "N/A"}</div>
-            <div>
-              Date:{" "}
-              {invoice.date
-                ? `${format(new Date(invoice.date), "MM/dd/yyyy")} ${format(new Date(), "HH:mm")}`
-                : "N/A"}
-            </div>
-          <div className="mb-2">Customer: {billTo || "N/A"}</div>
-          <div className="mb-2">Cashier: {cashier || "N/A"}</div>
-          <div className="border-t border-b py-2 mb-2">
-            <div className="flex justify-between font-bold mb-2">
+        <div className="flex-grow px-2">
+          <header className="mb-3 text-center">
+            <div className="text-2xl font-extrabold tracking-widest text-slate-700">RECEIPT</div>
+            <div className="text-base font-semibold mt-1">{yourCompany.name || 'N/A'}</div>
+            <div className="text-xs text-slate-400 mt-1">{yourCompany.address || ''}</div>
+            {yourCompany.phone && <div className="text-xs text-slate-400">{yourCompany.phone}</div>}
+          </header>
+
+          <section className="mb-2 flex justify-between text-xs text-slate-600">
+            <div>Invoice: <span className="font-medium text-slate-800">{invoice.number || 'N/A'}</span></div>
+            <div>Date: <span className="font-medium text-slate-800">{invoice.date ? format(new Date(invoice.date), 'MM/dd/yyyy') : 'N/A'}</span></div>
+          </section>
+
+          <section className="mb-2">
+            <div className="text-xs text-slate-600 mb-1">Customer</div>
+            <div className="font-medium text-slate-800">{billTo || 'N/A'}</div>
+          </section>
+
+          <section className="mb-2">
+            <div className="text-xs text-slate-600 mb-1">Cashier</div>
+            <div className="font-medium text-slate-800">{cashier || 'N/A'}</div>
+          </section>
+
+          <section className="border-t border-b border-slate-200 py-2 mb-2">
+            <div className="flex justify-between font-bold text-xs mb-2">
               <span>Item</span>
+              <span>Qty</span>
               <span>Total</span>
             </div>
             {items.map((item, index) => (
-              <div key={index} className="flex justify-between mb-2">
-                <div>
-                  <span>{item.name || "N/A"} X {item.quantity || 0} qty</span>
-                </div>
-                <span>
-                  {formatCurrency((item.quantity || 0) * (item.amount || 0), selectedCurrency)}
-                </span>
+              <div key={index} className="flex justify-between items-center mb-1 text-xs">
+                <span className="w-1/2 truncate">{item.name || 'N/A'}</span>
+                <span className="w-1/4 text-center">{item.quantity || 0}</span>
+                <span className="w-1/4 text-right">{formatCurrency((item.quantity || 0) * (item.amount || 0), selectedCurrency)}</span>
               </div>
             ))}
-          </div>
-          <div className="flex justify-between">
-            <span>Subtotal:</span>
-            <span>{formatCurrency(subTotal, selectedCurrency)}</span>
-          </div>
-          {taxPercentage > 0 && (
-            <div className="flex justify-between">
-              <span>Tax ({taxPercentage}%):</span>
-              <span>{formatCurrency(taxAmount, selectedCurrency)}</span>
+          </section>
+
+          <footer className="mt-2 text-xs">
+            <div className="flex justify-between py-1">
+              <div className="text-slate-600">Subtotal</div>
+              <div className="font-medium">{formatCurrency(subTotal, selectedCurrency)}</div>
             </div>
-          )}
-          <div className="flex justify-between font-bold mt-2">
-            <span>Total:</span>
-            <span>{formatCurrency(total, selectedCurrency)}</span>
-          </div>
-          {notes && (
-            <div className="mt-4">
-              <div>{notes}</div>
+            {taxPercentage > 0 && (
+              <div className="flex justify-between py-1">
+                <div className="text-slate-600">Tax ({taxPercentage}%)</div>
+                <div className="font-medium">{formatCurrency(taxAmount, selectedCurrency)}</div>
+              </div>
+            )}
+            <div className="flex justify-between py-2 border-t border-slate-200 mt-2">
+              <div className="text-base font-semibold">Total</div>
+              <div className="text-base font-extrabold">{formatCurrency(total, selectedCurrency)}</div>
             </div>
-          )}
+
+            {notes && (
+              <div className="mt-3 text-xs text-slate-600">
+                <div className="font-semibold text-slate-700">Notes</div>
+                <div>{notes}</div>
+              </div>
+            )}
+          </footer>
         </div>
-        <div className="text-center mt-4">{footer || ""}</div>
+
+        <div className="text-center mt-4 text-xs text-slate-500 p-2">{footer || ''}</div>
       </div>
     </BaseTemplate2>
   );

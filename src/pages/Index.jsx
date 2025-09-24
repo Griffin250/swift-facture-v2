@@ -1,17 +1,14 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { formatCurrency } from '../utils/formatCurrency'; // Corrected import path
-import FloatingLabelInput from '../components/FloatingLabelInput';
-import BillToSection from '../components/BillToSection';
-import ShipToSection from '../components/ShipToSection';
+import { formatCurrency } from "../utils/formatCurrency"; // Corrected import path
+import FloatingLabelInput from "../components/FloatingLabelInput";
+import BillToSection from "../components/BillToSection";
+import ShipToSection from "../components/ShipToSection";
 import ItemDetails from "../components/ItemDetails";
-import Header from '../components/Header';
 import { templates } from "../utils/templateRegistry";
 import { FiEdit, FiFileText, FiTrash2 } from "react-icons/fi"; // Added FiTrash2 icon
 import { RefreshCw } from "lucide-react";
-import { set, sub } from "date-fns";
-import Home from './Home';
 
 const generateRandomInvoiceNumber = () => {
   const length = Math.floor(Math.random() * 6) + 3;
@@ -166,18 +163,23 @@ const Index = () => {
   };
 
   const calculateSubTotal = () => {
-    const calculatedSubTotal = items.reduce((sum, item) => sum + (item.quantity * item.amount), 0);
+    const calculatedSubTotal = items.reduce(
+      (sum, item) => sum + item.quantity * item.amount,
+      0
+    );
     setSubTotal(calculatedSubTotal); // Store as number
     return calculatedSubTotal;
   };
 
-  const calculateTaxAmount = (subTotalValue) => { // Renamed param to avoid conflict with state
+  const calculateTaxAmount = (subTotalValue) => {
+    // Renamed param to avoid conflict with state
     const tax = (subTotalValue * taxPercentage) / 100;
     setTaxAmount(tax); // Store as number
     return tax;
   };
 
-  const calculateGrandTotal = (subTotalValue, taxAmountValue) => { // Renamed params to avoid conflict with state
+  const calculateGrandTotal = (subTotalValue, taxAmountValue) => {
+    // Renamed params to avoid conflict with state
     const total = parseFloat(subTotalValue) + parseFloat(taxAmountValue);
     setGrandTotal(total); // Store as number
     return total;
@@ -310,145 +312,166 @@ const Index = () => {
   };
 
   return (
-    <>    <Home />
-    <div className="min-h-screen card-mordern bg-gradient-to-br from-sky-100 via-sky-200 to-indigo-20">
-
-      <div className="container mx-auto px-20 py-8 relative ">
-      <div className="fixed top-20 md:left-8 left-2 flex flex-col gap-3 z-40">
+    <div className="min-h-screen bg-gradient-to-br from-background via-background to-accent/5">
+   
+        {/* Floating action buttons */}
+        <div className="fixed top-20 left-2 md:left-8 flex flex-col gap-3 z-40">
+          <Button
+            variant="destructive"
+            size="icon"
+            onClick={clearForm}
+            className="rounded-sm p-1 hover:scale-110 transition-smooth mt-8 w-auto text-black text-md font-bold"
+            title="Clear Form"
+          >
+            <span className="sr-only">Clear Form</span>
+            <FiTrash2 className="w-6" />
+          </Button>
+          <Button
+            variant="outline"
+            size="icon"
+            onClick={fillDummyData}
+            className="rounded-full hover:scale-110 transition-smooth"
+            title="Fill with Dummy Data"
+          >
+            <FiEdit size={20} />
+          </Button>
+        </div>
         <Button
-          variant="destructive"
+          variant="accent"
           size="icon"
-          onClick={clearForm}
-          className="rounded-sm p-1 hover:scale-110 transition-smooth mt-8 w-auto text-black text-md font-bold"
-          title="Clear Form"
-        ><span className='hidde'> Clear Form</span>
-          <FiTrash2 className='w-6' />
-        </Button>
-        <Button
-          variant="outline"
-          size="icon"
-          onClick={fillDummyData}
-          className="rounded-full hover:scale-110 transition-smooth"
-          title="Fill with Dummy Data"
-        >
-          <FiEdit size={20} />
-        </Button>
-      </div>
-      <Button
-        variant="accent"
-        size="icon"
-        onClick={() =>
-          navigate("/receipt", {
-            state: {
-              formData: {
-                billTo,
-                shipTo,
-                invoice,
-                yourCompany,
-                items,
-                taxPercentage,
-                notes,
-                selectedCurrency,
+          onClick={() =>
+            navigate("/receipt", {
+              state: {
+                formData: {
+                  billTo,
+                  shipTo,
+                  invoice,
+                  yourCompany,
+                  items,
+                  taxPercentage,
+                  notes,
+                  selectedCurrency,
+                },
               },
-            },
-          })
-        }
-        className="fixed top-20 right-4 rounded-md z-40 mt-8 w-auto p-2 text-black text-xl font-bold hover:scale-110 transition-smooth"
-        title="Switch to Receipt Generator"
-      >
-      <span className='hidden h'>  Receipt Generator </span> <FiFileText size={20} />
-      </Button>
-      <div className="flex flex-col md:flex-row gap-8">
-        <div className="w-full md:w-1/2 card-modern animate-fade-in">
-          <div className="space-y-8">
-            <BillToSection
-              billTo={billTo}
-              handleInputChange={handleInputChange(setBillTo)}
-              selectedCurrency={selectedCurrency}
-              setSelectedCurrency={setSelectedCurrency}
-            />
-            <ShipToSection
-              shipTo={shipTo}
-              handleInputChange={handleInputChange(setShipTo)}
-              billTo={billTo}
-            />
-
-            <div className="card-modern animate-fade-in" style={{ animationDelay: '0.4s' }}>
-              <h2 className="text-2xl font-semibold mb-6 gradient-text">
-                Invoice Information
-              </h2>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <FloatingLabelInput
-                  id="invoiceNumber"
-                  label="Invoice Number"
-                  value={invoice.number}
-                  onChange={handleInputChange(setInvoice)}
-                  name="number"
-                />
-                <FloatingLabelInput
-                  id="invoiceDate"
-                  label="Invoice Date"
-                  type="date"
-                  value={invoice.date}
-                  onChange={handleInputChange(setInvoice)}
-                  name="date"
-                />
-                <FloatingLabelInput
-                  id="paymentDate"
-                  label="Payment Date"
-                  type="date"
-                  value={invoice.paymentDate}
-                  onChange={handleInputChange(setInvoice)}
-                  name="paymentDate"
-                />
-              </div>
-            </div>
-
-            <div className="card-modern animate-fade-in" style={{ animationDelay: '0.6s' }}>
-              <h2 className="text-2xl font-semibold mb-6 gradient-text">Your Company</h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <FloatingLabelInput
-                  id="yourCompanyName"
-                  label="Name"
-                  value={yourCompany.name}
-                  onChange={handleInputChange(setYourCompany)}
-                  name="name"
-                />
-                <FloatingLabelInput
-                  id="yourCompanyPhone"
-                  label="Phone"
-                  value={yourCompany.phone}
-                  onChange={handleInputChange(setYourCompany)}
-                  name="phone"
-                />
-              </div>
-              <FloatingLabelInput
-                id="yourCompanyAddress"
-                label="Address"
-                value={yourCompany.address}
-                onChange={handleInputChange(setYourCompany)}
-                name="address"
-                className="mt-4"
+            })
+          }
+          className="fixed top-20 right-4 rounded-md z-40 mt-8 w-auto p-2 text-black text-xl font-bold hover:scale-110 transition-smooth"
+          title="Switch to Receipt Generator"
+        >
+          <span className="sr-only">Receipt Generator</span>{" "}
+          <FiFileText size={20} />
+        </Button>
+        
+        {/* Main content layout */}
+       <div className="container mx-auto px-4 md:px-12 py-5">
+          <div className="flex flex-col xl:flex-row gap-8"> 
+          {/* Invoice Form Container */}
+          <div className="w-full xl:w-1/2"> 
+          <div className="bg-white/70 backdrop-blur-sm rounded-3xl shadow-2xl border border-white/20 p-6 md:p-8 hover:shadow-2xl transition-all duration-300">
+            <div className="animate-fade-in" style={{ animationDelay: "0.2s" }}>
+              <BillToSection
+                billTo={billTo}
+                handleInputChange={handleInputChange(setBillTo)}
+                selectedCurrency={selectedCurrency}
+                setSelectedCurrency={setSelectedCurrency}
               />
+              <ShipToSection
+                shipTo={shipTo}
+                handleInputChange={handleInputChange(setShipTo)}
+                billTo={billTo}
+              />
+
+              <div
+                className="card-modern animate-fade-in"
+                style={{ animationDelay: "0.4s" }}
+              >
+                <h2 className="text-2xl font-semibold mb-6 gradient-text">
+                  Invoice Information
+                </h2>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <FloatingLabelInput
+                    id="invoiceNumber"
+                    label="Invoice Number"
+                    value={invoice.number}
+                    onChange={handleInputChange(setInvoice)}
+                    name="number"
+                  />
+                  <FloatingLabelInput
+                    id="invoiceDate"
+                    label="Invoice Date"
+                    type="date"
+                    value={invoice.date}
+                    onChange={handleInputChange(setInvoice)}
+                    name="date"
+                  />
+                  <FloatingLabelInput
+                    id="paymentDate"
+                    label="Payment Date"
+                    type="date"
+                    value={invoice.paymentDate}
+                    onChange={handleInputChange(setInvoice)}
+                    name="paymentDate"
+                  />
+                </div>
+              </div>
+
+              <div
+                className="card-modern animate-fade-in"
+                style={{ animationDelay: "0.6s" }}
+              >
+                <h2 className="text-2xl font-semibold mb-6 gradient-text">
+                  Your Company
+                </h2>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <FloatingLabelInput
+                    id="yourCompanyName"
+                    label="Name"
+                    value={yourCompany.name}
+                    onChange={handleInputChange(setYourCompany)}
+                    name="name"
+                  />
+                  <FloatingLabelInput
+                    id="yourCompanyPhone"
+                    label="Phone"
+                    value={yourCompany.phone}
+                    onChange={handleInputChange(setYourCompany)}
+                    name="phone"
+                  />
+                </div>
+                <FloatingLabelInput
+                  id="yourCompanyAddress"
+                  label="Address"
+                  value={yourCompany.address}
+                  onChange={handleInputChange(setYourCompany)}
+                  name="address"
+                  className="mt-4"
+                />
               </div>
             </div>
 
-            <div className="animate-fade-in" style={{ animationDelay: '0.8s' }}>
+            <div className="animate-fade-in" style={{ animationDelay: "0.8s" }}>
               <ItemDetails
-              items={items}
-              handleItemChange={handleItemChange}
-              addItem={addItem}
-              removeItem={removeItem}
-              currencyCode={selectedCurrency}
-            />
+                items={items}
+                handleItemChange={handleItemChange}
+                addItem={addItem}
+                removeItem={removeItem}
+                currencyCode={selectedCurrency}
+              />
             </div>
 
-            <div className="card-modern animate-fade-in" style={{ animationDelay: '1s' }}>
-              <h3 className="text-lg font-semibold mb-4 gradient-text">Totals</h3>
+            <div
+              className="card-modern animate-fade-in"
+              style={{ animationDelay: "1s" }}
+            >
+              <h3 className="text-lg font-semibold mb-4 gradient-text">
+                Totals
+              </h3>
               <div className="space-y-3">
                 <div className="flex justify-between py-2 border-b border-border/30">
                   <span className="text-muted-foreground">Sub Total:</span>
-                  <span className="font-medium">{formatCurrency(subTotal, selectedCurrency)}</span>
+                  <span className="font-medium">
+                    {formatCurrency(subTotal, selectedCurrency)}
+                  </span>
                 </div>
                 <div className="flex justify-between items-center py-2 border-b border-border/30">
                   <span className="text-muted-foreground">Tax Rate (%):</span>
@@ -464,16 +487,23 @@ const Index = () => {
                 </div>
                 <div className="flex justify-between py-2 border-b border-border/30">
                   <span className="text-muted-foreground">Tax Amount:</span>
-                  <span className="font-medium">{formatCurrency(taxAmount, selectedCurrency)}</span>
+                  <span className="font-medium">
+                    {formatCurrency(taxAmount, selectedCurrency)}
+                  </span>
                 </div>
                 <div className="flex justify-between py-3 px-4 bg-gradient-to-r from-primary/10 to-primary-glow/10 rounded-lg border border-primary/20">
                   <span className="font-bold text-primary">Grand Total:</span>
-                  <span className="font-bold text-xl text-primary">{formatCurrency(grandTotal, selectedCurrency)}</span>
+                  <span className="font-bold text-xl text-primary">
+                    {formatCurrency(grandTotal, selectedCurrency)}
+                  </span>
                 </div>
               </div>
             </div>
 
-            <div className="card-modern animate-fade-in" style={{ animationDelay: '1.2s' }}>
+            <div
+              className="card-modern animate-fade-in mt-8"
+              style={{ animationDelay: "1.2s" }}
+            >
               <div className="flex items-center mb-4">
                 <h3 className="text-lg font-semibold gradient-text">Notes</h3>
                 <Button
@@ -498,46 +528,75 @@ const Index = () => {
             {/* Clear Form button removed */}
           </div>
         </div>
-
-        <div className="w-full md:w-1/2 mt-12 card-modern bg-gradient-to-tr bg-slate-400 overflow-y-auto animate-fade-in" style={{ animationDelay: '0.2s' }}>
-          <h2 className="text-3xl font-bold mb-6 gradient-text">
-            Choose Template
-          </h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {templates.map((template, index) => (
-              <div
-                key={index}
-                className="glass-card p-4 rounded-2xl cursor-pointer hover:shadow-xl transition-smooth hover:scale-105 hover:-translate-y-1 group animate-fade-in border-2 border-transparent hover:border-accent/30"
-                style={{ animationDelay: `${0.3 + index * 0.1}s` }}
-                onClick={() => handleTemplateClick(index + 1)}
-              >
-                <div className="relative overflow-hidden rounded-xl mb-3 bg-gradient-to-br from-muted/50 to-muted">
-                  <img
-                    src={`/assets/template${index + 1}-preview.png`}
-                    alt={template.name}
-                    className={`w-full ${
-                      template.name === "Template 10"
-                        ? "h-[38px] w-[57px]"
-                        : "h-50"
-                    } object-cover transition-smooth group-hover:scale-110`}
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-primary/10 via-transparent to-accent/5 opacity-0 group-hover:opacity-100 transition-smooth"></div>
-                  <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-smooth">
-                    <div className="w-6 h-6 bg-accent/20 backdrop-blur-sm rounded-full flex items-center justify-center">
-                      <div className="w-2 h-2 bg-accent rounded-full"></div>
+        <div className="w-full xl:w-1/2">
+          <div className="bg-gradient-to-br from-white to-gray-50/80 backdrop-blur-sm rounded-3xl shadow-2xl border border-white/20 p-6 md:p-8 hover:shadow-2xl transition-all duration-300">
+            <h2 className="text-3xl font-bold mb-8 text-center bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
+              Choose Template
+            </h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              {templates.map((template, index) => (
+                <div
+                  key={index}
+                  className="glass-card p-4 rounded-2xl cursor-pointer hover:shadow-xl transition-smooth hover:scale-105 hover:-translate-y-1 group animate-fade-in border-2 border-transparent hover:border-accent/30"
+                  style={{ animationDelay: `${0.3 + index * 0.1}s` }}
+                  onClick={() => handleTemplateClick(index + 1)}
+                >
+                  <div className="relative overflow-hidden rounded-xl mb-3 bg-gradient-to-br from-muted/50 to-muted">
+                    <img
+                      src={`/assets/template${index + 1}-preview.png`}
+                      alt={template.name}
+                      className={`w-full ${
+                        template.name === "Template 10"
+                          ? "h-[38px] w-[57px]"
+                          : "h-50"
+                      } object-cover transition-smooth group-hover:scale-110`}
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-primary/10 via-transparent to-accent/5 opacity-0 group-hover:opacity-100 transition-smooth"></div>
+                    <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-smooth">
+                      <div className="w-6 h-6 bg-accent/20 backdrop-blur-sm rounded-full flex items-center justify-center">
+                        <div className="w-2 h-2 bg-accent rounded-full"></div>
+                      </div>
                     </div>
                   </div>
+                  <p className="text-center font-semibold text-foreground group-hover:gradient-text transition-smooth">
+                    {template.name}
+                  </p>
                 </div>
-                <p className="text-center font-semibold text-foreground group-hover:gradient-text transition-smooth">
-                  {template.name}
-                </p>
+              ))}
+
+              {/* Template Selection Help */}
+              <div className="mt-8 p-4 bg-blue-50 rounded-xl border border-blue-200">
+                <div className="flex items-start gap-3">
+                  <div className="w-6 h- bg-red-500 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                    <svg
+                      className="w-3 h-3 text-white"
+                      fill="currentColor"
+                      viewBox="0 0 20 20"
+                    >
+                      <path
+                        fillRule="evenodd"
+                        d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
+                        clipRule="evenodd"
+                      />
+                    </svg>
+                  </div>
+                  <div className="flex-1">
+                    <p className="text-sm text-blue-800 font-medium">
+                      Template Selection Tip
+                    </p>
+                    <p className="text-xs text-blue-600 mt-1">
+                      Click on any template to preview how your invoice will
+                      look. You can change templates at any time.
+                    </p>
+                  </div>
+                </div>
               </div>
-            ))}
+            </div>
           </div>
         </div>
       </div>
-    </div>
-     </>
+      </div></div>
+  
   );
 };
 
