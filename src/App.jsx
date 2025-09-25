@@ -13,8 +13,8 @@ import Header from "./components/Header";
 import NotFound from "./pages/NotFound";
 import Dashboard from "./pages/Dashboard";
 import AuthPage from "./pages/AuthPage";
-import EstimatesPage from "./pages/Estimates";
 import Estimates from "./pages/Estimates";
+import Customers from "./pages/Customers";
 
 const queryClient = new QueryClient();
 
@@ -34,6 +34,7 @@ const App = () => (
           <Route path="/template" element={<TemplatePage />} />
           <Route path="/receipt" element={<ReceiptPage />} />
           <Route path="/premium" element={<Premium />} />
+             <Route path="/customers" element={<Customers />} />
           <Route path="/estimates" element={<Estimates />} />
           <Route path="/authpage" element={<AuthPage />} />
           <Route path="/about" element={<About />} />
