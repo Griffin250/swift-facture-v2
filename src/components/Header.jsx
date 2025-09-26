@@ -13,7 +13,7 @@ const Header = () => {
     { label: "Invoice", to: "/invoice" },
     { label: "Customers", to: "/customers" },
     { label: "Estimates", to: "/estimates" },
-    { label: "Help", to: "/help" },
+        { label: "EST", to: "/estimated-invoice" },
   ];
   const location = useLocation();
 

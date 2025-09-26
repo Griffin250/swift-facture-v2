@@ -1,7 +1,56 @@
-import  { useState, useEffect } from 'react';
+
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 
+
+  // ...existing code...
+
 const Estimates = () => {
+  // Add item to items array
+  const addItem = () => {
+    const newItem = {
+      id: Date.now(),
+      description: "",
+      quantity: 1,
+      price: 0
+    };
+    setItems(prevItems => [...prevItems, newItem]);
+  };
+
+  // Remove item from items array
+  const removeItem = (id) => {
+    setItems(prevItems => prevItems.filter(item => item.id !== id));
+  };
+  // New estimate form state variables
+  const [issueDate, setIssueDate] = useState("");
+  const [validUntil, setValidUntil] = useState("");
+  const [currency, setCurrency] = useState("USD");
+  const [taxRate, setTaxRate] = useState(0);
+  const [discount, setDiscount] = useState(0);
+  const [status, setStatus] = useState("draft");
+  const [notes, setNotes] = useState("");
+  const [items, setItems] = useState([]);
+
+  // Item manipulation functions
+  const updateItem = (id, changes) => {
+    setItems(prevItems => prevItems.map(item => item.id === id ? { ...item, ...changes } : item));
+  };
+  const duplicateItem = (id) => {
+    setItems(prevItems => {
+      const itemToDuplicate = prevItems.find(item => item.id === id);
+      if (!itemToDuplicate) return prevItems;
+      const newItem = { ...itemToDuplicate, id: Date.now() };
+      return [...prevItems, newItem];
+    });
+  };
+
+  // Currency formatting function
+  const currencyFmt = (amount, curr) => {
+    return new Intl.NumberFormat('en-US', { style: 'currency', currency: curr }).format(amount);
+  };
+  // Step 1: Add form visibility state and ref
+  const [showForm, setShowForm] = useState(false);
+  const formRef = React.useRef(null);
   const navigate = useNavigate();
   const [estimates, setEstimates] = useState([]);
   const [filteredEstimates, setFilteredEstimates] = useState([]);
@@ -13,6 +62,10 @@ const Estimates = () => {
   const [editingField, setEditingField] = useState('');
   const [editValue, setEditValue] = useState('');
   const [isPremium, setIsPremium] = useState(false);
+  // Add missing state variables for new estimate form
+  const [company, setCompany] = useState("");
+  const [customer, setCustomer] = useState("");
+  const [estimateNo, setEstimateNo] = useState("");
 
   // Sample data - in real app this would come from localStorage/API
   useEffect(() => {
@@ -196,6 +249,22 @@ const Estimates = () => {
 
   return (
     <div className="min-h-screen bg-gray-50 p-6">
+      {/* Step 2: New Estimate Button */}
+      <div className="mb-4 flex justify-end">
+        <button
+          className="rounded-md bg-blue-700 text-white px-5 py-2 text-base font-semibold shadow hover:bg-blue-800 transition"
+          onClick={() => {
+            setShowForm(true);
+            setTimeout(() => {
+              if (formRef.current) {
+                formRef.current.scrollIntoView({ behavior: "smooth" });
+              }
+            }, 100);
+          }}
+        >
+          + New Estimate
+        </button>
+      </div>
       {/* Page Header */}
       <div className="mb-6">
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
@@ -356,6 +425,128 @@ const Estimates = () => {
 
       {/* Estimates Table */}
       <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+      {showForm && (
+        <div ref={formRef} className="mt-10 rounded-lg bg-white shadow-sm p-6">
+          <h2 className="mb-4 text-xl font-semibold text-foreground">Create New Estimate</h2>
+          <form onSubmit={e => { e.preventDefault(); /* Add save logic here */ }}>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+              <div>
+                <label className="block text-sm font-medium mb-1">Company</label>
+                <input value={company} onChange={e => setCompany(e.target.value)} className="w-full rounded border border-border bg-input px-3 py-2" required />
+              </div>
+              <div>
+                <label className="block text-sm font-medium mb-1">Customer</label>
+                <input value={customer} onChange={e => setCustomer(e.target.value)} className="w-full rounded border border-border bg-input px-3 py-2" required />
+              </div>
+              <div>
+                <label className="block text-sm font-medium mb-1">Estimate No.</label>
+                <input value={estimateNo} onChange={e => setEstimateNo(e.target.value)} className="w-full rounded border border-border bg-input px-3 py-2" required />
+              </div>
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-sm font-medium mb-1">Issue Date</label>
+                  <input type="date" value={issueDate} onChange={e => setIssueDate(e.target.value)} className="w-full rounded border border-border bg-input px-3 py-2" required />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium mb-1">Valid Until</label>
+                  <input type="date" value={validUntil} onChange={e => setValidUntil(e.target.value)} className="w-full rounded border border-border bg-input px-3 py-2" required />
+                </div>
+              </div>
+              <div className="grid grid-cols-3 gap-3">
+                <div>
+                  <label className="block text-sm font-medium mb-1">Currency</label>
+                  <select value={currency} onChange={e => setCurrency(e.target.value)} className="w-full rounded border border-border bg-input px-3 py-2">
+                    <option value="€">EUR (€)</option>
+                    <option value="$">USD ($)</option>
+                    <option value="£">GBP (£)</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium mb-1">Tax %</label>
+                  <input type="number" value={taxRate} onChange={e => setTaxRate(Number(e.target.value))} className="w-full rounded border border-border bg-input px-3 py-2" />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium mb-1">Discount %</label>
+                  <input type="number" value={discount} onChange={e => setDiscount(Number(e.target.value))} className="w-full rounded border border-border bg-input px-3 py-2" />
+                </div>
+              </div>
+              <div>
+                <label className="block text-sm font-medium mb-1">Status</label>
+                <select value={status} onChange={e => setStatus(e.target.value)} className="w-full rounded border border-border bg-input px-3 py-2">
+                  <option value="draft">Draft</option>
+                  <option value="sent">Sent</option>
+                  <option value="accepted">Accepted</option>
+                  <option value="declined">Declined</option>
+                </select>
+              </div>
+            </div>
+            <div className="mb-4">
+              <label className="block text-sm font-medium mb-1">Notes</label>
+              <textarea value={notes} onChange={e => setNotes(e.target.value)} rows={3} className="w-full rounded border border-border bg-input px-3 py-2" placeholder="Additional details for the customer" />
+            </div>
+            <div className="mb-4">
+              <h3 className="text-base font-semibold mb-2">Items</h3>
+              <table className="w-full text-sm mb-2">
+                <thead className="border-b border-border text-left text-muted">
+                  <tr>
+                    <th className="py-2 pr-3">Description</th>
+                    <th className="py-2 pr-3 w-28">Qty</th>
+                    <th className="py-2 pr-3 w-32">Price</th>
+                    <th className="py-2 pr-3 w-32 text-right">Line Total</th>
+                    <th className="py-2 w-40"></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {items.map((item) => {
+                    const line = (item.quantity || 0) * (item.price || 0);
+                    return (
+                      <tr key={item.id} className="border-b border-border last:border-b-0">
+                        <td className="py-2 pr-3">
+                          <input
+                            value={item.description}
+                            onChange={e => updateItem(item.id, { description: e.target.value })}
+                            placeholder="Item description"
+                            className="w-full rounded border border-border bg-input px-3 py-2"
+                          />
+                        </td>
+                        <td className="py-2 pr-3">
+                          <input
+                            type="number"
+                            min={0}
+                            value={item.quantity}
+                            onChange={e => updateItem(item.id, { quantity: Number(e.target.value) })}
+                            className="w-full rounded border border-border bg-input px-3 py-2"
+                          />
+                        </td>
+                        <td className="py-2 pr-3">
+                          <input
+                            type="number"
+                            min={0}
+                            step="0.01"
+                            value={item.price}
+                            onChange={e => updateItem(item.id, { price: Number(e.target.value) })}
+                            className="w-full rounded border border-border bg-input px-3 py-2"
+                          />
+                        </td>
+                        <td className="py-2 pr-3 text-right align-middle">{currencyFmt(line, currency)}</td>
+                        <td className="py-2 flex gap-2">
+                          <button type="button" onClick={() => duplicateItem(item.id)} className="rounded-md border border-border px-3 py-2 text-xs hover:bg-accent">Duplicate</button>
+                          <button type="button" onClick={() => removeItem(item.id)} className="rounded-md border border-border px-3 py-2 text-xs hover:bg-accent">Remove</button>
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+              <button type="button" onClick={addItem} className="rounded-md border border-border px-3 py-2 text-sm hover:bg-accent">Add item</button>
+            </div>
+            <div className="flex gap-3">
+              <button type="submit" className="rounded-md bg-blue-700 text-white px-5 py-2 font-semibold shadow hover:bg-blue-800 transition">Save Estimate</button>
+              <button type="button" className="rounded-md border border-border px-5 py-2 font-semibold text-gray-700 hover:bg-accent transition" onClick={() => setShowForm(false)}>Cancel</button>
+            </div>
+          </form>
+        </div>
+      )}
         {filteredEstimates.length === 0 ? (
           // Empty State
           <div className="text-center py-12">
@@ -601,6 +792,6 @@ const Estimates = () => {
       </div>
     </div>
   );
-};
+}
 
 export default Estimates;

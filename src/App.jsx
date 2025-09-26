@@ -15,6 +15,8 @@ import Dashboard from "./pages/Dashboard";
 import AuthPage from "./pages/AuthPage";
 import Estimates from "./pages/Estimates";
 import Customers from "./pages/Customers";
+import JwtAuthSystem from "./pages/JwtAuthSystem";
+import EstimatedInvoice from "./pages/EstimatedInvoice";
 
 const queryClient = new QueryClient();
 
@@ -38,6 +40,8 @@ const App = () => (
           <Route path="/estimates" element={<Estimates />} />
           <Route path="/authpage" element={<AuthPage />} />
           <Route path="/about" element={<About />} />
+          <Route path="/estimated-invoice" element={<EstimatedInvoice />} />
+          <Route path="/jwt-auth" element={<JwtAuthSystem />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
   <Footer />

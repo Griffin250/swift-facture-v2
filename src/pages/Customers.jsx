@@ -23,7 +23,8 @@ const Customers = () => {
     },
     vatId: '',
     currency: 'EUR',
-    notes: ''
+    notes: '',
+    status: 'active' // default status
   });
 
   // Refs for inline editing
@@ -251,9 +252,8 @@ const Customers = () => {
                     )}
                   </div>
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Actions
-                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
@@ -344,7 +344,42 @@ const Customers = () => {
                     <td className="px-6 py-4 whitespace-nowrap">
                       {customer.currency}
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      {editingCustomerId === customer.id ? (
+                        <select
+                          value={customer.status}
+                          onChange={e => handleEditChange(customer.id, 'status', e.target.value)}
+                          onBlur={handleEditBlur}
+                          className="border border-gray-300 rounded px-2 py-1 w-full"
+                        >
+                          <option value="active">Active</option>
+                          <option value="inactive">Inactive</option>
+                          <option value="pending">Pending</option>
+                          <option value="blocked">Blocked</option>
+                        </select>
+                      ) : (
+                        <span
+                          className={`inline-block px-2 py-1 rounded text-xs font-semibold ${
+                            customer.status === 'active' ? 'bg-green-100 text-green-800' :
+                            customer.status === 'inactive' ? 'bg-gray-200 text-gray-700' :
+                            customer.status === 'pending' ? 'bg-yellow-100 text-yellow-800' :
+                            customer.status === 'blocked' ? 'bg-red-100 text-red-800' :
+                            'bg-gray-100 text-gray-800'
+                          }`}
+                          style={{ cursor: 'pointer' }}
+                          onClick={() => handleEditStart(customer.id, 'status')}
+                        >
+                          {customer.status || 'active'}
+                        </span>
+                      )}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium flex gap-2">
+                      <button
+                        onClick={() => handleEditStart(customer.id, 'name')}
+                        className="text-blue-600 hover:text-blue-900 transition duration-150"
+                      >
+                        Edit
+                      </button>
                       <button
                         onClick={() => handleDeleteCustomer(customer.id)}
                         className="text-red-600 hover:text-red-900 transition duration-150"
