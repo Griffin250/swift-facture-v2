@@ -13,10 +13,8 @@ import Header from "./components/Header";
 import NotFound from "./pages/NotFound";
 import Dashboard from "./pages/Dashboard";
 import AuthPage from "./pages/AuthPage";
-import Estimates from "./pages/Estimates";
+import Estimate from "./pages/Estimate";
 import Customers from "./pages/Customers";
-import JwtAuthSystem from "./pages/JwtAuthSystem";
-import EstimatedInvoice from "./pages/EstimatedInvoice";
 
 const queryClient = new QueryClient();
 
@@ -25,8 +23,8 @@ const App = () => (
     <TooltipProvider>
       <Toaster />
       <BrowserRouter>
-      <Header />
-      
+        <Header />
+
         <Routes>
           {navItems.map(({ to, page }) => (
             <Route key={to} path={to} element={page} />
@@ -36,15 +34,15 @@ const App = () => (
           <Route path="/template" element={<TemplatePage />} />
           <Route path="/receipt" element={<ReceiptPage />} />
           <Route path="/premium" element={<Premium />} />
-             <Route path="/customers" element={<Customers />} />
-          <Route path="/estimates" element={<Estimates />} />
+          <Route path="/customers" element={<Customers />} />
+          <Route path="/estimate" element={<Estimate />} />
           <Route path="/authpage" element={<AuthPage />} />
           <Route path="/about" element={<About />} />
-          <Route path="/estimated-invoice" element={<EstimatedInvoice />} />
-          <Route path="/jwt-auth" element={<JwtAuthSystem />} />
+      
+
           <Route path="*" element={<NotFound />} />
         </Routes>
-  <Footer />
+        <Footer />
       </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>
