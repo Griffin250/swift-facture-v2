@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import websiteIcon from "../../public/assets/icons/website.png";
+import SwiftFactureLogo  from "../../public/assets/logo/SwiftFactureLogo.png";
 const Footer = () => {
   return (
     <footer className="bg-gradient-to-r from-gray-900 to-black border-t border-gray-700 mt-12">
@@ -8,9 +8,10 @@ const Footer = () => {
         <div className="flex flex-col md:flex-row items-center justify-between">
           {/* Brand & Social */}
           <div className="flex items-center space-x-4 mb-4 md:mb-0">
-            <div className="font-bold text-white text-xl">PayFlow</div>
-            <span className="text-gray-400 text-sm">
-              — Professional invoices & Receipts
+            <img src={SwiftFactureLogo} alt="SwiftFacture Logo" className="w-10 h-8 rounded-lg shadow" />
+            <div className="font-bold text-white text-xl">SwiftFacture</div>
+            <span className="text-gray-400 text-sm font-bold">
+              — Fast. Professional. Effortless.
             </span>
 
             {/* Social Icons */}
@@ -65,7 +66,7 @@ const Footer = () => {
 
         {/* Copyright */}
         <div className="text-center text-gray-500 text-xs mt-4">
-          © {new Date().getFullYear()} PayFlow. All rights reserved.
+          © {new Date().getFullYear()} SwiftFacture. All rights reserved.
         </div>
       </div>
     </footer>
