@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { FileText, Menu, X } from "lucide-react";
+import SwiftFactureLogo from "../../public/assets/logo/SwiftFactureLogo.png";
 
 const Header = () => {
   const [open, setOpen] = useState(false);
@@ -28,14 +29,15 @@ const Header = () => {
         <div className="flex items-center space-x-3">
           <div className="relative flex items-center">
             <div className="w-10 h-10 bg-gradient-to-r from-primary to-secondary rounded-lg flex items-center justify-center">
-              <FileText className="h-5 w-5 text-white" />
+             {/*..<FileText className="h-5 w-5 text-white" />..*/} 
+             <img src={SwiftFactureLogo} alt="SwiftFacture Logo" className="w-auto"/>
             </div>
             <div className="ml-3">
               <h1 className="text-xl md:text-2xl font-bold gradient-text">
-                PayFlow
+                SwiftFacture
               </h1>
-              <p className="text-xs md:text-sm text-muted-foreground hidden md:block">
-                Professional Invoice & Receipt Generator
+              <p className="text-xs md:text-sm text-muted-foreground hidden md:block font-bold">
+               Fast. Professional. Effortless.
               </p>
             </div>
           </div>
