@@ -54,6 +54,7 @@ const noteOptions = [
 
 const Index = () => {
   const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(true);
   const [selectedCurrency, setSelectedCurrency] = useState("USD");
   const [billTo, setBillTo] = useState({ name: "", address: "", phone: "" });
   const [shipTo, setShipTo] = useState({ name: "", address: "", phone: "" });
@@ -310,6 +311,20 @@ const Index = () => {
     setNotes("");
     localStorage.removeItem("formData");
   };
+
+  // Loading simulation
+  useEffect(() => {
+    const timer = setTimeout(() => setIsLoading(false), 1000);
+    return () => clearTimeout(timer);
+  }, []);
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/30 flex items-center justify-center">
+        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-primary"></div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-background to-accent/5">

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Check, Clock, FileText, Award, UserCheck, ChevronDown } from 'lucide-react';
 
@@ -31,6 +31,21 @@ const FeatureCard = ({ title, children, icon: Icon }) => (
 const About = () => {
   const navigate = useNavigate();
   const [openFaq, setOpenFaq] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    // Simulate data loading
+    const timer = setTimeout(() => setIsLoading(false), 1000);
+    return () => clearTimeout(timer);
+  }, []);
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/30 flex items-center justify-center">
+        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-primary"></div>
+      </div>
+    );
+  }
 
   return (
     <main className="min-h-screen bg-background">
@@ -38,7 +53,7 @@ const About = () => {
         <div className="rounded-xl bg-gradient-to-br from-card to-background p-8 shadow-elegant">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
             <div>
-              <h1 className="text-3xl md:text-4xl font-extrabold">PayFlow — simple invoices & receipts</h1>
+              <h1 className="text-3xl md:text-4xl font-extrabold">SwiftFacture — simple invoices & receipts</h1>
               <p className="mt-4 text-muted-foreground max-w-xl">Create professional invoices and receipts in seconds. Select a template, fill your customer and item details and export a PDF — no server-side storage required.</p>
 
               <div className="mt-6 flex flex-wrap gap-3">
