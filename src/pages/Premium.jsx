@@ -1,102 +1,103 @@
 import { useState, useEffect } from "react";
 import { Check } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
-const plans = [
+const getPlanData = (t) => [
   {
     id: "free",
-    name: "FREE",
+    name: t('premium.plans.free'),
     monthly: 0,
     features: [
-      "5 customers",
-      "15 invoices and estimates",
-      "Premium deliveries (not included)",
-      "Android and iOS apps",
+      `5 ${t('premium.features.customers')}`,
+      `15 ${t('premium.features.invoicesEstimates')}`,
+      t('premium.features.premiumDeliveriesNotIncluded'),
+      t('premium.features.androidIosApps'),
     ],
   },
   {
     id: "starter",
-    name: "STARTER",
+    name: t('premium.plans.starter'),
     monthly: 9.99,
     features: [
-      "30 customers",
-      "Unlimited invoices and estimates",
-      "36 premium deliveries",
-      "Android and iOS apps",
-      "Convert estimates to invoices",
+      `30 ${t('premium.features.customers')}`,
+      t('premium.features.unlimitedInvoicesEstimates'),
+      `36 ${t('premium.features.premiumDeliveries')}`,
+      t('premium.features.androidIosApps'),
+      t('premium.features.convertEstimates'),
     ],
   },
   {
     id: "pro",
-    name: "PRO",
+    name: t('premium.plans.pro'),
     monthly: 17.99,
     features: [
-      "Unlimited customers",
-      "Unlimited invoices and estimates",
-      "120 premium deliveries",
-      "Android and iOS apps",
-      "Time tracking",
-      "Recurring invoices",
+      t('premium.features.unlimitedCustomers'),
+      t('premium.features.unlimitedInvoicesEstimates'),
+      `120 ${t('premium.features.premiumDeliveries')}`,
+      t('premium.features.androidIosApps'),
+      t('premium.features.timeTracking'),
+      t('premium.features.recurringInvoices'),
     ],
   },
   {
     id: "growth",
-    name: "GROWTH",
+    name: t('premium.plans.growth'),
     monthly: 41.99,
     features: [
-      "Unlimited customers",
-      "Unlimited invoices and estimates",
-      "360 premium deliveries",
-      "Android and iOS apps",
-      "Payment schedules",
-      "Multiple trade names",
+      t('premium.features.unlimitedCustomers'),
+      t('premium.features.unlimitedInvoicesEstimates'),
+      `360 ${t('premium.features.premiumDeliveries')}`,
+      t('premium.features.androidIosApps'),
+      t('premium.features.paymentSchedules'),
+      t('premium.features.multipleTradeNames'),
     ],
   },
 ];
 
-const featuresLeft = [
+const getFeaturesLeft = (t) => [
   {
-    title: "Send invoices by post",
-    desc: "Forget about printing, stamps, envelopes and the post office. We take care of it all for you.",
+    title: t('premium.services.sendInvoicesByPost.title'),
+    desc: t('premium.services.sendInvoicesByPost.desc'),
   },
   {
-    title: "Send friendly payment reminders",
-    desc: "Make sure you get paid by scheduling automatic payment reminders.",
+    title: t('premium.services.sendPaymentReminders.title'),
+    desc: t('premium.services.sendPaymentReminders.desc'),
   },
   {
-    title: "Convert estimates to invoices",
-    desc: "Convert estimates to invoices with one click, and split estimates into multiple invoices.",
+    title: t('premium.services.convertEstimatesToInvoices.title'),
+    desc: t('premium.services.convertEstimatesToInvoices.desc'),
   },
   {
-    title: "Improve cash flow and reduce risk with payment schedules",
-    desc: "Requesting a down payment is a great way to secure your customer's commitment to pay in full",
+    title: t('premium.services.improveCashFlow.title'),
+    desc: t('premium.services.improveCashFlow.desc'),
   },
   {
-    title: "Free 30-day trial (monthly plans only)",
-    desc: "Try this service out with a 30-day free trial, cancel at any time.",
+    title: t('premium.services.freeTrialMonthly.title'),
+    desc: t('premium.services.freeTrialMonthly.desc'),
   },
 ];
 
-const featuresRight = [
+const getFeaturesRight = (t) => [
   {
-    title: "Send e-invoices",
-    desc: "Send e-invoices to public sector or corporate customers.",
+    title: t('premium.services.sendEInvoices.title'),
+    desc: t('premium.services.sendEInvoices.desc'),
   },
   {
-    title: "Time tracking",
-    desc: "Save time by turning tracked hours into invoices with a single click.",
+    title: t('premium.services.timeTracking.title'),
+    desc: t('premium.services.timeTracking.desc'),
   },
   {
-    title: "Multiple trade names",
-    desc: "Add more than one trade name to your account.",
+    title: t('premium.services.multipleTradeNames.title'),
+    desc: t('premium.services.multipleTradeNames.desc'),
   },
   {
-    title: "Increase the size of your customer database",
-    desc: "Store more customers in your account as your business grows.",
+    title: t('premium.services.increaseCustomerDatabase.title'),
+    desc: t('premium.services.increaseCustomerDatabase.desc'),
   },
   {
-    title: "Frequent improvements",
-    desc: "All our plans include monthly product updates at no extra charge.",
+    title: t('premium.services.frequentImprovements.title'),
+    desc: t('premium.services.frequentImprovements.desc'),
   },
 ];
 
@@ -104,6 +105,12 @@ const Premium = () => {
   const [isLoading, setIsLoading] = useState(true);
   const navigate = useNavigate();
   const [billing, setBilling] = useState("yearly"); // 'yearly' or 'monthly'
+  const { t } = useTranslation('common');
+  
+  // Get translated data
+  const plans = getPlanData(t);
+  const featuresLeft = getFeaturesLeft(t);
+  const featuresRight = getFeaturesRight(t);
 
   useEffect(() => {
     // Simulate data loading
@@ -124,13 +131,13 @@ const Premium = () => {
       <section className="text-center max-w-3xl mx-auto">
         <h2 className="text-2xl md:text-3xl font-semibold">
           {billing === "yearly"
-            ? "Save money with our yearly plans"
-            : "Get a 30-day free trial with our monthly plans"}
+            ? t('premium.title.yearly')
+            : t('premium.title.monthly')}
         </h2>
         <p className="mt-3 text-sm text-muted-foreground">
           {billing === "yearly"
-            ? "Save up to 15% of the price when selecting our yearly plans or switch to our monthly plans to get 30-day free trial."
-            : "Choose any plan to get a 30-day trial and pay only after the trial ends - you can cancel anytime. Switch to the yearly payment to get 15% off."}
+            ? t('premium.subtitle.yearly')
+            : t('premium.subtitle.monthly')}
         </p>
       </section>
 
@@ -158,7 +165,7 @@ const Premium = () => {
                   />
                 </svg>
               )}
-              Pay yearly and save
+              {t('premium.billing.yearly')}
             </span>
           </button>
 
@@ -184,7 +191,7 @@ const Premium = () => {
                   />
                 </svg>
               )}
-              Pay monthly and get a free trial
+              {t('premium.billing.monthly')}
             </span>
           </button>
         </div>
@@ -199,7 +206,7 @@ const Premium = () => {
             >
               {idx === 2 && (
                 <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-secondary px-3 py-1 text-xs font-semibold rounded-b">
-                  MOST POPULAR
+                  {t('common.mostPopular')}
                 </div>
               )}
               <div className="text-sm font-semibold text-muted-foreground">
@@ -211,7 +218,7 @@ const Premium = () => {
                   : `${(p.monthly * 12 * 0.85).toFixed(2)} €`}
               </div>
               <div className="text-xs text-muted-foreground mt-1">
-                Price per month*
+                {t('common.pricePerMonth')}
               </div>
 
               {billing === "yearly" && (
@@ -230,14 +237,14 @@ const Premium = () => {
                     onClick={() => navigate("/account")}
                     className="w-full py-2 rounded-full border border-primary text-primary font-semibold"
                   >
-                    Start free trial
+                    {t('buttons.startFreeTrial')}
                   </button>
                 ) : (
                   <button
                     onClick={() => navigate("/account")}
                     className="w-full py-2 rounded-full bg-primary text-primary-foreground font-semibold"
                   >
-                    Upgrade
+                    {t('buttons.upgrade')}
                   </button>
                 )}
               </div>
@@ -257,7 +264,7 @@ const Premium = () => {
       <section className="mt-12">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           <div>
-            <h3 className="text-lg font-semibold">Premium services</h3>
+            <h3 className="text-lg font-semibold">{t('premium.services.title')}</h3>
             <div className="mt-6 grid grid-cols-1 gap-6">
               {featuresLeft.map((f) => (
                 <div key={f.title} className="flex gap-4">
@@ -297,11 +304,7 @@ const Premium = () => {
 
       <section className="mt-10 text-xs text-muted-foreground">
         <p>
-          *Prices excluding VAT. If your business is registered for VAT in the
-          business domicile, you are not required to pay VAT on any services
-          purchased from SwiftFacture. However, if not registered for VAT, you
-          will be charged the Finnish rate of VAT (25.5%) on any services
-          purchased from SwiftFacture.
+          {t('premium.vatDisclaimer')}
         </p>
       </section>
     </main>

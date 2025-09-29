@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
@@ -21,14 +22,12 @@ import {
   TrendingUp,
   Calendar,
   Download,
-  Eye,
-  MoreVertical,
   ArrowUpRight,
   ArrowDownRight,
 } from "lucide-react";
 
 // Mock chart components (replace with actual chart library)
-const RevenueChart = () => (
+const RevenueChart = ({ t }) => (
   <div className="h-48 bg-gradient-to-b from-blue-500/10 to-transparent rounded-lg p-4">
     <div className="flex items-end justify-between h-32 gap-1">
       {[65, 80, 60, 90, 75, 95, 70].map((height, i) => (
@@ -40,14 +39,22 @@ const RevenueChart = () => (
       ))}
     </div>
     <div className="flex justify-between text-xs text-muted-foreground mt-2">
-      {['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul'].map(month => (
+      {[
+        t('dashboard.charts.months.jan'), 
+        t('dashboard.charts.months.feb'), 
+        t('dashboard.charts.months.mar'), 
+        t('dashboard.charts.months.apr'), 
+        t('dashboard.charts.months.may'), 
+        t('dashboard.charts.months.jun'), 
+        t('dashboard.charts.months.jul')
+      ].map(month => (
         <span key={month}>{month}</span>
       ))}
     </div>
   </div>
 );
 
-const InvoiceStatusChart = () => (
+const InvoiceStatusChart = ({ t }) => (
   <div className="h-48 flex items-center justify-center">
     <div className="relative w-32 h-32">
       <div className="absolute inset-0 border-8 border-green-500 rounded-full border-r-transparent transform -rotate-45" />
@@ -56,7 +63,7 @@ const InvoiceStatusChart = () => (
       <div className="absolute inset-0 flex items-center justify-center">
         <div className="text-center">
           <div className="text-2xl font-bold">156</div>
-          <div className="text-xs text-muted-foreground">Total</div>
+          <div className="text-xs text-muted-foreground">{t('dashboard.stats.total')}</div>
         </div>
       </div>
     </div>
@@ -67,6 +74,7 @@ const Dashboard = () => {
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState("");
   const [isLoading, setIsLoading] = useState(true);
+  const { t } = useTranslation('common');
 
   useEffect(() => {
     // Simulate loading
@@ -76,7 +84,7 @@ const Dashboard = () => {
 
   const stats = [
     {
-      title: "Total Invoices",
+      title: t('dashboard.stats.totalInvoices'),
       value: "156",
       icon: FileText,
       change: "+12%",
@@ -84,7 +92,7 @@ const Dashboard = () => {
       color: "from-blue-500 to-cyan-500",
     },
     {
-      title: "Total Revenue",
+      title: t('dashboard.stats.totalRevenue'),
       value: "$45,231",
       icon: DollarSign,
       change: "+18%",
@@ -92,7 +100,7 @@ const Dashboard = () => {
       color: "from-green-500 to-emerald-500",
     },
     {
-      title: "Outstanding",
+      title: t('dashboard.stats.outstanding'),
       value: "23",
       icon: TrendingUp,
       change: "-5%",
@@ -100,7 +108,7 @@ const Dashboard = () => {
       color: "from-amber-500 to-orange-500",
     },
     {
-      title: "This Month",
+      title: t('dashboard.stats.thisMonth'),
       value: "$12,543",
       icon: Calendar,
       change: "+25%",
@@ -173,10 +181,10 @@ const Dashboard = () => {
         <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between mb-8">
           <div>
             <h1 className="text-4xl font-bold bg-gradient-to-r from-slate-900 to-slate-700 bg-clip-text text-transparent">
-              Dashboard
+              {t('dashboard.title')}
             </h1>
             <p className="text-muted-foreground mt-2">
-              Welcome back! Here's what's happening with your business today.
+              {t('dashboard.subtitle')}
             </p>
           </div>
           <div className="flex gap-3 mt-6 lg:mt-0">
@@ -186,14 +194,14 @@ const Dashboard = () => {
               className="gap-2 bg-white/80 backdrop-blur-sm border-gray-200 hover:bg-white"
             >
               <Receipt className="h-4 w-4" />
-              Create Receipt
+              {t('dashboard.buttons.createReceipt')}
             </Button>
             <Button 
               onClick={() => navigate("/invoice")} 
               className="gap-2 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 shadow-lg hover:shadow-xl transition-all duration-300"
             >
               <Plus className="h-4 w-4" />
-              New Invoice
+              {t('dashboard.buttons.newInvoice')}
             </Button>
           </div>
         </div>
@@ -241,14 +249,14 @@ const Dashboard = () => {
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <TrendingUp className="h-5 w-5 text-blue-600" />
-                Revenue Overview
+                {t('dashboard.charts.revenueOverview')}
               </CardTitle>
               <CardDescription>
-                Monthly revenue performance for the last 7 months
+                {t('dashboard.charts.revenueDescription')}
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <RevenueChart />
+              <RevenueChart t={t} />
             </CardContent>
           </Card>
 
@@ -257,26 +265,26 @@ const Dashboard = () => {
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <FileText className="h-5 w-5 text-purple-600" />
-                Invoice Status
+                {t('dashboard.charts.invoiceStatus')}
               </CardTitle>
               <CardDescription>
-                Distribution of invoice statuses
+                {t('dashboard.charts.invoiceStatusDescription')}
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <InvoiceStatusChart />
+              <InvoiceStatusChart t={t} />
               <div className="flex justify-center gap-4 mt-4 text-xs">
                 <div className="flex items-center gap-1">
                   <div className="w-3 h-3 bg-green-500 rounded-full"></div>
-                  <span>Paid</span>
+                  <span>{t('dashboard.charts.statuses.paid')}</span>
                 </div>
                 <div className="flex items-center gap-1">
                   <div className="w-3 h-3 bg-yellow-500 rounded-full"></div>
-                  <span>Pending</span>
+                  <span>{t('dashboard.charts.statuses.pending')}</span>
                 </div>
                 <div className="flex items-center gap-1">
                   <div className="w-3 h-3 bg-red-500 rounded-full"></div>
-                  <span>Overdue</span>
+                  <span>{t('dashboard.charts.statuses.overdue')}</span>
                 </div>
               </div>
             </CardContent>
@@ -290,13 +298,13 @@ const Dashboard = () => {
               <CardHeader>
                 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                   <div>
-                    <CardTitle>Recent Invoices</CardTitle>
+                    <CardTitle>{t('dashboard.invoices.title')}</CardTitle>
                     <CardDescription>
-                      Manage and track your recent invoices
+                      {t('dashboard.invoices.description')}
                     </CardDescription>
                   </div>
                   <Badge variant="secondary" className="w-fit bg-blue-100 text-blue-700 hover:bg-blue-200">
-                    Free monthly invoices: 0/5
+                    {t('dashboard.invoices.freeMonthly')}
                   </Badge>
                 </div>
               </CardHeader>
@@ -305,23 +313,23 @@ const Dashboard = () => {
                   <div className="flex flex-col lg:flex-row gap-4 items-start lg:items-center justify-between">
                     <TabsList className="grid w-full lg:w-auto grid-cols-4 bg-muted/50 p-1">
                       <TabsTrigger value="all" className="data-[state=active]:bg-white data-[state=active]:shadow-sm">
-                        All ({recentInvoices.length})
+                        {t('dashboard.invoices.tabs.all')} ({recentInvoices.length})
                       </TabsTrigger>
                       <TabsTrigger value="outstanding" className="data-[state=active]:bg-white data-[state=active]:shadow-sm">
-                        Outstanding (2)
+                        {t('dashboard.invoices.tabs.outstanding')} (2)
                       </TabsTrigger>
                       <TabsTrigger value="drafts" className="data-[state=active]:bg-white data-[state=active]:shadow-sm">
-                        Drafts (0)
+                        {t('dashboard.invoices.tabs.drafts')} (0)
                       </TabsTrigger>
                       <TabsTrigger value="more" className="data-[state=active]:bg-white data-[state=active]:shadow-sm">
-                        More
+                        {t('dashboard.invoices.tabs.more')}
                       </TabsTrigger>
                     </TabsList>
                     <div className="flex gap-2 w-full lg:w-auto">
                       <div className="relative flex-1 lg:w-80">
                         <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
                         <Input
-                          placeholder="Search invoices..."
+                          placeholder={t('dashboard.invoices.search')}
                           value={searchQuery}
                           onChange={(e) => setSearchQuery(e.target.value)}
                           className="pl-10 bg-white/50 backdrop-blur-sm"
@@ -334,11 +342,11 @@ const Dashboard = () => {
                     <div className="border border-gray-200/50 rounded-xl overflow-hidden bg-white/50 backdrop-blur-sm">
                       {/* Table Header */}
                       <div className="grid grid-cols-12 gap-4 p-4 text-sm font-medium text-muted-foreground bg-gradient-to-r from-gray-50 to-gray-100/30 border-b">
-                        <div className="col-span-3">INVOICE</div>
-                        <div className="col-span-3">CUSTOMER</div>
-                        <div className="col-span-2">DUE DATE</div>
-                        <div className="col-span-2">AMOUNT</div>
-                        <div className="col-span-2">STATUS</div>
+                        <div className="col-span-3">{t('dashboard.invoices.columns.invoice')}</div>
+                        <div className="col-span-3">{t('dashboard.invoices.columns.customer')}</div>
+                        <div className="col-span-2">{t('dashboard.invoices.columns.dueDate')}</div>
+                        <div className="col-span-2">{t('dashboard.invoices.columns.amount')}</div>
+                        <div className="col-span-2">{t('dashboard.invoices.columns.status')}</div>
                       </div>
 
                       {/* Table Rows */}
@@ -377,7 +385,12 @@ const Dashboard = () => {
                                     : "bg-amber-100 text-amber-700 hover:bg-amber-200"
                                 }`}
                               >
-                                {invoice.status}
+                                {invoice.status === "Paid" 
+                                  ? t('dashboard.charts.statuses.paid')
+                                  : invoice.status === "Overdue"
+                                  ? t('dashboard.charts.statuses.overdue')
+                                  : t('dashboard.charts.statuses.pending')
+                                }
                               </Badge>
                             </div>
                           </div>
@@ -397,15 +410,15 @@ const Dashboard = () => {
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <TrendingUp className="h-5 w-5 text-green-600" />
-                  Quick Actions
+                  {t('dashboard.quickActions.title')}
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-3">
                 {[
-                  { icon: FileText, label: "Create Invoice", action: () => navigate("/invoice") },
-                  { icon: Receipt, label: "Generate Receipt", action: () => navigate("/receipt") },
-                  { icon: Users, label: "Manage Customers", action: () => {} },
-                  { icon: Download, label: "Export Reports", action: () => {} },
+                  { icon: FileText, label: t('dashboard.quickActions.createInvoice'), action: () => navigate("/invoice") },
+                  { icon: Receipt, label: t('dashboard.quickActions.generateReceipt'), action: () => navigate("/receipt") },
+                  { icon: Users, label: t('dashboard.quickActions.manageCustomers'), action: () => {} },
+                  { icon: Download, label: t('dashboard.quickActions.exportReports'), action: () => {} },
                 ].map((action, index) => (
                   <Button
                     key={index}
@@ -425,14 +438,14 @@ const Dashboard = () => {
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <Calendar className="h-5 w-5 text-purple-600" />
-                  Recent Activity
+                  {t('dashboard.recentActivity.title')}
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 {[
-                  { action: "Invoice paid", details: "INV-1001 - Acme Corp", time: "2 hours ago" },
-                  { action: "New invoice created", details: "INV-1005 - Tech Startup", time: "5 hours ago" },
-                  { action: "Receipt generated", details: "RC-0456 - Retail Client", time: "1 day ago" },
+                  { action: t('dashboard.recentActivity.invoicePaid'), details: "INV-1001 - Acme Corp", time: t('dashboard.recentActivity.timeAgo.hoursAgo', { count: 2 }) },
+                  { action: t('dashboard.recentActivity.newInvoiceCreated'), details: "INV-1005 - Tech Startup", time: t('dashboard.recentActivity.timeAgo.hoursAgo', { count: 5 }) },
+                  { action: t('dashboard.recentActivity.receiptGenerated'), details: "RC-0456 - Retail Client", time: t('dashboard.recentActivity.timeAgo.dayAgo', { count: 1 }) },
                 ].map((activity, index) => (
                   <div key={index} className="flex items-start gap-3 p-2 rounded-lg hover:bg-gray-50/50 transition-colors">
                     <div className="w-2 h-2 bg-blue-500 rounded-full mt-2" />

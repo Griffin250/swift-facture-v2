@@ -807,7 +807,7 @@ export const Estimate = () => {
                     access all features.
                   </div>
                   <a
-                    href="/authPage"
+                    href="/login"
                     className="text-orange-600 hover:text-orange-800 underline mt-2 inline-block"
                   >
                     Go to login

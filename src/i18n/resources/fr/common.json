@@ -1,0 +1,305 @@
+{
+  "navigation": {
+    "dashboard": "Tableau de bord",
+    "about": "À propos",
+    "receipt": "Reçu",
+    "invoice": "Facture",
+    "customers": "Clients",
+    "estimate": "Devis"
+  },
+  "buttons": {
+    "premium": "Premium",
+    "account": "Compte",
+    "save": "Enregistrer",
+    "cancel": "Annuler",
+    "delete": "Supprimer",
+    "edit": "Modifier",
+    "create": "Créer",
+    "download": "Télécharger",
+    "print": "Imprimer",
+    "back": "Retour",
+    "next": "Suivant",
+    "previous": "Précédent",
+    "close": "Fermer",
+    "upgrade": "Mettre à niveau",
+    "startFreeTrial": "Commencer l'essai gratuit",
+    "createInvoice": "Créer une facture",
+    "openReceipt": "Ouvrir un reçu",
+    "viewPricing": "Voir les tarifs",
+    "signIn": "Se connecter",
+    "signUp": "S'inscrire",
+    "createAccount": "Créer un compte",
+    "continueWithGoogle": "Continuer avec Google",
+    "continueWithGitHub": "Continuer avec GitHub"
+  },
+  "common": {
+    "loading": "Chargement...",
+    "error": "Erreur",
+    "success": "Succès",
+    "warning": "Attention",
+    "confirm": "Confirmer",
+    "mostPopular": "PLUS POPULAIRE",
+    "pricePerMonth": "Prix par mois*"
+  },
+  "brand": {
+    "name": "SwiftFacture",
+    "tagline": "Rapide. Professionnel. Sans effort."
+  },
+  "language": {
+    "french": "Français",
+    "english": "Anglais"
+  },
+  "premium": {
+    "title": {
+      "yearly": "Économisez de l'argent avec nos plans annuels",
+      "monthly": "Obtenez un essai gratuit de 30 jours avec nos plans mensuels"
+    },
+    "subtitle": {
+      "yearly": "Économisez jusqu'à 15% du prix en sélectionnant nos plans annuels ou passez à nos plans mensuels pour obtenir un essai gratuit de 30 jours.",
+      "monthly": "Choisissez n'importe quel plan pour obtenir un essai de 30 jours et ne payez qu'après la fin de l'essai - vous pouvez annuler à tout moment. Passez au paiement annuel pour obtenir 15% de réduction."
+    },
+    "billing": {
+      "yearly": "Payer annuellement et économiser",
+      "monthly": "Payer mensuellement et obtenir un essai gratuit"
+    },
+    "plans": {
+      "free": "GRATUIT",
+      "starter": "DÉBUTANT",
+      "pro": "PRO",
+      "growth": "CROISSANCE"
+    },
+    "features": {
+      "customers": "clients",
+      "unlimitedCustomers": "Clients illimités",
+      "invoicesEstimates": "factures et devis",
+      "unlimitedInvoicesEstimates": "Factures et devis illimités",
+      "premiumDeliveries": "livraisons premium",
+      "premiumDeliveriesNotIncluded": "Livraisons premium (non incluses)",
+      "androidIosApps": "Applications Android et iOS",
+      "convertEstimates": "Convertir les devis en factures",
+      "timeTracking": "Suivi du temps",
+      "recurringInvoices": "Factures récurrentes",
+      "paymentSchedules": "Échéanciers de paiement",
+      "multipleTradeNames": "Noms commerciaux multiples"
+    },
+    "services": {
+      "title": "Services premium",
+      "sendInvoicesByPost": {
+        "title": "Envoyer des factures par courrier",
+        "desc": "Oubliez l'impression, les timbres, les enveloppes et la poste. Nous nous occupons de tout pour vous."
+      },
+      "sendPaymentReminders": {
+        "title": "Envoyer des rappels de paiement amicaux",
+        "desc": "Assurez-vous d'être payé en programmant des rappels de paiement automatiques."
+      },
+      "convertEstimatesToInvoices": {
+        "title": "Convertir les devis en factures",
+        "desc": "Convertissez les devis en factures d'un clic et divisez les devis en plusieurs factures."
+      },
+      "improveCashFlow": {
+        "title": "Améliorez la trésorerie et réduisez les risques avec les échéanciers de paiement",
+        "desc": "Demander un acompte est un excellent moyen de sécuriser l'engagement de votre client à payer intégralement"
+      },
+      "freeTrialMonthly": {
+        "title": "Essai gratuit de 30 jours (plans mensuels uniquement)",
+        "desc": "Essayez ce service avec un essai gratuit de 30 jours, annulez à tout moment."
+      },
+      "sendEInvoices": {
+        "title": "Envoyer des factures électroniques",
+        "desc": "Envoyez des factures électroniques aux clients du secteur public ou aux entreprises."
+      },
+      "timeTracking": {
+        "title": "Suivi du temps",
+        "desc": "Gagnez du temps en transformant les heures suivies en factures d'un seul clic."
+      },
+      "multipleTradeNames": {
+        "title": "Noms commerciaux multiples",
+        "desc": "Ajoutez plus d'un nom commercial à votre compte."
+      },
+      "increaseCustomerDatabase": {
+        "title": "Augmentez la taille de votre base de données clients",
+        "desc": "Stockez plus de clients dans votre compte au fur et à mesure que votre entreprise grandit."
+      },
+      "frequentImprovements": {
+        "title": "Améliorations fréquentes",
+        "desc": "Tous nos plans incluent des mises à jour mensuelles du produit sans frais supplémentaires."
+      }
+    },
+    "vatDisclaimer": "*Prix hors TVA. Si votre entreprise est enregistrée pour la TVA dans le domicile de l'entreprise, vous n'êtes pas tenu de payer la TVA sur les services achetés auprès de SwiftFacture. Cependant, si vous n'êtes pas enregistré pour la TVA, vous serez facturé au taux finlandais de TVA (25,5%) sur tous les services achetés auprès de SwiftFacture."
+  },
+  "about": {
+    "title": "SwiftFacture — factures et reçus simples",
+    "subtitle": "Créez des factures et des reçus professionnels en quelques secondes. Sélectionnez un modèle, remplissez les détails de votre client et des articles et exportez un PDF — aucun stockage côté serveur requis.",
+    "howItWorks": {
+      "title": "Comment ça marche",
+      "subtitle": "Un flux en 3 étapes pour créer, personnaliser et envoyer des factures rapidement.",
+      "steps": {
+        "create": {
+          "title": "Créer",
+          "desc": "Remplissez rapidement les champs Facturer à / Expédier à et les articles."
+        },
+        "customize": {
+          "title": "Personnaliser",
+          "desc": "Changez de modèles et prévisualisez avant d'exporter."
+        },
+        "send": {
+          "title": "Envoyer",
+          "desc": "Générez un PDF et partagez avec les clients instantanément."
+        }
+      }
+    },
+    "features": {
+      "editableTemplates": {
+        "title": "Modèles modifiables",
+        "desc": "Plusieurs modèles modernes avec aperçu en direct et sortie optimisée pour l'impression."
+      },
+      "pdfExport": {
+        "title": "Export PDF",
+        "desc": "PDFs prêts pour le client générés dans le navigateur sans backend."
+      },
+      "autoCalculations": {
+        "title": "Calculs automatiques",
+        "desc": "Gestion automatique des taxes, totaux et devises pour une création rapide de factures."
+      },
+      "privacyFirst": {
+        "title": "Confidentialité d'abord",
+        "desc": "Toutes les données restent dans votre navigateur sauf si vous choisissez de les exporter ou de les partager."
+      }
+    },
+    "tips": {
+      "title": "Conseils et meilleures pratiques",
+      "saveDrafts": "Enregistrez les brouillons localement pour éviter de perdre les progrès.",
+      "clearDescriptions": "Utilisez des descriptions d'articles claires pour une meilleure communication client.",
+      "verifyTaxCurrency": "Vérifiez les taxes et la devise avant d'exporter le PDF final."
+    },
+    "faq": {
+      "title": "Questions fréquemment posées",
+      "dataStorage": {
+        "q": "Où sont stockées mes données ?",
+        "a": "Vos données sont stockées localement dans votre navigateur (localStorage). Elles ne quittent pas votre appareil sauf si vous exportez ou partagez le fichier généré."
+      },
+      "customizeTemplates": {
+        "q": "Puis-je personnaliser les modèles ?",
+        "a": "Les modèles sont prédéfinis pour l'instant. Vous pouvez changer de modèles et les futures versions pourraient inclure des contrôles de style plus approfondis."
+      },
+      "pdfSecurity": {
+        "q": "Les PDFs générés sont-ils sécurisés ?",
+        "a": "Les PDFs sont générés côté client. La sécurité dépend de la façon dont vous partagez le fichier (email, drive sécurisé, etc.)."
+      }
+    },
+    "cta": {
+      "title": "Prêt à créer votre première facture ?",
+      "subtitle": "Commencez à partir d'un modèle et générez un PDF en quelques secondes."
+    }
+  },
+  "auth": {
+    "login": {
+      "title": "Bon retour",
+      "subtitle": "Connectez-vous à votre compte pour continuer"
+    },
+    "register": {
+      "title": "Créez votre compte",
+      "subtitle": "Rejoignez-nous aujourd'hui et commencez"
+    },
+    "form": {
+      "firstName": "Prénom",
+      "lastName": "Nom de famille",
+      "email": "Adresse e-mail",
+      "password": "Mot de passe",
+      "confirmPassword": "Confirmer le mot de passe",
+      "rememberMe": "Se souvenir de moi",
+      "forgotPassword": "Mot de passe oublié ?",
+      "placeholders": {
+        "firstName": "Jean",
+        "lastName": "Dupont",
+        "email": "vous@exemple.com",
+        "password": "••••••••"
+      }
+    },
+    "divider": "Ou continuez avec",
+    "toggle": {
+      "noAccount": "Vous n'avez pas de compte ?",
+      "hasAccount": "Vous avez déjà un compte ?",
+      "signUp": "S'inscrire",
+      "signIn": "Se connecter"
+    },
+    "footer": {
+      "terms": "Conditions d'utilisation",
+      "privacy": "Politique de confidentialité",
+      "agreement": "En continuant, vous acceptez nos"
+    }
+  },
+  "dashboard": {
+    "title": "Tableau de bord",
+    "subtitle": "Bon retour ! Voici ce qui se passe avec votre entreprise aujourd'hui.",
+    "stats": {
+      "totalInvoices": "Total des factures",
+      "totalRevenue": "Chiffre d'affaires total",
+      "outstanding": "En attente",
+      "thisMonth": "Ce mois-ci",
+      "total": "Total"
+    },
+    "charts": {
+      "revenueOverview": "Aperçu des revenus",
+      "revenueDescription": "Performance mensuelle des revenus pour les 7 derniers mois",
+      "invoiceStatus": "Statut des factures",
+      "invoiceStatusDescription": "Répartition des statuts de factures",
+      "months": {
+        "jan": "Jan",
+        "feb": "Fév",
+        "mar": "Mar",
+        "apr": "Avr",
+        "may": "Mai",
+        "jun": "Juin",
+        "jul": "Juil"
+      },
+      "statuses": {
+        "paid": "Payé",
+        "pending": "En attente",
+        "overdue": "En retard"
+      }
+    },
+    "invoices": {
+      "title": "Factures récentes",
+      "description": "Gérer et suivre vos factures récentes",
+      "freeMonthly": "Factures mensuelles gratuites: 0/5",
+      "tabs": {
+        "all": "Toutes",
+        "outstanding": "En attente",
+        "drafts": "Brouillons",
+        "more": "Plus"
+      },
+      "search": "Rechercher des factures...",
+      "columns": {
+        "invoice": "FACTURE",
+        "customer": "CLIENT",
+        "dueDate": "DATE D'ÉCHÉANCE",
+        "amount": "MONTANT",
+        "status": "STATUT"
+      }
+    },
+    "quickActions": {
+      "title": "Actions rapides",
+      "createInvoice": "Créer une facture",
+      "generateReceipt": "Générer un reçu",
+      "manageCustomers": "Gérer les clients",
+      "exportReports": "Exporter les rapports"
+    },
+    "recentActivity": {
+      "title": "Activité récente",
+      "invoicePaid": "Facture payée",
+      "newInvoiceCreated": "Nouvelle facture créée",
+      "receiptGenerated": "Reçu généré",
+      "timeAgo": {
+        "hoursAgo": "il y a {{count}} heure",
+        "hoursAgo_plural": "il y a {{count}} heures",
+        "dayAgo": "il y a {{count}} jour",
+        "dayAgo_plural": "il y a {{count}} jours"
+      }
+    },
+    "buttons": {
+      "createReceipt": "Créer un reçu",
+      "newInvoice": "Nouvelle facture"
+    }
+  }
+}

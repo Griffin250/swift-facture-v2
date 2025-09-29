@@ -21,7 +21,7 @@ const signInSchema = z.object({
   password: z.string().min(1, 'Password is required'),
 });
 
-export default function Auth() {
+export default function Login() {
 
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);

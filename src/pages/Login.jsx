@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 
 const AuthPage = () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -11,6 +12,7 @@ const AuthPage = () => {
     lastName: '',
     rememberMe: false
   });
+  const { t } = useTranslation('common');
 
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -46,10 +48,10 @@ const AuthPage = () => {
         {/* Header */}
         <div className="text-center mb-8">
           <h1 className="text-3xl font-bold text-gray-900 mb-2">
-            {isLogin ? 'Welcome Back' : 'Create Your Account'}
+            {isLogin ? t('auth.login.title') : t('auth.register.title')}
           </h1>
           <p className="text-gray-600">
-            {isLogin ? 'Sign in to your account to continue' : 'Join us today and get started'}
+            {isLogin ? t('auth.login.subtitle') : t('auth.register.subtitle')}
           </p>
         </div>
 
@@ -61,7 +63,7 @@ const AuthPage = () => {
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <label htmlFor="firstName" className="block text-sm font-medium text-gray-700 mb-1">
-                    First Name
+                    {t('auth.form.firstName')}
                   </label>
                   <input
                     type="text"
@@ -70,12 +72,12 @@ const AuthPage = () => {
                     value={formData.firstName}
                     onChange={handleInputChange}
                     className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
-                    placeholder="John"
+                    placeholder={t('auth.form.placeholders.firstName')}
                   />
                 </div>
                 <div>
                   <label htmlFor="lastName" className="block text-sm font-medium text-gray-700 mb-1">
-                    Last Name
+                    {t('auth.form.lastName')}
                   </label>
                   <input
                     type="text"
@@ -84,7 +86,7 @@ const AuthPage = () => {
                     value={formData.lastName}
                     onChange={handleInputChange}
                     className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
-                    placeholder="Doe"
+                    placeholder={t('auth.form.placeholders.lastName')}
                   />
                 </div>
               </div>
@@ -92,7 +94,7 @@ const AuthPage = () => {
 
             <div>
               <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
-                Email Address
+                {t('auth.form.email')}
               </label>
               <input
                 type="email"
@@ -101,14 +103,14 @@ const AuthPage = () => {
                 value={formData.email}
                 onChange={handleInputChange}
                 className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
-                placeholder="you@example.com"
+                placeholder={t('auth.form.placeholders.email')}
                 required
               />
             </div>
 
             <div>
               <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">
-                Password
+                {t('auth.form.password')}
               </label>
               <input
                 type="password"
@@ -117,7 +119,7 @@ const AuthPage = () => {
                 value={formData.password}
                 onChange={handleInputChange}
                 className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
-                placeholder="••••••••"
+                placeholder={t('auth.form.placeholders.password')}
                 required
               />
             </div>
@@ -125,7 +127,7 @@ const AuthPage = () => {
             {!isLogin && (
               <div>
                 <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700 mb-1">
-                  Confirm Password
+                  {t('auth.form.confirmPassword')}
                 </label>
                 <input
                   type="password"
@@ -134,7 +136,7 @@ const AuthPage = () => {
                   value={formData.confirmPassword}
                   onChange={handleInputChange}
                   className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
-                  placeholder="••••••••"
+                  placeholder={t('auth.form.placeholders.password')}
                   required
                 />
               </div>
@@ -150,10 +152,10 @@ const AuthPage = () => {
                     onChange={handleInputChange}
                     className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
                   />
-                  <span className="ml-2 text-sm text-gray-600">Remember me</span>
+                  <span className="ml-2 text-sm text-gray-600">{t('auth.form.rememberMe')}</span>
                 </label>
                 <a href="#" className="text-sm text-blue-600 hover:text-blue-500">
-                  Forgot password?
+                  {t('auth.form.forgotPassword')}
                 </a>
               </div>
             )}
@@ -162,7 +164,7 @@ const AuthPage = () => {
               type="submit"
               className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white py-3 px-4 rounded-xl font-semibold shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200 focus:ring-4 focus:ring-blue-200"
             >
-              {isLogin ? 'Sign In' : 'Create Account'}
+              {isLogin ? t('buttons.signIn') : t('buttons.createAccount')}
             </button>
           </form>
 
@@ -172,7 +174,7 @@ const AuthPage = () => {
               <div className="w-full border-t border-gray-300"></div>
             </div>
             <div className="relative flex justify-center text-sm">
-              <span className="px-2 bg-white text-gray-500">Or continue with</span>
+              <span className="px-2 bg-white text-gray-500">{t('auth.divider')}</span>
             </div>
           </div>
 
@@ -185,26 +187,26 @@ const AuthPage = () => {
                 <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
                 <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
               </svg>
-              Continue with Google
+              {t('buttons.continueWithGoogle')}
             </button>
 
             <button className="w-full flex items-center justify-center gap-3 bg-black text-white rounded-xl py-3 px-4 font-medium hover:bg-gray-800 transition-all duration-200 shadow-sm hover:shadow-md">
               <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
                 <path d="M12 2C6.477 2 2 6.477 2 12c0 4.42 2.865 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.008-.866-.013-1.7-2.782.603-3.369-1.34-3.369-1.34-.454-1.156-1.11-1.462-1.11-1.462-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.268 2.75 1.026A9.578 9.578 0 0112 6.836c.85.004 1.705.114 2.504.336 1.909-1.294 2.747-1.026 2.747-1.026.546 1.377.203 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.335-.012 2.415-.012 2.743 0 .267.18.578.688.48C19.138 20.163 22 16.418 22 12c0-5.523-4.477-10-10-10z"/>
               </svg>
-              Continue with GitHub
+              {t('buttons.continueWithGitHub')}
             </button>
           </div>
 
           {/* Toggle between Login/Signup */}
           <div className="text-center mt-6">
             <p className="text-gray-600">
-              {isLogin ? "Don't have an account?" : "Already have an account?"}
+              {isLogin ? t('auth.toggle.noAccount') : t('auth.toggle.hasAccount')}
               <button
                 onClick={() => setIsLogin(!isLogin)}
                 className="ml-1 text-blue-600 font-semibold hover:text-blue-500 transition-colors duration-200"
               >
-                {isLogin ? 'Sign up' : 'Sign in'}
+                {isLogin ? t('auth.toggle.signUp') : t('auth.toggle.signIn')}
               </button>
             </p>
           </div>
@@ -213,10 +215,10 @@ const AuthPage = () => {
         {/* Footer */}
         <div className="text-center mt-6">
           <p className="text-xs text-gray-500">
-            By continuing, you agree to our{' '}
-            <a href="#" className="text-gray-600 hover:text-gray-800">Terms of Service</a>
+            {t('auth.footer.agreement')}{' '}
+            <a href="#" className="text-gray-600 hover:text-gray-800">{t('auth.footer.terms')}</a>
             {' '}and{' '}
-            <a href="#" className="text-gray-600 hover:text-gray-800">Privacy Policy</a>
+            <a href="#" className="text-gray-600 hover:text-gray-800">{t('auth.footer.privacy')}</a>
           </p>
         </div>
       </div>
