@@ -193,7 +193,7 @@ const Premium = () => {
       </section>
 
       <section className="mt-10 text-xs text-muted-foreground">
-        <p>*Prices excluding VAT. If your business is registered for VAT in the business domicile, you are not required to pay VAT on any services purchased from Zervant. However, if not registered for VAT, you will be charged the Finnish rate of VAT (25.5%) on any services purchased from Zervant.</p>
+        <p>*Prices excluding VAT. If your business is registered for VAT in the business domicile, you are not required to pay VAT on any services purchased from SwiftFacture. However, if not registered for VAT, you will be charged the Finnish rate of VAT (25.5%) on any services purchased from SwiftFacture.</p>
       </section>
     </main>
   );
