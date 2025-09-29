@@ -12,7 +12,7 @@ import Footer from "./components/Footer";
 import Header from "./components/Header";
 import NotFound from "./pages/NotFound";
 import Dashboard from "./pages/Dashboard";
-import AuthPage from "./pages/AuthPage";
+import Login from "./pages/Login";
 import Estimate from "./pages/Estimate";
 import Customers from "./pages/Customers";
 
@@ -36,7 +36,7 @@ const App = () => (
           <Route path="/premium" element={<Premium />} />
           <Route path="/customers" element={<Customers />} />
           <Route path="/estimate" element={<Estimate />} />
-          <Route path="/authpage" element={<AuthPage />} />
+          <Route path="/login" element={<Login />} />
           <Route path="/about" element={<About />} />
       
 
