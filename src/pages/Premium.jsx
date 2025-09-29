@@ -62,7 +62,7 @@ const featuresLeft = [
   { title: 'Send friendly payment reminders', desc: 'Make sure you get paid by scheduling automatic payment reminders.' },
   { title: 'Convert estimates to invoices', desc: 'Convert estimates to invoices with one click, and split estimates into multiple invoices.' },
   { title: 'Improve cash flow and reduce risk with payment schedules', desc: "Requesting a down payment is a great way to secure your customer's commitment to pay in full" },
-  { title: 'Free 14-day trial (monthly plans only)', desc: 'Try this service out with a 14-day free trial, cancel at any time.' }
+  { title: 'Free 30-day trial (monthly plans only)', desc: 'Try this service out with a 30-day free trial, cancel at any time.' }
 ];
 
 const featuresRight = [
