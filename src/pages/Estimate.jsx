@@ -16,6 +16,7 @@ import EstimateProfessional from "@/components/templates/EstimateProfessional";
 const currencyFmt = (n, currency = "€") => `${currency}${n.toFixed(2)}`;
 
 export const Estimate = () => {
+  const [isLoading, setIsLoading] = React.useState(true);
   const [showTemplatePreview, setShowTemplatePreview] = React.useState(false);
   // Convert to Invoice (finalize estimate)
   const convertToInvoice = () => {
@@ -385,6 +386,20 @@ export const Estimate = () => {
 
   const isAuthenticated =
     typeof window !== "undefined" && !!localStorage.getItem("bearer_token");
+
+  // Loading simulation
+  React.useEffect(() => {
+    const timer = setTimeout(() => setIsLoading(false), 1000);
+    return () => clearTimeout(timer);
+  }, []);
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/30 flex items-center justify-center">
+        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-primary"></div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-white p-4">

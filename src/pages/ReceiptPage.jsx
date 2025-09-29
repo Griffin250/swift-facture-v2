@@ -63,6 +63,7 @@ const footerOptions = [
 
 const ReceiptPage = () => {
   const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(true);
   const [isDownloading, setIsDownloading] = useState(false);
   const receiptRef = useRef(null);
 
@@ -237,13 +238,27 @@ const ReceiptPage = () => {
     return `${sign}${num}`;
   };
 
+  // Loading simulation
+  useEffect(() => {
+    const timer = setTimeout(() => setIsLoading(false), 1000);
+    return () => clearTimeout(timer);
+  }, []);
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/30 flex items-center justify-center">
+        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-primary"></div>
+      </div>
+    );
+  }
+
   return (
   
     <div className="min-h-screen bg-gradient-to-br from-background via-background to-accent/5">
 
       <div className="container mx-auto px-4 py-8 relative">
         <div className="flex justify-between items-center mb-8">
-          <h1 className="text-4xl font-bold gradient-text mb-4">PayFlow Receipts</h1>
+          <h1 className="text-4xl font-bold gradient-text mb-4">SwiftFacture Receipts</h1>
           <div className="flex flex-wrap items-center gap-4">
             <Button
               variant="accent"

@@ -1,6 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
 
 const Customers = () => {
+  // Loading state
+  const [isLoading, setIsLoading] = useState(true);
+  
   // State for customers data
   const [customers, setCustomers] = useState([]);
   const [filteredCustomers, setFilteredCustomers] = useState([]);
@@ -162,6 +165,20 @@ const Customers = () => {
       setCustomers(updatedCustomers);
     }
   };
+
+  // Loading simulation
+  useEffect(() => {
+    const timer = setTimeout(() => setIsLoading(false), 1000);
+    return () => clearTimeout(timer);
+  }, []);
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/30 flex items-center justify-center">
+        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-primary"></div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gray-50 p-6">

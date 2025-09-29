@@ -10,6 +10,7 @@ import { templates } from '../utils/templateRegistry';
 const TemplatePage = () => {
   const location = useLocation();
   const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(true);
   const [formData, setFormData] = useState(null);
   const [currentTemplate, setCurrentTemplate] = useState(1);
   const [isDownloading, setIsDownloading] = useState(false);
@@ -48,6 +49,20 @@ const TemplatePage = () => {
     navigate('/');
   };
 
+  // Loading simulation
+  useEffect(() => {
+    const timer = setTimeout(() => setIsLoading(false), 1000);
+    return () => clearTimeout(timer);
+  }, []);
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/30 flex items-center justify-center">
+        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-primary"></div>
+      </div>
+    );
+  }
+
   if (!formData) {
     return <div>Loading...</div>;
   }
@@ -57,7 +72,7 @@ const TemplatePage = () => {
       <div className="container mx-auto px-4 py-8">
         <div className="flex justify-between items-center mb-8">
           <Button variant="outline" onClick={handleBack} className="font-semibold">
-            <ArrowLeft className="mr-2 h-4 w-4" /> Back to PayFlow
+            <ArrowLeft className="mr-2 h-4 w-4" /> Back to SwiftFacture
           </Button>
           <Button 
             variant="accent" 

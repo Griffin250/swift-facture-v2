@@ -440,7 +440,7 @@ export const EstimateTemplate = () => {
         
         <button 
           onClick={previewEstimate}
-          className="group bg-white/90 hover:bg-white text-blue-700 px-4 py-2.5 rounded-lg font-medium transition-all duration-300 border border-white/30 hover:scale-105 flex items-center shadow-lg hover:shadow-xl"
+          className="group hidden bg-white/90 hover:bg-white text-blue-700 px-4 py-2.5 rounded-lg font-medium transition-all duration-300 border border-white/30 hover:scale-105 items-center shadow-lg hover:shadow-xl"
         >
           <svg className="w-4 h-4 mr-2 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
