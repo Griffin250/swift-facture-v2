@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from 'react-i18next';
 import { Button } from "@/components/ui/button";
 import { formatCurrency } from "../utils/formatCurrency"; // Corrected import path
 import FloatingLabelInput from "../components/FloatingLabelInput";
@@ -54,6 +55,7 @@ const noteOptions = [
 
 const Index = () => {
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const [isLoading, setIsLoading] = useState(true);
   const [selectedCurrency, setSelectedCurrency] = useState("USD");
   const [billTo, setBillTo] = useState({ name: "", address: "", phone: "" });
@@ -336,9 +338,9 @@ const Index = () => {
             size="icon"
             onClick={clearForm}
             className="rounded-sm p-1 hover:scale-110 transition-smooth mt-8 w-auto text-black text-md font-bold"
-            title="Clear Form"
+            title={t('index.clearForm')}
           >
-            <span className="sr-only">Clear Form</span>
+            <span className="sr-only">{t('index.clearForm')}</span>
             <FiTrash2 className="w-6" />
           </Button>
           <Button
@@ -346,7 +348,7 @@ const Index = () => {
             size="icon"
             onClick={fillDummyData}
             className="rounded-full hover:scale-110 transition-smooth"
-            title="Fill with Dummy Data"
+            title={t('index.fillDummyData')}
           >
             <FiEdit size={20} />
           </Button>
@@ -371,9 +373,9 @@ const Index = () => {
             })
           }
           className="fixed top-20 right-4 rounded-md z-40 mt-8 w-auto p-2 text-black text-xl font-bold hover:scale-110 transition-smooth"
-          title="Switch to Receipt Generator"
+          title={t('index.switchToReceipt')}
         >
-          <span className="sr-only">Receipt Generator</span>{" "}
+          <span className="sr-only">{t('index.receiptGenerator')}</span>{" "}
           <FiFileText size={20} />
         </Button>
         
@@ -401,7 +403,7 @@ const Index = () => {
                 style={{ animationDelay: "0.4s" }}
               >
                 <h2 className="text-2xl font-semibold mb-6 gradient-text">
-                  Invoice Information
+                  {t('index.invoiceInformation')}
                 </h2>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   <FloatingLabelInput
@@ -435,7 +437,7 @@ const Index = () => {
                 style={{ animationDelay: "0.6s" }}
               >
                 <h2 className="text-2xl font-semibold mb-6 gradient-text">
-                  Your Company
+                  {t('index.yourCompany')}
                 </h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <FloatingLabelInput
@@ -479,17 +481,17 @@ const Index = () => {
               style={{ animationDelay: "1s" }}
             >
               <h3 className="text-lg font-semibold mb-4 gradient-text">
-                Totals
+                {t('index.totals')}
               </h3>
               <div className="space-y-3">
                 <div className="flex justify-between py-2 border-b border-border/30">
-                  <span className="text-muted-foreground">Sub Total:</span>
+                  <span className="text-muted-foreground">{t('index.subTotal')}:</span>
                   <span className="font-medium">
                     {formatCurrency(subTotal, selectedCurrency)}
                   </span>
                 </div>
                 <div className="flex justify-between items-center py-2 border-b border-border/30">
-                  <span className="text-muted-foreground">Tax Rate (%):</span>
+                  <span className="text-muted-foreground">{t('index.taxRate')}:</span>
                   <input
                     type="number"
                     value={taxPercentage}
@@ -501,13 +503,13 @@ const Index = () => {
                   />
                 </div>
                 <div className="flex justify-between py-2 border-b border-border/30">
-                  <span className="text-muted-foreground">Tax Amount:</span>
+                  <span className="text-muted-foreground">{t('index.taxAmount')}:</span>
                   <span className="font-medium">
                     {formatCurrency(taxAmount, selectedCurrency)}
                   </span>
                 </div>
                 <div className="flex justify-between py-3 px-4 bg-gradient-to-r from-primary/10 to-primary-glow/10 rounded-lg border border-primary/20">
-                  <span className="font-bold text-primary">Grand Total:</span>
+                  <span className="font-bold text-primary">{t('index.grandTotal')}:</span>
                   <span className="font-bold text-xl text-primary">
                     {formatCurrency(grandTotal, selectedCurrency)}
                   </span>
@@ -520,13 +522,13 @@ const Index = () => {
               style={{ animationDelay: "1.2s" }}
             >
               <div className="flex items-center mb-4">
-                <h3 className="text-lg font-semibold gradient-text">Notes</h3>
+                <h3 className="text-lg font-semibold gradient-text">{t('index.notes')}</h3>
                 <Button
                   variant="ghost"
                   size="icon"
                   onClick={refreshNotes}
                   className="ml-3 rounded-full hover:scale-110"
-                  title="Refresh Notes"
+                  title={t('index.refreshNotes')}
                 >
                   <RefreshCw size={16} />
                 </Button>
@@ -536,7 +538,7 @@ const Index = () => {
                 onChange={(e) => setNotes(e.target.value)}
                 className="w-full px-4 py-3 border-2 border-border/30 rounded-xl bg-input/50 transition-smooth focus:border-primary focus:ring-2 focus:ring-primary/20 resize-none hover:border-border/50"
                 rows="4"
-                placeholder="Add notes or special instructions..."
+                placeholder={t('index.notesPlaceholder')}
               ></textarea>
             </div>
 
@@ -546,7 +548,7 @@ const Index = () => {
         <div className="w-full xl:w-1/2">
           <div className="bg-gradient-to-br from-white to-gray-50/80 backdrop-blur-sm rounded-3xl shadow-2xl border border-white/20 p-6 md:p-8 hover:shadow-2xl transition-all duration-300">
             <h2 className="text-3xl font-bold mb-8 text-center bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
-              Choose Template
+              {t('index.chooseTemplate')}
             </h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {templates.map((template, index) => (
@@ -597,11 +599,10 @@ const Index = () => {
                   </div>
                   <div className="flex-1">
                     <p className="text-sm text-blue-800 font-medium">
-                      Template Selection Tip
+                      {t('index.templateSelectionTip')}
                     </p>
                     <p className="text-xs text-blue-600 mt-1">
-                      Click on any template to preview how your invoice will
-                      look. You can change templates at any time.
+                      {t('index.templateSelectionHelp')}
                     </p>
                   </div>
                 </div>

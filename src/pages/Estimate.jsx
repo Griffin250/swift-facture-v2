@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import { useTranslation } from 'react-i18next';
 import {
   Dialog,
   DialogContent,
@@ -16,6 +17,7 @@ import EstimateProfessional from "@/components/templates/EstimateProfessional";
 const currencyFmt = (n, currency = "€") => `${currency}${n.toFixed(2)}`;
 
 export const Estimate = () => {
+  const { t } = useTranslation();
   const [isLoading, setIsLoading] = React.useState(true);
   const [showTemplatePreview, setShowTemplatePreview] = React.useState(false);
   // Convert to Invoice (finalize estimate)
@@ -407,10 +409,10 @@ export const Estimate = () => {
         {/* Header Section */}
         <div className="mb-8 pt-6">
           <h1 className="text-3xl font-bold text-black mb-2">
-            Invoice & Estimate Manager
+            {t('estimatePage.title')}
           </h1>
           <p className="text-gray-600">
-            Create, manage, and track your estimates and invoices
+            {t('estimatePage.subtitle')}
           </p>
         </div>
 
@@ -438,7 +440,7 @@ export const Estimate = () => {
                   d="M12 4v16m8-8H4"
                 />
               </svg>
-              Create New Estimate
+              {t('estimatePage.createNewEstimate')}
             </button>
                
           </div>
@@ -461,10 +463,10 @@ export const Estimate = () => {
     <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between">
       <div className="mb-2">
         <h2 className="text-2xl md:text-3xl font-bold text-white mb-2">
-          Saved Estimates
+          {t('estimatePage.savedEstimates')}
         </h2>
         <p className="text-blue-100 opacity-90">
-          Manage your existing estimates
+          {t('estimatePage.manageExistingEstimates')}
         </p>
       </div>
       <EstimateTemplate />
@@ -492,7 +494,7 @@ export const Estimate = () => {
                   type="text"
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  placeholder="Search estimates by number, customer, or notes..."
+                  placeholder={t('estimatePage.searchPlaceholder')}
                   className="w-full pl-10 pr-4 py-3 rounded-lg border border-gray-200 bg-white text-black placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 />
               </div>
@@ -503,7 +505,7 @@ export const Estimate = () => {
                   onChange={(e) => setCurrencyFilter(e.target.value)}
                   className="px-4 py-2 rounded-lg border border-gray-200 bg-white text-black focus:ring-2 focus:ring-blue-500"
                 >
-                  <option value="All">All Currencies</option>
+                  <option value="All">{t('estimatePage.filterByCurrency')}</option>
                   <option value="USD">USD</option>
                   <option value="EUR">EUR</option>
                   <option value="GBP">GBP</option>
@@ -533,19 +535,19 @@ export const Estimate = () => {
                 <div className="text-2xl font-bold text-blue-700">
                   {filteredInvoices.length}
                 </div>
-                <div className="text-sm text-gray-600">Total</div>
+                <div className="text-sm text-gray-600">{t('estimatePage.total')}</div>
               </div>
               <div className="bg-gray-50 p-4 rounded-lg text-center">
                 <div className="text-2xl font-bold text-gray-700">
                   {filteredInvoices.filter((i) => i.status === "draft").length}
                 </div>
-                <div className="text-sm text-gray-600">Draft</div>
+                <div className="text-sm text-gray-600">{t('estimatePage.pending')}</div>
               </div>
               <div className="bg-blue-50 p-4 rounded-lg text-center">
                 <div className="text-2xl font-bold text-blue-700">
                   {filteredInvoices.filter((i) => i.status === "sent").length}
                 </div>
-                <div className="text-sm text-gray-600">Sent</div>
+                <div className="text-sm text-gray-600">{t('estimatePage.sent')}</div>
               </div>
               <div className="bg-green-50 p-4 rounded-lg text-center">
                 <div className="text-2xl font-bold text-green-700">
@@ -554,7 +556,7 @@ export const Estimate = () => {
                       .length
                   }
                 </div>
-                <div className="text-sm text-gray-600">Accepted</div>
+                <div className="text-sm text-gray-600">{t('estimatePage.accepted')}</div>
               </div>
               <div className="bg-red-50 p-4 rounded-lg text-center">
                 <div className="text-2xl font-bold text-red-700">
@@ -563,7 +565,7 @@ export const Estimate = () => {
                       .length
                   }
                 </div>
-                <div className="text-sm text-gray-600">Declined</div>
+                <div className="text-sm text-gray-600">{t('estimatePage.declined')}</div>
               </div>
               <div className="bg-orange-50 p-4 rounded-lg text-center">
                 <div className="text-2xl font-bold text-orange-700">
@@ -572,7 +574,7 @@ export const Estimate = () => {
                     .reduce((sum, i) => sum + i.total, 0)
                     .toFixed(2)}
                 </div>
-                <div className="text-sm text-gray-600">Total Value</div>
+                <div className="text-sm text-gray-600">{t('estimatePage.totalValue')}</div>
               </div>
             </div>
 
@@ -582,22 +584,22 @@ export const Estimate = () => {
                 <thead className="bg-gradient-to-r from-gray-50 to-gray-100">
                   <tr>
                     <th className="py-4 px-4 font-semibold text-gray-700 text-left">
-                      NUMBER
+                      {t('estimatePage.number')}
                     </th>
                     <th className="py-4 px-4 font-semibold text-gray-700 text-left">
-                      DATE
+                      {t('estimatePage.date')}
                     </th>
                     <th className="py-4 px-4 font-semibold text-gray-700 text-left">
-                      CUSTOMER
+                      {t('estimatePage.customer')}
                     </th>
                     <th className="py-4 px-4 font-semibold text-gray-700 text-left">
-                      TOTAL
+                      {t('estimatePage.total')}
                     </th>
                     <th className="py-4 px-4 font-semibold text-gray-700 text-left">
-                      STATUS
+                      {t('estimatePage.status')}
                     </th>
                     <th className="py-4 px-4 font-semibold text-gray-700 text-left">
-                      ACTIONS
+                      {t('estimatePage.actions')}
                     </th>
                   </tr>
                 </thead>
@@ -675,7 +677,7 @@ export const Estimate = () => {
                                   setItems(inv.items || []);
                                 }}
                                 className="text-purple-600 hover:text-purple-800 p-2 rounded hover:bg-purple-50 transition-colors"
-                                title="Preview"
+                                title={t('estimatePage.preview')}
                               >
                                 <svg
                                   className="w-4 h-4"
@@ -697,7 +699,7 @@ export const Estimate = () => {
                                   setShowTemplatePreview(true);
                                 }}
                               className="text-blue-600 hover:text-blue-800 p-2 rounded hover:bg-blue-50 transition-colors"
-                              title="Edit"
+                              title={t('estimatePage.edit')}
                             >
                               <svg
                                 className="w-4 h-4"
@@ -716,7 +718,7 @@ export const Estimate = () => {
                             <button
                               onClick={() => deleteEstimate(inv.number)}
                               className="text-red-600 hover:text-red-800 p-2 rounded hover:bg-red-50 transition-colors"
-                              title="Delete"
+                              title={t('estimatePage.delete')}
                             >
                               <svg
                                 className="w-4 h-4"
@@ -803,14 +805,13 @@ export const Estimate = () => {
                         clipRule="evenodd"
                       />
                     </svg>
-                    You are not logged in. Use admin/admin on the Login page to
-                    access all features.
+                    {t('estimatePage.notLoggedInMessage')}
                   </div>
                   <a
                     href="/login"
                     className="text-orange-600 hover:text-orange-800 underline mt-2 inline-block"
                   >
-                    Go to login
+                    {t('estimatePage.goToLogin')}
                   </a>
                 </div>
               )}
@@ -820,7 +821,7 @@ export const Estimate = () => {
       <button
         onClick={() => setShowTemplatePreview(false)}
         className="absolute top-4 right-4 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-full p-2 shadow transition-colors"
-        title="Close Preview"
+        title={t('estimatePage.closePreview')}
       >
         <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -861,12 +862,12 @@ export const Estimate = () => {
                           d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
                         />
                       </svg>
-                      Estimate Details
+                      {t('estimatePage.estimateDetails')}
                     </h3>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Company
+                          {t('estimatePage.company')}
                         </label>
                         <input
                           value={company}
@@ -876,7 +877,7 @@ export const Estimate = () => {
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Customer
+                          {t('estimatePage.customer')}
                         </label>
                         <input
                           value={customer}
@@ -886,7 +887,7 @@ export const Estimate = () => {
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Estimate Number
+                          {t('estimatePage.estimateNumber')}
                         </label>
                         <input
                           value={estimateNo}
@@ -897,7 +898,7 @@ export const Estimate = () => {
                       <div className="grid grid-cols-2 gap-3">
                         <div>
                           <label className="block text-sm font-medium text-gray-700 mb-2">
-                            Issue Date
+                            {t('estimatePage.issueDate')}
                           </label>
                           <input
                             type="date"
@@ -908,7 +909,7 @@ export const Estimate = () => {
                         </div>
                         <div>
                           <label className="block text-sm font-medium text-gray-700 mb-2">
-                            Valid Until
+                            {t('estimatePage.validUntil')}
                           </label>
                           <input
                             type="date"
@@ -921,7 +922,7 @@ export const Estimate = () => {
                       <div className="grid grid-cols-3 gap-3">
                         <div>
                           <label className="block text-sm font-medium text-gray-700 mb-2">
-                            Currency
+                            {t('estimatePage.currency')}
                           </label>
                           <select
                             value={currency}
@@ -935,7 +936,7 @@ export const Estimate = () => {
                         </div>
                         <div>
                           <label className="block text-sm font-medium text-gray-700 mb-2">
-                            Tax %
+                            {t('estimatePage.taxPercent')}
                           </label>
                           <input
                             type="number"
@@ -946,7 +947,7 @@ export const Estimate = () => {
                         </div>
                         <div>
                           <label className="block text-sm font-medium text-gray-700 mb-2">
-                            Discount %
+                            {t('estimatePage.discountPercent')}
                           </label>
                           <input
                             type="number"
@@ -978,7 +979,7 @@ export const Estimate = () => {
                             d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
                           />
                         </svg>
-                        Items
+                        {t('estimatePage.items')}
                       </h3>
                       <button
                         onClick={addItem}
@@ -997,7 +998,7 @@ export const Estimate = () => {
                             d="M12 4v16m8-8H4"
                           />
                         </svg>
-                        Add Item
+                        {t('estimatePage.addItem')}
                       </button>
                     </div>
 
