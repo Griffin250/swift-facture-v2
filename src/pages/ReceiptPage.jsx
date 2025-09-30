@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from 'react-i18next';
 import { Loader2, RefreshCw, FileText, RotateCw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Receipt1 from "../components/templates/Receipt1";
@@ -63,6 +64,7 @@ const footerOptions = [
 
 const ReceiptPage = () => {
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const [isLoading, setIsLoading] = useState(true);
   const [isDownloading, setIsDownloading] = useState(false);
   const receiptRef = useRef(null);
@@ -258,7 +260,7 @@ const ReceiptPage = () => {
 
       <div className="container mx-auto px-4 py-8 relative">
         <div className="flex justify-between items-center mb-8">
-          <h1 className="text-4xl font-bold gradient-text mb-4">SwiftFacture Receipts</h1>
+          <h1 className="text-4xl font-bold gradient-text mb-4">{t('receiptPage.title')}</h1>
           <div className="flex flex-wrap items-center gap-4">
             <Button
               variant="accent"
@@ -269,10 +271,10 @@ const ReceiptPage = () => {
               {isDownloading ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Generating PDF...
+                  {t('receiptPage.generatingPDF')}
                 </>
               ) : (
-                "Download Receipt PDF"
+                t('receiptPage.downloadReceiptPDF')
               )}
             </Button>
             <Button
@@ -280,21 +282,21 @@ const ReceiptPage = () => {
               onClick={() => setShowEmailModal(true)}
               className="font-semibold"
             >
-              Send via Email
+              {t('receiptPage.sendViaEmail')}
             </Button>
             <Button
               variant="outline"
               onClick={handlePrint}
               className="font-semibold"
             >
-              Print Receipt
+              {t('receiptPage.printReceipt')}
             </Button>
             <Button
               variant="outline"
               onClick={() => navigate("/")}
               size="icon"
               className="rounded-full"
-              title="Switch to Invoice Generator"
+              title={t('receiptPage.switchToInvoice')}
             >
               <FileText size={20} />
             </Button>
@@ -334,18 +336,18 @@ const ReceiptPage = () => {
           <div className="w-full lg:w-1/2 card-modern">
             <form className="space-y-8">
               <div className="mb-8">
-                <h2 className="text-2xl font-semibold gradient-text mb-6">Your Company</h2>
+                <h2 className="text-2xl font-semibold gradient-text mb-6">{t('receiptPage.yourCompany')}</h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <FloatingLabelInput
                     id="yourCompanyName"
-                    label="Name"
+                    label={t('receiptPage.name')}
                     value={yourCompany.name}
                     onChange={handleInputChange(setYourCompany)}
                     name="name"
                   />
                   <FloatingLabelInput
                     id="yourCompanyPhone"
-                    label="Phone"
+                    label={t('receiptPage.phone')}
                     value={yourCompany.phone}
                     onChange={handleInputChange(setYourCompany)}
                     name="phone"
@@ -353,7 +355,7 @@ const ReceiptPage = () => {
                 </div>
                 <FloatingLabelInput
                   id="yourCompanyAddress"
-                  label="Address"
+                  label={t('receiptPage.address')}
                   value={yourCompany.address}
                   onChange={handleInputChange(setYourCompany)}
                   name="address"
@@ -362,7 +364,7 @@ const ReceiptPage = () => {
                 <div className="relative mt-4">
                   <FloatingLabelInput
                     id="yourCompanyGST"
-                    label="GST No."
+                    label={t('receiptPage.gstNo')}
                     value={yourCompany.gst}
                     onChange={(e) => {
                       const value = e.target.value.slice(0, 15);
@@ -380,14 +382,14 @@ const ReceiptPage = () => {
                       setYourCompany(prev => ({ ...prev, gst: newGST }));
                     }}
                     className="absolute right-2 top-1/2 transform -translate-y-1/2 p-1 rounded-full hover:bg-gray-200"
-                    title="Generate new GST number"
+                    title={t('receiptPage.generateNewGST')}
                   >
                     <RotateCw size={16} />
                   </button>
                 </div>
                 <FloatingLabelInput
                   id="cashier"
-                  label="Cashier"
+                  label={t('receiptPage.cashier')}
                   value={cashier}
                   onChange={(e) => setCashier(e.target.value)}
                   name="cashier"
@@ -396,10 +398,10 @@ const ReceiptPage = () => {
               </div>
 
               <div className="mb-8">
-                <h2 className="text-2xl font-semibold gradient-text mb-6">Bill To</h2>
+                <h2 className="text-2xl font-semibold gradient-text mb-6">{t('receiptPage.billTo')}</h2>
                 <FloatingLabelInput
                   id="billTo"
-                  label="Bill To"
+                  label={t('receiptPage.billTo')}
                   value={billTo}
                   onChange={(e) => setBillTo(e.target.value)}
                   name="billTo"
@@ -408,19 +410,19 @@ const ReceiptPage = () => {
 
               <div className="mb-8">
                 <h2 className="text-2xl font-semibold gradient-text mb-6">
-                  Invoice Information
+                  {t('receiptPage.invoiceInformation')}
                 </h2>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   <FloatingLabelInput
                     id="invoiceNumber"
-                    label="Invoice Number"
+                    label={t('receiptPage.invoiceNumber')}
                     value={invoice.number}
                     onChange={handleInputChange(setInvoice)}
                     name="number"
                   />
                   <FloatingLabelInput
                     id="invoiceDate"
-                    label="Invoice Date"
+                    label={t('receiptPage.invoiceDate')}
                     type="date"
                     value={invoice.date}
                     onChange={handleInputChange(setInvoice)}
@@ -437,13 +439,13 @@ const ReceiptPage = () => {
             />
 
             <div className="mb-6">
-              <h3 className="text-lg font-medium mb-2">Totals</h3>
+              <h3 className="text-lg font-medium mb-2">{t('receiptPage.totals')}</h3>
               <div className="flex justify-between mb-2">
-                <span>Sub Total:</span>
+                <span>{t('receiptPage.subTotal')}:</span>
                 <span>{renderCurrency(calculateSubTotal())}</span>
               </div>
               <div className="flex justify-between mb-2">
-                <span>Tax (%):</span>
+                <span>{t('receiptPage.tax')}:</span>
                 <input
                   type="number"
                   value={taxPercentage}
@@ -457,17 +459,17 @@ const ReceiptPage = () => {
                 />
               </div>
               <div className="flex justify-between mb-2">
-                <span>Tax Amount:</span>
+                <span>{t('receiptPage.taxAmount')}:</span>
                 <span>{renderCurrency(calculateTaxAmount())}</span>
               </div>
               <div className="flex justify-between font-bold">
-                <span>Grand Total:</span>
+                <span>{t('receiptPage.grandTotal')}:</span>
                 <span>{renderCurrency(calculateGrandTotal())}</span>
               </div>
             </div>
 
             <div className="mb-6">
-              <h3 className="text-lg font-medium mb-2">Notes</h3>
+              <h3 className="text-lg font-medium mb-2">{t('receiptPage.notes')}</h3>
               <textarea
                 value={notes}
                 onChange={(e) => setNotes(e.target.value)}
@@ -477,12 +479,12 @@ const ReceiptPage = () => {
             </div>
             <div className="mb-6">
               <div className="flex items-center mb-2">
-                <h3 className="text-lg font-medium">Footer</h3>
+                <h3 className="text-lg font-medium">{t('receiptPage.footer')}</h3>
                 <button
                   type="button"
                   onClick={refreshFooter}
                   className="ml-2 p-1 rounded-full hover:bg-gray-200"
-                  title="Refresh footer"
+                  title={t('receiptPage.refreshFooter')}
                 >
                   <RefreshCw size={16} />
                 </button>
@@ -498,7 +500,7 @@ const ReceiptPage = () => {
           </div>
 
  <div className="w-full lg:w-1/2 card-modern">
-  <h2 className="text-2xl font-bold gradient-text mb-6">Choose Receipt Format</h2>
+  <h2 className="text-2xl font-bold gradient-text mb-6">{t('receiptPage.receiptTheme')}</h2>
   
   <div className="lg:hidden mb-4">
     <div className="relative">
@@ -522,7 +524,7 @@ const ReceiptPage = () => {
   
 
   <div className="hidden lg:block mb-6">
-    <h3 className="text-lg font-medium mb-3">Receipt Type</h3>
+    <h3 className="text-lg font-medium mb-3">{t('receiptPage.receiptTheme')}</h3>
     <div className="flex flex-wrap gap-3">
       <label className="custom-radio">
         <input

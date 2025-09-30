@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { ArrowLeft, Loader2 } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import InvoiceTemplate from '../components/InvoiceTemplate';
@@ -10,6 +11,7 @@ import { templates } from '../utils/templateRegistry';
 const TemplatePage = () => {
   const location = useLocation();
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const [isLoading, setIsLoading] = useState(true);
   const [formData, setFormData] = useState(null);
   const [currentTemplate, setCurrentTemplate] = useState(1);
@@ -64,7 +66,7 @@ const TemplatePage = () => {
   }
 
   if (!formData) {
-    return <div>Loading...</div>;
+    return <div>{t('templatePage.loading')}</div>;
   }
 
   return (
@@ -72,7 +74,7 @@ const TemplatePage = () => {
       <div className="container mx-auto px-4 py-8">
         <div className="flex justify-between items-center mb-8">
           <Button variant="outline" onClick={handleBack} className="font-semibold">
-            <ArrowLeft className="mr-2 h-4 w-4" /> Back to SwiftFacture
+            <ArrowLeft className="mr-2 h-4 w-4" /> {t('templatePage.backToSwiftFacture')}
           </Button>
           <Button 
             variant="accent" 
@@ -83,20 +85,20 @@ const TemplatePage = () => {
             {isDownloading ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                Generating PDF...
+                {t('templatePage.generatingPDF')}
               </>
             ) : (
-              "Download PDF"
+              t('templatePage.downloadPDF')
             )}
           </Button>
         </div>
 
         <div className="mb-8">
           <h1 className="text-3xl font-bold gradient-text mb-4 text-center">
-            Invoice Preview
+            {t('templatePage.invoicePreview')}
           </h1>
           <div className="card-modern bg-blue-200">
-            <h3 className="text-lg font-semibold gradient-text mb-4">Choose Template Style</h3>
+            <h3 className="text-lg font-semibold gradient-text mb-4">{t('templatePage.chooseTemplateStyle')}</h3>
             <div className="flex flex-wrap gap-3">
               {templates.map((template, index) => (
                 <Button

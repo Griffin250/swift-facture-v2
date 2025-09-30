@@ -1,6 +1,9 @@
-import React, { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
+import { useTranslation } from 'react-i18next';
 
 const Customers = () => {
+  const { t } = useTranslation('common');
+  
   // Loading state
   const [isLoading, setIsLoading] = useState(true);
   
@@ -160,7 +163,7 @@ const Customers = () => {
 
   // Handle customer deletion
   const handleDeleteCustomer = (customerId) => {
-    if (window.confirm('Are you sure you want to delete this customer?')) {
+    if (window.confirm(t('customers.messages.deleteConfirm') || 'Are you sure you want to delete this customer?')) {
       const updatedCustomers = customers.filter(customer => customer.id !== customerId);
       setCustomers(updatedCustomers);
     }
@@ -184,8 +187,8 @@ const Customers = () => {
     <div className="min-h-screen bg-gray-50 p-6">
       {/* Header */}
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900">Customers</h1>
-        <p className="text-gray-600 mt-2">Manage your customer database</p>
+        <h1 className="text-3xl font-bold text-gray-900">{t('customers.title')}</h1>
+        <p className="text-gray-600 mt-2">{t('customers.subtitle')}</p>
       </div>
 
       {/* Search and Controls */}
@@ -193,7 +196,7 @@ const Customers = () => {
         <div className="relative w-full sm:w-64">
           <input
             type="text"
-            placeholder="Search customers..."
+            placeholder={t('customers.search')}
             className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
