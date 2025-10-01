@@ -6,6 +6,15 @@ import { navItems } from "./nav-items";
 import TemplatePage from "./pages/TemplatePage";
 import ReceiptPage from "./pages/ReceiptPage";
 import Index from "./pages/Index";
+import About from "./pages/About";
+import Premium from "./pages/Premium";
+import Footer from "./components/Footer";
+import Header from "./components/Header";
+import NotFound from "./pages/NotFound";
+import Dashboard from "./pages/Dashboard";
+import Login from "./pages/Login";
+import Estimate from "./pages/Estimate";
+import Customers from "./pages/Customers";
 
 const queryClient = new QueryClient();
 
@@ -14,14 +23,26 @@ const App = () => (
     <TooltipProvider>
       <Toaster />
       <BrowserRouter>
+        <Header />
+
         <Routes>
           {navItems.map(({ to, page }) => (
             <Route key={to} path={to} element={page} />
           ))}
-          <Route path="/" element={<Index />} />
+          <Route path="/" element={<Dashboard />} />
+          <Route path="/invoice" element={<Index />} />
           <Route path="/template" element={<TemplatePage />} />
           <Route path="/receipt" element={<ReceiptPage />} />
+          <Route path="/premium" element={<Premium />} />
+          <Route path="/customers" element={<Customers />} />
+          <Route path="/estimate" element={<Estimate />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/about" element={<About />} />
+      
+
+          <Route path="*" element={<NotFound />} />
         </Routes>
+        <Footer />
       </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>

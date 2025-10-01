@@ -1,0 +1,632 @@
+{
+  "navigation": {
+    "dashboard": "Dashboard",
+    "about": "About",
+    "receipt": "Receipt",
+    "invoice": "Invoice",
+    "customers": "Customers",
+    "estimate": "Estimate"
+  },
+  "buttons": {
+    "premium": "Premium",
+    "account": "Account",
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "create": "Create",
+    "download": "Download",
+    "print": "Print",
+    "back": "Back",
+    "next": "Next",
+    "previous": "Previous",
+    "close": "Close",
+    "upgrade": "Upgrade",
+    "startFreeTrial": "Start free trial",
+    "createInvoice": "Create Invoice",
+    "openReceipt": "Open Receipt",
+    "viewPricing": "View Pricing",
+    "signIn": "Sign In",
+    "signUp": "Sign up",
+    "createAccount": "Create Account",
+    "continueWithGoogle": "Continue with Google",
+    "continueWithGitHub": "Continue with GitHub"
+  },
+  "common": {
+    "loading": "Loading...",
+    "error": "Error",
+    "success": "Success",
+    "warning": "Warning",
+    "confirm": "Confirm",
+    "mostPopular": "MOST POPULAR",
+    "pricePerMonth": "Price per month*",
+    "all": "All",
+    "none": "None",
+    "optional": "Optional",
+    "required": "Required",
+    "search": "Search...",
+    "noResults": "No results found",
+    "showing": "Showing {{from}} to {{to}} of {{total}} entries",
+    "itemsPerPage": "Items per page"
+  },
+  "brand": {
+    "name": "SwiftFacture",
+    "tagline": "Fast. Professional. Effortless."
+  },
+  "language": {
+    "french": "French",
+    "english": "English"
+  },
+  "premium": {
+    "title": {
+      "yearly": "Save money with our yearly plans",
+      "monthly": "Get a 30-day free trial with our monthly plans"
+    },
+    "subtitle": {
+      "yearly": "Save up to 15% of the price when selecting our yearly plans or switch to our monthly plans to get 30-day free trial.",
+      "monthly": "Choose any plan to get a 30-day trial and pay only after the trial ends - you can cancel anytime. Switch to the yearly payment to get 15% off."
+    },
+    "billing": {
+      "yearly": "Pay yearly and save",
+      "monthly": "Pay monthly and get a free trial"
+    },
+    "plans": {
+      "free": "FREE",
+      "starter": "STARTER",
+      "pro": "PRO",
+      "growth": "GROWTH"
+    },
+    "features": {
+      "customers": "customers",
+      "unlimitedCustomers": "Unlimited customers",
+      "invoicesEstimates": "invoices and estimates",
+      "unlimitedInvoicesEstimates": "Unlimited invoices and estimates",
+      "premiumDeliveries": "premium deliveries",
+      "premiumDeliveriesNotIncluded": "Premium deliveries (not included)",
+      "androidIosApps": "Android and iOS apps",
+      "convertEstimates": "Convert estimates to invoices",
+      "timeTracking": "Time tracking",
+      "recurringInvoices": "Recurring invoices",
+      "paymentSchedules": "Payment schedules",
+      "multipleTradeNames": "Multiple trade names"
+    },
+    "services": {
+      "title": "Premium services",
+      "sendInvoicesByPost": {
+        "title": "Send invoices by post",
+        "desc": "Forget about printing, stamps, envelopes and the post office. We take care of it all for you."
+      },
+      "sendPaymentReminders": {
+        "title": "Send friendly payment reminders",
+        "desc": "Make sure you get paid by scheduling automatic payment reminders."
+      },
+      "convertEstimatesToInvoices": {
+        "title": "Convert estimates to invoices",
+        "desc": "Convert estimates to invoices with one click, and split estimates into multiple invoices."
+      },
+      "improveCashFlow": {
+        "title": "Improve cash flow and reduce risk with payment schedules",
+        "desc": "Requesting a down payment is a great way to secure your customer's commitment to pay in full"
+      },
+      "freeTrialMonthly": {
+        "title": "Free 30-day trial (monthly plans only)",
+        "desc": "Try this service out with a 30-day free trial, cancel at any time."
+      },
+      "sendEInvoices": {
+        "title": "Send e-invoices",
+        "desc": "Send e-invoices to public sector or corporate customers."
+      },
+      "timeTracking": {
+        "title": "Time tracking",
+        "desc": "Save time by turning tracked hours into invoices with a single click."
+      },
+      "multipleTradeNames": {
+        "title": "Multiple trade names",
+        "desc": "Add more than one trade name to your account."
+      },
+      "increaseCustomerDatabase": {
+        "title": "Increase the size of your customer database",
+        "desc": "Store more customers in your account as your business grows."
+      },
+      "frequentImprovements": {
+        "title": "Frequent improvements",
+        "desc": "All our plans include monthly product updates at no extra charge."
+      }
+    },
+    "vatDisclaimer": "*Prices excluding VAT. If your business is registered for VAT in the business domicile, you are not required to pay VAT on any services purchased from SwiftFacture. However, if not registered for VAT, you will be charged the Finnish rate of VAT (25.5%) on any services purchased from SwiftFacture."
+  },
+  "about": {
+    "title": "SwiftFacture — simple invoices & receipts",
+    "subtitle": "Create professional invoices and receipts in seconds. Select a template, fill your customer and item details and export a PDF — no server-side storage required.",
+    "howItWorks": {
+      "title": "How it works",
+      "subtitle": "A focused 3-step flow to create, customize and send invoices fast.",
+      "steps": {
+        "create": {
+          "title": "Create",
+          "desc": "Quickly fill in Bill To / Ship To and line items."
+        },
+        "customize": {
+          "title": "Customize",
+          "desc": "Switch templates and preview before exporting."
+        },
+        "send": {
+          "title": "Send",
+          "desc": "Generate PDF and share with clients instantly."
+        }
+      }
+    },
+    "features": {
+      "editableTemplates": {
+        "title": "Editable Templates",
+        "desc": "Multiple modern templates with live preview and print-optimized output."
+      },
+      "pdfExport": {
+        "title": "PDF Export",
+        "desc": "Client-ready PDFs generated in the browser with no back-end."
+      },
+      "autoCalculations": {
+        "title": "Auto Calculations",
+        "desc": "Automatic tax, totals and currency handling for fast invoice creation."
+      },
+      "privacyFirst": {
+        "title": "Privacy-first",
+        "desc": "All data remains in your browser unless you choose to export or share it."
+      }
+    },
+    "tips": {
+      "title": "Tips & Best Practices",
+      "saveDrafts": "Save drafts locally to avoid losing progress.",
+      "clearDescriptions": "Use clear line item descriptions for better client communication.",
+      "verifyTaxCurrency": "Verify tax and currency before exporting the final PDF."
+    },
+    "faq": {
+      "title": "Frequently asked questions",
+      "dataStorage": {
+        "q": "Where is my data stored?",
+        "a": "Your data is stored locally in your browser (localStorage). It does not leave your device unless you export or share the generated file."
+      },
+      "customizeTemplates": {
+        "q": "Can I customize templates?",
+        "a": "Templates are prebuilt for now. You can switch between templates and future versions may include deeper styling controls."
+      },
+      "pdfSecurity": {
+        "q": "Are generated PDFs secure?",
+        "a": "PDFs are generated client-side. Security depends on how you share the file (email, secure drive, etc.)."
+      }
+    },
+    "cta": {
+      "title": "Ready to create your first invoice?",
+      "subtitle": "Start from a template and generate a PDF in seconds."
+    }
+  },
+  "auth": {
+    "login": {
+      "title": "Welcome Back",
+      "subtitle": "Sign in to your account to continue"
+    },
+    "register": {
+      "title": "Create Your Account",
+      "subtitle": "Join us today and get started"
+    },
+    "form": {
+      "firstName": "First Name",
+      "lastName": "Last Name",
+      "email": "Email Address",
+      "password": "Password",
+      "confirmPassword": "Confirm Password",
+      "rememberMe": "Remember me",
+      "forgotPassword": "Forgot password?",
+      "placeholders": {
+        "firstName": "John",
+        "lastName": "Doe",
+        "email": "you@example.com",
+        "password": "••••••••"
+      }
+    },
+    "divider": "Or continue with",
+    "toggle": {
+      "noAccount": "Don't have an account?",
+      "hasAccount": "Already have an account?",
+      "signUp": "Sign up",
+      "signIn": "Sign in"
+    },
+    "footer": {
+      "terms": "Terms of Service",
+      "privacy": "Privacy Policy",
+      "agreement": "By continuing, you agree to our"
+    }
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "subtitle": "Welcome back! Here's what's happening with your business today.",
+    "stats": {
+      "totalInvoices": "Total Invoices",
+      "totalRevenue": "Total Revenue",
+      "outstanding": "Outstanding",
+      "thisMonth": "This Month",
+      "total": "Total"
+    },
+    "charts": {
+      "revenueOverview": "Revenue Overview",
+      "revenueDescription": "Monthly revenue performance for the last 7 months",
+      "invoiceStatus": "Invoice Status",
+      "invoiceStatusDescription": "Distribution of invoice statuses",
+      "months": {
+        "jan": "Jan",
+        "feb": "Feb",
+        "mar": "Mar",
+        "apr": "Apr",
+        "may": "May",
+        "jun": "Jun",
+        "jul": "Jul"
+      },
+      "statuses": {
+        "paid": "Paid",
+        "pending": "Pending",
+        "overdue": "Overdue"
+      }
+    },
+    "invoices": {
+      "title": "Recent Invoices",
+      "description": "Manage and track your recent invoices",
+      "freeMonthly": "Free monthly invoices: 0/5",
+      "tabs": {
+        "all": "All",
+        "outstanding": "Outstanding",
+        "drafts": "Drafts",
+        "more": "More"
+      },
+      "search": "Search invoices...",
+      "columns": {
+        "invoice": "INVOICE",
+        "customer": "CUSTOMER",
+        "dueDate": "DUE DATE",
+        "amount": "AMOUNT",
+        "status": "STATUS"
+      }
+    },
+    "quickActions": {
+      "title": "Quick Actions",
+      "createInvoice": "Create Invoice",
+      "generateReceipt": "Generate Receipt",
+      "manageCustomers": "Manage Customers",
+      "exportReports": "Export Reports"
+    },
+    "recentActivity": {
+      "title": "Recent Activity",
+      "invoicePaid": "Invoice paid",
+      "newInvoiceCreated": "New invoice created",
+      "receiptGenerated": "Receipt generated",
+      "timeAgo": {
+        "hoursAgo": "{{count}} hour ago",
+        "hoursAgo_plural": "{{count}} hours ago",
+        "dayAgo": "{{count}} day ago",
+        "dayAgo_plural": "{{count}} days ago"
+      }
+    },
+    "buttons": {
+      "createReceipt": "Create Receipt",
+      "newInvoice": "New Invoice"
+    }
+  },
+  "estimate": {
+    "title": "Estimates",
+    "subtitle": "Create and manage your estimates",
+    "createNew": "Create New Estimate",
+    "form": {
+      "estimateNumber": "Estimate Number",
+      "company": "Company",
+      "customer": "Customer",
+      "issueDate": "Issue Date",
+      "validUntil": "Valid Until",
+      "currency": "Currency",
+      "taxRate": "Tax Rate (%)",
+      "discount": "Discount",
+      "notes": "Notes",
+      "status": "Status",
+      "items": "Items",
+      "description": "Description",
+      "quantity": "Quantity",
+      "price": "Price",
+      "total": "Total"
+    },
+    "statuses": {
+      "draft": "Draft",
+      "sent": "Sent",
+      "accepted": "Accepted",
+      "declined": "Declined"
+    },
+    "actions": {
+      "save": "Save Estimate",
+      "convertToInvoice": "Convert to Invoice",
+      "preview": "Preview",
+      "download": "Download PDF",
+      "edit": "Edit",
+      "delete": "Delete",
+      "duplicate": "Duplicate",
+      "send": "Send"
+    },
+    "search": "Search estimates by number, customer, or notes...",
+    "tabs": {
+      "all": "All",
+      "recent": "Recent"
+    },
+    "table": {
+      "number": "Number",
+      "customer": "Customer", 
+      "date": "Date",
+      "validUntil": "Valid Until",
+      "amount": "Amount",
+      "status": "Status",
+      "actions": "Actions"
+    },
+    "messages": {
+      "noEstimates": "No estimates found",
+      "saved": "Estimate saved successfully",
+      "deleted": "Estimate deleted successfully",
+      "converted": "Estimate converted to invoice"
+    }
+  },
+  "receipt": {
+    "title": "Receipts",
+    "subtitle": "Create and manage your receipts",
+    "createNew": "Create New Receipt",
+    "form": {
+      "receiptNumber": "Receipt Number",
+      "company": "Company",
+      "customer": "Customer",
+      "date": "Date",
+      "paymentMethod": "Payment Method",
+      "items": "Items",
+      "description": "Description",
+      "amount": "Amount",
+      "total": "Total"
+    },
+    "paymentMethods": {
+      "cash": "Cash",
+      "card": "Card",
+      "bankTransfer": "Bank Transfer",
+      "check": "Check",
+      "other": "Other"
+    },
+    "actions": {
+      "save": "Save Receipt",
+      "preview": "Preview",
+      "download": "Download PDF",
+      "print": "Print"
+    }
+  },
+  "customers": {
+    "title": "Customers",
+    "subtitle": "Manage your customer database",
+    "addNew": "Add New Customer",
+    "form": {
+      "name": "Name",
+      "email": "Email",
+      "phone": "Phone",
+      "address": "Address",
+      "city": "City",
+      "zipCode": "ZIP Code",
+      "country": "Country",
+      "taxId": "Tax ID",
+      "notes": "Notes"
+    },
+    "search": "Search customers...",
+    "table": {
+      "name": "Name",
+      "email": "Email",
+      "phone": "Phone",
+      "totalInvoices": "Total Invoices",
+      "totalAmount": "Total Amount",
+      "actions": "Actions"
+    },
+    "actions": {
+      "save": "Save Customer",
+      "edit": "Edit",
+      "delete": "Delete",
+      "viewInvoices": "View Invoices"
+    },
+    "messages": {
+      "noCustomers": "No customers found",
+      "saved": "Customer saved successfully",
+      "deleted": "Customer deleted successfully",
+      "deleteConfirm": "Are you sure you want to delete this customer?"
+    }
+  },
+  "templates": {
+    "title": "Templates",
+    "subtitle": "Choose from our professional invoice templates",
+    "preview": "Preview",
+    "select": "Select Template",
+    "categories": {
+      "modern": "Modern",
+      "classic": "Classic",
+      "minimalist": "Minimalist",
+      "professional": "Professional"
+    }
+  },
+  "invoice": {
+    "title": "Invoice",
+    "billTo": "Bill To",
+    "shipTo": "Ship To",
+    "invoiceNumber": "Invoice Number",
+    "invoiceDate": "Invoice Date",
+    "dueDate": "Due Date",
+    "items": "Items",
+    "description": "Description",
+    "quantity": "Qty",
+    "rate": "Rate",
+    "amount": "Amount",
+    "subtotal": "Subtotal",
+    "tax": "Tax",
+    "discount": "Discount",
+    "total": "Total",
+    "notes": "Notes",
+    "terms": "Terms and Conditions",
+    "paymentInstructions": "Payment Instructions"
+  },
+  "index": {
+    "clearForm": "Clear Form",
+    "fillDummyData": "Fill with Dummy Data",
+    "receiptGenerator": "Receipt Generator",
+    "switchToReceipt": "Switch to Receipt Generator",
+    "invoiceInformation": "Invoice Information",
+    "yourCompany": "Your Company",
+    "totals": "Totals",
+    "subTotal": "Sub Total",
+    "taxRate": "Tax Rate (%)",
+    "taxAmount": "Tax Amount",
+    "grandTotal": "Grand Total",
+    "notes": "Notes",
+    "refreshNotes": "Refresh Notes",
+    "notesPlaceholder": "Add notes or special instructions...",
+    "chooseTemplate": "Choose Template",
+    "templateSelectionTip": "Template Selection Tip",
+    "templateSelectionHelp": "Click on any template to preview how your invoice will look. You can change templates at any time."
+  },
+  "receiptPage": {
+    "title": "SwiftFacture Receipts",
+    "generatingPDF": "Generating PDF...",
+    "downloadReceiptPDF": "Download Receipt PDF",
+    "sendViaEmail": "Send via Email",
+    "printReceipt": "Print Receipt",
+    "switchToInvoice": "Switch to Invoice Generator",
+    "yourCompany": "Your Company",
+    "name": "Name",
+    "phone": "Phone",
+    "address": "Address",
+    "gstNo": "GST No.",
+    "generateNewGST": "Generate new GST number",
+    "cashier": "Cashier",
+    "billTo": "Bill To",
+    "invoiceInformation": "Invoice Information",
+    "invoiceNumber": "Invoice Number",
+    "invoiceDate": "Invoice Date",
+    "totals": "Totals",
+    "subTotal": "Sub Total",
+    "tax": "Tax (%)",
+    "taxAmount": "Tax Amount",
+    "grandTotal": "Grand Total",
+    "notes": "Notes",
+    "refreshNotes": "Refresh Notes",
+    "notesPlaceholder": "Add notes or special instructions...",
+    "footer": "Footer",
+    "refreshFooter": "Refresh Footer",
+    "footerPlaceholder": "Add footer message...",
+    "currency": "Currency",
+    "receiptTheme": "Receipt Theme",
+    "previewAndPrint": "Preview & Print"
+  },
+  "templatePage": {
+    "backToSwiftFacture": "Back to SwiftFacture",
+    "generatingPDF": "Generating PDF...",
+    "downloadPDF": "Download PDF",
+    "invoicePreview": "Invoice Preview",
+    "chooseTemplateStyle": "Choose Template Style",
+    "loading": "Loading..."
+  },
+  "estimatePage": {
+    "title": "Invoice & Estimate Manager",
+    "subtitle": "Create, manage, and track your estimates and invoices",
+    "createNewEstimate": "Create New Estimate",
+    "savedEstimates": "Saved Estimates",
+    "manageExistingEstimates": "Manage your existing estimates",
+    "searchPlaceholder": "Search estimates by number, customer, or notes...",
+    "filterByCurrency": "Filter by Currency",
+    "filterByStatus": "Filter by Status",
+    "all": "All",
+    "pending": "Pending",
+    "sent": "Sent",
+    "accepted": "Accepted",
+    "declined": "Declined",
+    "totalValue": "Total Value",
+    "number": "NUMBER",
+    "date": "DATE",
+    "customer": "CUSTOMER",
+    "total": "TOTAL",
+    "status": "STATUS",
+    "actions": "ACTIONS",
+    "preview": "Preview",
+    "edit": "Edit",
+    "delete": "Delete",
+    "closePreview": "Close Preview",
+    "notLoggedInMessage": "You are not logged in. Use admin/admin on the Login page to access all features.",
+    "goToLogin": "Go to login",
+    "estimateDetails": "Estimate Details",
+    "company": "Company",
+    "estimateNumber": "Estimate Number",
+    "issueDate": "Issue Date",
+    "validUntil": "Valid Until",
+    "currency": "Currency",
+    "taxPercent": "Tax %",
+    "discountPercent": "Discount %",
+    "items": "Items",
+    "addItem": "Add Item",
+    "description": "Description",
+    "quantity": "Qty",
+    "rate": "Rate",
+    "amount": "Amount",
+    "removeItem": "Remove Item",
+    "notes": "Notes",
+    "notesPlaceholder": "Add notes or terms...",
+    "summary": "Summary",
+    "subtotal": "Subtotal",
+    "tax": "Tax",
+    "discount": "Discount",
+    "grandTotal": "Grand Total",
+    "saveEstimate": "Save Estimate",
+    "cancel": "Cancel",
+    "fillSampleData": "Fill Sample Data",
+    "downloadPDF": "Download PDF",
+    "sendEstimate": "Send Estimate"
+  },
+  "invoiceTemplate": {
+    "invoice": "INVOICE",
+    "invoiceNumber": "Invoice Number",
+    "invoiceDate": "Invoice Date",
+    "dueDate": "Due Date",
+    "billTo": "Bill To",
+    "shipTo": "Ship To",
+    "item": "Item",
+    "description": "Description",
+    "quantity": "Quantity",
+    "qty": "Qty",
+    "unitPrice": "Unit Price",
+    "rate": "Rate",
+    "amount": "Amount",
+    "total": "Total",
+    "subtotal": "Subtotal",
+    "tax": "Tax",
+    "discount": "Discount",
+    "grandTotal": "Grand Total",
+    "notes": "Notes",
+    "terms": "Terms & Conditions",
+    "thankyou": "Thank you for your business!",
+    "paymentInstructions": "Payment Instructions",
+    "na": "N/A"
+  },
+  "receiptTemplate": {
+    "receipt": "RECEIPT",
+    "invoiceNumber": "Invoice",
+    "date": "Date",
+    "customer": "Customer",
+    "cashier": "Cashier",
+    "createdBy": "Created By",
+    "item": "Item",
+    "qty": "Qty",
+    "price": "Price",
+    "total": "Total",
+    "subtotal": "Subtotal",
+    "tax": "Tax",
+    "grandTotal": "Total",
+    "taxSummary": "Tax Summary",
+    "type": "Type",
+    "rate": "Rate",
+    "totalAmt": "Total Amt",
+    "taxAmt": "Tax Amt",
+    "notes": "Notes",
+    "thankyou": "Thank you for your business!",
+    "na": "N/A"
+  }
+}

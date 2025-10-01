@@ -1,8 +1,10 @@
-import React from 'react';
+
+import { useTranslation } from 'react-i18next';
 import BaseTemplate from './BaseTemplate';
 import { formatCurrency } from '../../utils/formatCurrency';
 
 const Template3 = ({ data }) => {
+  const { t } = useTranslation();
   const { billTo, shipTo, invoice, yourCompany, items, taxPercentage, taxAmount, subTotal, grandTotal, notes, selectedCurrency } = data;
 
   return (
@@ -21,7 +23,7 @@ const Template3 = ({ data }) => {
             <p>{yourCompany?.phone || "Your Company Phone"}</p>
           </div>
           <div>
-            <h2 className="text-xl font-semibold mb-2">BILLED TO</h2>
+            <h2 className="text-xl font-semibold mb-2">{t('invoiceTemplate.billTo').toUpperCase()}</h2>
             <p>{billTo.name}</p>
             <p>{billTo.address}</p>
             <p>{billTo.phone}</p>
@@ -29,15 +31,15 @@ const Template3 = ({ data }) => {
         </div>
         <div className="flex justify-between mb-8">
           <div>
-            <h2 className="text-xl font-semibold mb-2">SHIP TO</h2>
+            <h2 className="text-xl font-semibold mb-2">{t('invoiceTemplate.shipTo').toUpperCase()}</h2>
             <p>{shipTo.name}</p>
             <p>{shipTo.address}</p>
             <p>{shipTo.phone}</p>
           </div>
           <div className="text-right">
-            <p>Invoice #: {invoice.number}</p>
-            <p>Invoice Date: {invoice.date}</p>
-            <p>Due Date: {invoice.paymentDate}</p>
+            <p>{t('invoiceTemplate.invoice')} #: {invoice.number}</p>
+            <p>{t('invoiceTemplate.invoiceDate')}: {invoice.date}</p>
+            <p>{t('invoiceTemplate.dueDate')}: {invoice.paymentDate}</p>
             <p>Due Amount: {formatCurrency(grandTotal, selectedCurrency)}</p>
           </div>
         </div>
@@ -47,10 +49,10 @@ const Template3 = ({ data }) => {
           <div className="bg-blue-200 flex rounded-t">
             <div className="p-2 w-12"></div>
             <div className="p-2 flex-grow text-left">
-              ITEM NAME/ITEM DESCRIPTION
+              {t('invoiceTemplate.item').toUpperCase()}/{t('invoiceTemplate.description').toUpperCase()}
             </div>
-            <div className="p-2 flex-1 text-right">QTY.</div>
-            <div className="p-2 flex-1 text-right">AMOUNT</div>
+            <div className="p-2 flex-1 text-right">{t('invoiceTemplate.qty').toUpperCase()}.</div>
+            <div className="p-2 flex-1 text-right">{t('invoiceTemplate.amount').toUpperCase()}</div>
           </div>
           {items.map((item, index) => (
             <div key={index} className="flex border-t border-b">
@@ -70,22 +72,22 @@ const Template3 = ({ data }) => {
         </div>
         <div className="flex justify-between">
           <div className="w-2/3 p-4">
-            <h3 className="text-lg font-semibold">Notes</h3>
+            <h3 className="text-lg font-semibold">{t('invoiceTemplate.notes')}</h3>
             <p className="text-sm text-gray-600">{notes}</p>
           </div>
           <div className="w-1/3">
             <div className="flex justify-between mb-2 p-2">
-              <span>Sub Total:</span>
+              <span>{t('invoiceTemplate.subtotal')}:</span>
               <span>{formatCurrency(subTotal, selectedCurrency)}</span>
             </div>
             {taxPercentage > 0 && (
               <div className="flex justify-between mb-2 p-2">
-                <span>Tax ({taxPercentage}%):</span>
+                <span>{t('invoiceTemplate.tax')} ({taxPercentage}%):</span>
                 <span>{formatCurrency(taxAmount, selectedCurrency)}</span>
               </div>
             )}
             <div className="flex justify-between font-bold bg-blue-500 text-white p-2 mt-4">
-              <span className="text-left">Total</span>
+              <span className="text-left">{t('invoiceTemplate.total')}</span>
               <span>{formatCurrency(grandTotal, selectedCurrency)}</span>
             </div>
           </div>

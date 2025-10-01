@@ -1,14 +1,15 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { formatCurrency } from '../utils/formatCurrency'; // Corrected import path
-import FloatingLabelInput from '../components/FloatingLabelInput';
-import BillToSection from '../components/BillToSection';
-import ShipToSection from '../components/ShipToSection';
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { useTranslation } from 'react-i18next';
+import { Button } from "@/components/ui/button";
+import { formatCurrency } from "../utils/formatCurrency"; // Corrected import path
+import FloatingLabelInput from "../components/FloatingLabelInput";
+import BillToSection from "../components/BillToSection";
+import ShipToSection from "../components/ShipToSection";
 import ItemDetails from "../components/ItemDetails";
 import { templates } from "../utils/templateRegistry";
 import { FiEdit, FiFileText, FiTrash2 } from "react-icons/fi"; // Added FiTrash2 icon
 import { RefreshCw } from "lucide-react";
-import { set, sub } from "date-fns";
 
 const generateRandomInvoiceNumber = () => {
   const length = Math.floor(Math.random() * 6) + 3;
@@ -54,7 +55,9 @@ const noteOptions = [
 
 const Index = () => {
   const navigate = useNavigate();
-  const [selectedCurrency, setSelectedCurrency] = useState("INR");
+  const { t } = useTranslation();
+  const [isLoading, setIsLoading] = useState(true);
+  const [selectedCurrency, setSelectedCurrency] = useState("USD");
   const [billTo, setBillTo] = useState({ name: "", address: "", phone: "" });
   const [shipTo, setShipTo] = useState({ name: "", address: "", phone: "" });
   const [invoice, setInvoice] = useState({
@@ -95,7 +98,7 @@ const Index = () => {
       setItems(parsedData.items || []);
       settaxPercentage(parsedData.taxPercentage || 0);
       setNotes(parsedData.notes || "");
-      setSelectedCurrency(parsedData.selectedCurrency || "INR"); // Load selectedCurrency from localStorage
+      setSelectedCurrency(parsedData.selectedCurrency || "USD"); // Load selectedCurrency from localStorage
     } else {
       // If no saved data, set invoice number
       setInvoice((prev) => ({
@@ -163,18 +166,23 @@ const Index = () => {
   };
 
   const calculateSubTotal = () => {
-    const calculatedSubTotal = items.reduce((sum, item) => sum + (item.quantity * item.amount), 0);
+    const calculatedSubTotal = items.reduce(
+      (sum, item) => sum + item.quantity * item.amount,
+      0
+    );
     setSubTotal(calculatedSubTotal); // Store as number
     return calculatedSubTotal;
   };
 
-  const calculateTaxAmount = (subTotalValue) => { // Renamed param to avoid conflict with state
+  const calculateTaxAmount = (subTotalValue) => {
+    // Renamed param to avoid conflict with state
     const tax = (subTotalValue * taxPercentage) / 100;
     setTaxAmount(tax); // Store as number
     return tax;
   };
 
-  const calculateGrandTotal = (subTotalValue, taxAmountValue) => { // Renamed params to avoid conflict with state
+  const calculateGrandTotal = (subTotalValue, taxAmountValue) => {
+    // Renamed params to avoid conflict with state
     const total = parseFloat(subTotalValue) + parseFloat(taxAmountValue);
     setGrandTotal(total); // Store as number
     return total;
@@ -306,209 +314,305 @@ const Index = () => {
     localStorage.removeItem("formData");
   };
 
-  return (
-    <div className="container mx-auto px-4 py-8 relative">
-      <h1 className="text-3xl font-bold mb-8 text-center">Bill Generator</h1>
-      <div className="fixed top-4 left-4 flex gap-2">
-        <button
-          onClick={clearForm}
-          className="bg-red-500 text-white p-2 rounded-full shadow-lg hover:bg-red-600"
-          aria-label="Clear Form"
-        >
-          <FiTrash2 size={24} />
-        </button>
-        <button
-          onClick={fillDummyData}
-          className="bg-blue-500 text-white p-2 rounded-full shadow-lg hover:bg-blue-600"
-          aria-label="Fill with Dummy Data"
-        >
-          <FiEdit size={24} />
-        </button>
-      </div>
-      <button
-        onClick={() =>
-          navigate("/receipt", {
-            state: {
-              formData: {
-                billTo,
-                shipTo,
-                invoice,
-                yourCompany,
-                items,
-                taxPercentage,
-                notes,
-                selectedCurrency, // Ensure this is passed
-              },
-            },
-          })
-        }
-        className="fixed top-4 right-4 bg-green-500 text-white p-2 rounded-full shadow-lg hover:bg-green-600"
-        aria-label="Switch to Receipt"
-      >
-        <FiFileText size={24} />
-      </button>
-      <div className="flex flex-col md:flex-row gap-8">
-        <div className="w-full md:w-1/2 bg-white p-6 rounded-lg shadow-md">
-          <form>
-            <BillToSection
-              billTo={billTo}
-              handleInputChange={handleInputChange(setBillTo)}
-              selectedCurrency={selectedCurrency}
-              setSelectedCurrency={setSelectedCurrency}
-            />
-            <ShipToSection
-              shipTo={shipTo}
-              handleInputChange={handleInputChange(setShipTo)}
-              billTo={billTo}
-            />
+  // Loading simulation
+  useEffect(() => {
+    const timer = setTimeout(() => setIsLoading(false), 1000);
+    return () => clearTimeout(timer);
+  }, []);
 
-            <div className="mb-6">
-              <h2 className="text-2xl font-semibold mb-4">
-                Invoice Information
-              </h2>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/30 flex items-center justify-center">
+        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-primary"></div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-background via-background to-accent/5">
+   
+        {/* Floating action buttons */}
+        <div className="fixed top-20 left-2 md:left-8 flex flex-col gap-3 z-40">
+          <Button
+            variant="destructive"
+            size="icon"
+            onClick={clearForm}
+            className="rounded-sm p-1 hover:scale-110 transition-smooth mt-8 w-auto text-black text-md font-bold"
+            title={t('index.clearForm')}
+          >
+            <span className="sr-only">{t('index.clearForm')}</span>
+            <FiTrash2 className="w-6" />
+          </Button>
+          <Button
+            variant="outline"
+            size="icon"
+            onClick={fillDummyData}
+            className="rounded-full hover:scale-110 transition-smooth"
+            title={t('index.fillDummyData')}
+          >
+            <FiEdit size={20} />
+          </Button>
+        </div>
+        <Button
+          variant="accent"
+          size="icon"
+          onClick={() =>
+            navigate("/receipt", {
+              state: {
+                formData: {
+                  billTo,
+                  shipTo,
+                  invoice,
+                  yourCompany,
+                  items,
+                  taxPercentage,
+                  notes,
+                  selectedCurrency,
+                },
+              },
+            })
+          }
+          className="fixed top-20 right-4 rounded-md z-40 mt-8 w-auto p-2 text-black text-xl font-bold hover:scale-110 transition-smooth"
+          title={t('index.switchToReceipt')}
+        >
+          <span className="sr-only">{t('index.receiptGenerator')}</span>{" "}
+          <FiFileText size={20} />
+        </Button>
+        
+        {/* Main content layout */}
+       <div className="container mx-auto px-4 md:px-12 py-5">
+          <div className="flex flex-col xl:flex-row gap-8"> 
+          {/* Invoice Form Container */}
+          <div className="w-full xl:w-1/2"> 
+          <div className="bg-white/70 backdrop-blur-sm rounded-3xl shadow-2xl border border-white/20 p-6 md:p-8 hover:shadow-2xl transition-all duration-300">
+            <div className="animate-fade-in" style={{ animationDelay: "0.2s" }}>
+              <BillToSection
+                billTo={billTo}
+                handleInputChange={handleInputChange(setBillTo)}
+                selectedCurrency={selectedCurrency}
+                setSelectedCurrency={setSelectedCurrency}
+              />
+              <ShipToSection
+                shipTo={shipTo}
+                handleInputChange={handleInputChange(setShipTo)}
+                billTo={billTo}
+              />
+
+              <div
+                className="card-modern animate-fade-in"
+                style={{ animationDelay: "0.4s" }}
+              >
+                <h2 className="text-2xl font-semibold mb-6 gradient-text">
+                  {t('index.invoiceInformation')}
+                </h2>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <FloatingLabelInput
+                    id="invoiceNumber"
+                    label="Invoice Number"
+                    value={invoice.number}
+                    onChange={handleInputChange(setInvoice)}
+                    name="number"
+                  />
+                  <FloatingLabelInput
+                    id="invoiceDate"
+                    label="Invoice Date"
+                    type="date"
+                    value={invoice.date}
+                    onChange={handleInputChange(setInvoice)}
+                    name="date"
+                  />
+                  <FloatingLabelInput
+                    id="paymentDate"
+                    label="Payment Date"
+                    type="date"
+                    value={invoice.paymentDate}
+                    onChange={handleInputChange(setInvoice)}
+                    name="paymentDate"
+                  />
+                </div>
+              </div>
+
+              <div
+                className="card-modern animate-fade-in"
+                style={{ animationDelay: "0.6s" }}
+              >
+                <h2 className="text-2xl font-semibold mb-6 gradient-text">
+                  {t('index.yourCompany')}
+                </h2>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <FloatingLabelInput
+                    id="yourCompanyName"
+                    label="Name"
+                    value={yourCompany.name}
+                    onChange={handleInputChange(setYourCompany)}
+                    name="name"
+                  />
+                  <FloatingLabelInput
+                    id="yourCompanyPhone"
+                    label="Phone"
+                    value={yourCompany.phone}
+                    onChange={handleInputChange(setYourCompany)}
+                    name="phone"
+                  />
+                </div>
                 <FloatingLabelInput
-                  id="invoiceNumber"
-                  label="Invoice Number"
-                  value={invoice.number}
-                  onChange={handleInputChange(setInvoice)}
-                  name="number"
-                />
-                <FloatingLabelInput
-                  id="invoiceDate"
-                  label="Invoice Date"
-                  type="date"
-                  value={invoice.date}
-                  onChange={handleInputChange(setInvoice)}
-                  name="date"
-                />
-                <FloatingLabelInput
-                  id="paymentDate"
-                  label="Payment Date"
-                  type="date"
-                  value={invoice.paymentDate}
-                  onChange={handleInputChange(setInvoice)}
-                  name="paymentDate"
+                  id="yourCompanyAddress"
+                  label="Address"
+                  value={yourCompany.address}
+                  onChange={handleInputChange(setYourCompany)}
+                  name="address"
+                  className="mt-4"
                 />
               </div>
             </div>
 
-            <div className="mb-6">
-              <h2 className="text-2xl font-semibold mb-4">Your Company</h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <FloatingLabelInput
-                  id="yourCompanyName"
-                  label="Name"
-                  value={yourCompany.name}
-                  onChange={handleInputChange(setYourCompany)}
-                  name="name"
-                />
-                <FloatingLabelInput
-                  id="yourCompanyPhone"
-                  label="Phone"
-                  value={yourCompany.phone}
-                  onChange={handleInputChange(setYourCompany)}
-                  name="phone"
-                />
-              </div>
-              <FloatingLabelInput
-                id="yourCompanyAddress"
-                label="Address"
-                value={yourCompany.address}
-                onChange={handleInputChange(setYourCompany)}
-                name="address"
-                className="mt-4"
+            <div className="animate-fade-in" style={{ animationDelay: "0.8s" }}>
+              <ItemDetails
+                items={items}
+                handleItemChange={handleItemChange}
+                addItem={addItem}
+                removeItem={removeItem}
+                currencyCode={selectedCurrency}
               />
             </div>
 
-            <ItemDetails
-              items={items}
-              handleItemChange={handleItemChange}
-              addItem={addItem}
-              removeItem={removeItem}
-              currencyCode={selectedCurrency}
-            />
-
-            <div className="mb-6">
-              <h3 className="text-lg font-medium mb-2">Totals</h3>
-              <div className="flex justify-between mb-2">
-                <span>Sub Total:</span>
-                <span>{formatCurrency(subTotal, selectedCurrency)}</span>
-              </div>
-              <div className="flex justify-between mb-2">
-                <span>Tax Rate (%):</span>
-                <input
-                  type="number"
-                  value={taxPercentage}
-                  onChange={(e) => handleTaxPercentageChange(e)}
-                  className="w-24 p-2 border rounded"
-                  min="0"
-                  max="28"
-                  step="1"
-                />
-              </div>
-              <div className="flex justify-between mb-2">
-                <span>Tax Amount:</span>
-                <span>{formatCurrency(taxAmount, selectedCurrency)}</span>
-              </div>
-              <div className="flex justify-between font-bold">
-                <span>Grand Total:</span>
-                <span>{formatCurrency(grandTotal, selectedCurrency)}</span>
+            <div
+              className="card-modern animate-fade-in"
+              style={{ animationDelay: "1s" }}
+            >
+              <h3 className="text-lg font-semibold mb-4 gradient-text">
+                {t('index.totals')}
+              </h3>
+              <div className="space-y-3">
+                <div className="flex justify-between py-2 border-b border-border/30">
+                  <span className="text-muted-foreground">{t('index.subTotal')}:</span>
+                  <span className="font-medium">
+                    {formatCurrency(subTotal, selectedCurrency)}
+                  </span>
+                </div>
+                <div className="flex justify-between items-center py-2 border-b border-border/30">
+                  <span className="text-muted-foreground">{t('index.taxRate')}:</span>
+                  <input
+                    type="number"
+                    value={taxPercentage}
+                    onChange={(e) => handleTaxPercentageChange(e)}
+                    className="w-24 px-3 py-2 border border-border rounded-lg bg-input transition-smooth focus:border-primary focus:ring-2 focus:ring-primary/20"
+                    min="0"
+                    max="28"
+                    step="1"
+                  />
+                </div>
+                <div className="flex justify-between py-2 border-b border-border/30">
+                  <span className="text-muted-foreground">{t('index.taxAmount')}:</span>
+                  <span className="font-medium">
+                    {formatCurrency(taxAmount, selectedCurrency)}
+                  </span>
+                </div>
+                <div className="flex justify-between py-3 px-4 bg-gradient-to-r from-primary/10 to-primary-glow/10 rounded-lg border border-primary/20">
+                  <span className="font-bold text-primary">{t('index.grandTotal')}:</span>
+                  <span className="font-bold text-xl text-primary">
+                    {formatCurrency(grandTotal, selectedCurrency)}
+                  </span>
+                </div>
               </div>
             </div>
 
-            <div className="mb-6">
-              <div className="flex items-center mb-2">
-                <h3 className="text-lg font-medium">Notes</h3>
-                <button
-                  type="button"
+            <div
+              className="card-modern animate-fade-in mt-8"
+              style={{ animationDelay: "1.2s" }}
+            >
+              <div className="flex items-center mb-4">
+                <h3 className="text-lg font-semibold gradient-text">{t('index.notes')}</h3>
+                <Button
+                  variant="ghost"
+                  size="icon"
                   onClick={refreshNotes}
-                  className="ml-2 p-1 rounded-full hover:bg-gray-200"
-                  title="Refresh Notes"
+                  className="ml-3 rounded-full hover:scale-110"
+                  title={t('index.refreshNotes')}
                 >
                   <RefreshCw size={16} />
-                </button>
+                </Button>
               </div>
               <textarea
                 value={notes}
                 onChange={(e) => setNotes(e.target.value)}
-                className="w-full p-2 border rounded"
+                className="w-full px-4 py-3 border-2 border-border/30 rounded-xl bg-input/50 transition-smooth focus:border-primary focus:ring-2 focus:ring-primary/20 resize-none hover:border-border/50"
                 rows="4"
+                placeholder={t('index.notesPlaceholder')}
               ></textarea>
             </div>
 
             {/* Clear Form button removed */}
-          </form>
+          </div>
         </div>
+        <div className="w-full xl:w-1/2">
+          <div className="bg-gradient-to-br from-white to-gray-50/80 backdrop-blur-sm rounded-3xl shadow-2xl border border-white/20 p-6 md:p-8 hover:shadow-2xl transition-all duration-300">
+            <h2 className="text-3xl font-bold mb-8 text-center bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
+              {t('index.chooseTemplate')}
+            </h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              {templates.map((template, index) => (
+                <div
+                  key={index}
+                  className="glass-card p-4 rounded-2xl cursor-pointer hover:shadow-xl transition-smooth hover:scale-105 hover:-translate-y-1 group animate-fade-in border-2 border-transparent hover:border-accent/30"
+                  style={{ animationDelay: `${0.3 + index * 0.1}s` }}
+                  onClick={() => handleTemplateClick(index + 1)}
+                >
+                  <div className="relative overflow-hidden rounded-xl mb-3 bg-gradient-to-br from-muted/50 to-muted">
+                    <img
+                      src={`/assets/template${index + 1}-preview.png`}
+                      alt={template.name}
+                      className={`w-full ${
+                        template.name === "Template 10"
+                          ? "h-[38px] w-[57px]"
+                          : "h-50"
+                      } object-cover transition-smooth group-hover:scale-110`}
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-primary/10 via-transparent to-accent/5 opacity-0 group-hover:opacity-100 transition-smooth"></div>
+                    <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-smooth">
+                      <div className="w-6 h-6 bg-accent/20 backdrop-blur-sm rounded-full flex items-center justify-center">
+                        <div className="w-2 h-2 bg-accent rounded-full"></div>
+                      </div>
+                    </div>
+                  </div>
+                  <p className="text-center font-semibold text-foreground group-hover:gradient-text transition-smooth">
+                    {template.name}
+                  </p>
+                </div>
+              ))}
 
-        <div
-          className="w-full md:w-1/2 bg-white p-6 rounded-lg shadow-md overflow-y-auto"
-          // style={{ maxHeight: "calc(100vh - 2rem)" }}
-        >
-          <h2 className="text-2xl font-semibold mb-4">Template Gallery</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {templates.map((template, index) => (
-              <div
-                key={index}
-                className="template-card bg-gray-100 p-4 rounded-lg cursor-pointer hover:shadow-lg transition-shadow duration-300"
-                onClick={() => handleTemplateClick(index + 1)}
-              >
-                <img
-                  src={`/assets/template${index + 1}-preview.png`}
-                  alt={template.name}
-                  className={`w-full ${
-                    template.name === "Template 10"
-                      ? "h-[38px] w-[57px]"
-                      : "h-50"
-                  } object-cover rounded mb-2`}
-                />
-                <p className="text-center font-medium">{template.name}</p>
+              {/* Template Selection Help */}
+              <div className="mt-8 p-4 bg-blue-50 rounded-xl border border-blue-200">
+                <div className="flex items-start gap-3">
+                  <div className="w-6 h- bg-red-500 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                    <svg
+                      className="w-3 h-3 text-white"
+                      fill="currentColor"
+                      viewBox="0 0 20 20"
+                    >
+                      <path
+                        fillRule="evenodd"
+                        d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
+                        clipRule="evenodd"
+                      />
+                    </svg>
+                  </div>
+                  <div className="flex-1">
+                    <p className="text-sm text-blue-800 font-medium">
+                      {t('index.templateSelectionTip')}
+                    </p>
+                    <p className="text-xs text-blue-600 mt-1">
+                      {t('index.templateSelectionHelp')}
+                    </p>
+                  </div>
+                </div>
               </div>
-            ))}
+            </div>
           </div>
         </div>
       </div>
-    </div>
+      </div></div>
+  
   );
 };
 

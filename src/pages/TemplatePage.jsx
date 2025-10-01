@@ -1,14 +1,18 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { ArrowLeft, Loader2 } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import InvoiceTemplate from '../components/InvoiceTemplate';
 import { generatePDF } from '../utils/pdfGenerator';
 import { templates } from '../utils/templateRegistry';
 
+
 const TemplatePage = () => {
   const location = useLocation();
   const navigate = useNavigate();
+  const { t } = useTranslation();
+  const [isLoading, setIsLoading] = useState(true);
   const [formData, setFormData] = useState(null);
   const [currentTemplate, setCurrentTemplate] = useState(1);
   const [isDownloading, setIsDownloading] = useState(false);
@@ -47,48 +51,72 @@ const TemplatePage = () => {
     navigate('/');
   };
 
+  // Loading simulation
+  useEffect(() => {
+    const timer = setTimeout(() => setIsLoading(false), 1000);
+    return () => clearTimeout(timer);
+  }, []);
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/30 flex items-center justify-center">
+        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-primary"></div>
+      </div>
+    );
+  }
+
   if (!formData) {
-    return <div>Loading...</div>;
+    return <div>{t('templatePage.loading')}</div>;
   }
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <div className="flex justify-between items-center mb-8">
-        <Button variant="ghost" onClick={handleBack}>
-          <ArrowLeft className="mr-2 h-4 w-4" /> Back
-        </Button>
-        <Button onClick={handleDownloadPDF} disabled={isDownloading}>
-          {isDownloading ? (
-            <>
-              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-              Downloading...
-            </>
-          ) : (
-            "Download PDF"
-          )}
-        </Button>
-      </div>
-
-      <div className="mb-8 overflow-x-auto">
-        <div className="flex space-x-4">
-          {templates.map((template, index) => (
-            <div
-              key={index}
-              className={`cursor-pointer p-4 border rounded ${
-                currentTemplate === index + 1
-                  ? "border-blue-500"
-                  : "border-gray-300"
-              }`}
-              onClick={() => handleTemplateChange(index + 1)}
-            >
-              {template.name}
-            </div>
-          ))}
+    <div className="min-h-screen bg-gradient-to-br from-sky-50 via-sky-100 to-indigo-50">
+      <div className="container mx-auto px-4 py-8">
+        <div className="flex justify-between items-center mb-8">
+          <Button variant="outline" onClick={handleBack} className="font-semibold">
+            <ArrowLeft className="mr-2 h-4 w-4" /> {t('templatePage.backToSwiftFacture')}
+          </Button>
+          <Button 
+            variant="accent" 
+            onClick={handleDownloadPDF} 
+            disabled={isDownloading}
+            className="font-semibold"
+          >
+            {isDownloading ? (
+              <>
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                {t('templatePage.generatingPDF')}
+              </>
+            ) : (
+              t('templatePage.downloadPDF')
+            )}
+          </Button>
         </div>
-      </div>
 
-      <div className="w-[210mm] h-[297mm] mx-auto border shadow-lg">
-        <InvoiceTemplate data={formData} templateNumber={currentTemplate} />
+        <div className="mb-8">
+          <h1 className="text-3xl font-bold gradient-text mb-4 text-center">
+            {t('templatePage.invoicePreview')}
+          </h1>
+          <div className="card-modern bg-blue-200">
+            <h3 className="text-lg font-semibold gradient-text mb-4">{t('templatePage.chooseTemplateStyle')}</h3>
+            <div className="flex flex-wrap gap-3">
+              {templates.map((template, index) => (
+                <Button
+                  key={index}
+                  variant={currentTemplate === index + 1 ? "default" : "outline"}
+                  onClick={() => handleTemplateChange(index + 1)}
+                  className="font-semibold"
+                >
+                  {template.name}
+                </Button>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        <div className="w-[210mm] h-[297mm] mx-auto border-2 border-border/30 shadow-2xl rounded-xl overflow-hidden bg-white">
+          <InvoiceTemplate data={formData} templateNumber={currentTemplate} />
+        </div>
       </div>
     </div>
   );

@@ -1,14 +1,14 @@
-import React from 'react';
+
 import FloatingLabelInput from './FloatingLabelInput';
 import { Trash2 } from 'lucide-react';
 import { Button } from "@/components/ui/button";
-import { formatCurrency, getCurrencySymbol } from '../utils/formatCurrency.js';
+import { getCurrencySymbol } from '../utils/formatCurrency.js';
 
 const ItemDetails = ({ items, handleItemChange, addItem, removeItem, currencyCode: propCurrencyCode }) => {
   let currencyCode = propCurrencyCode;
   if (!currencyCode) {
-    console.warn("Warning: currencyCode prop not provided to ItemDetails. Defaulting to 'INR'.");
-    currencyCode = 'INR';
+  console.warn("Warning: currencyCode prop not provided to ItemDetails. Defaulting to 'USD'.");
+  currencyCode = 'USD';
   }
   const currencySymbol = getCurrencySymbol(currencyCode);
 
@@ -64,7 +64,9 @@ const ItemDetails = ({ items, handleItemChange, addItem, removeItem, currencyCod
           )}
         </div>
       ))}
-      <Button type="button" onClick={addItem} className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Add Item</Button>
+      <Button type="button" variant="accent" onClick={addItem} className="font-semibold">
+        Add Item
+      </Button>
     </div>
   );
 };

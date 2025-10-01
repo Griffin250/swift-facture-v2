@@ -1,8 +1,10 @@
-import React from 'react';
+
+import { useTranslation } from 'react-i18next';
 import BaseTemplate from './BaseTemplate';
 import { formatCurrency } from '../../utils/formatCurrency';
 
 const Template2 = ({ data }) => {
+  const { t } = useTranslation();
   const { billTo, shipTo, invoice, yourCompany, items, taxPercentage, taxAmount, subTotal, grandTotal, notes, selectedCurrency } = data;
 
   return (
@@ -17,22 +19,22 @@ const Template2 = ({ data }) => {
             <p>{yourCompany.phone}</p>
           </div>
           <div className="text-right">
-            <h2 className="text-xl font-semibold text-cyan-700">Tax invoice</h2>
-            <p>INVOICE NUMBER: {invoice.number}</p>
-            <p>DATE: {invoice.date}</p>
-            <p>DUE DATE: {invoice.paymentDate}</p>
+            <h2 className="text-xl font-semibold text-cyan-700">{t('invoiceTemplate.invoice')}</h2>
+            <p>{t('invoiceTemplate.invoiceNumber').toUpperCase()}: {invoice.number}</p>
+            <p>{t('invoiceTemplate.invoiceDate').toUpperCase()}: {invoice.date}</p>
+            <p>{t('invoiceTemplate.dueDate').toUpperCase()}: {invoice.paymentDate}</p>
           </div>
         </div>
 
         <div className="flex justify-between mb-8">
           <div>
-            <h3 className="font-semibold text-lg mb-2 text-cyan-700">Bill To</h3>
+            <h3 className="font-semibold text-lg mb-2 text-cyan-700">{t('invoiceTemplate.billTo')}</h3>
             <p>{billTo.name}</p>
             <p>{billTo.address}</p>
             <p>{billTo.phone}</p>
           </div>
           <div>
-            <h3 className="font-semibold text-lg mb-2 text-cyan-700">Ship To</h3>
+            <h3 className="font-semibold text-lg mb-2 text-cyan-700">{t('invoiceTemplate.shipTo')}</h3>
             <p>{shipTo.name}</p>
             <p>{shipTo.address}</p>
             <p>{shipTo.phone}</p>
@@ -45,14 +47,14 @@ const Template2 = ({ data }) => {
               <tr>
                 <th className="p-2 text-left border border-gray-300">ID</th>
                 <th className="p-2 text-left border border-gray-300">
-                  Description
+                  {t('invoiceTemplate.description')}
                 </th>
                 <th className="p-2 text-right border border-gray-300">
-                  Quantity
+                  {t('invoiceTemplate.quantity')}
                 </th>
-                <th className="p-2 text-right border border-gray-300">Rate</th>
+                <th className="p-2 text-right border border-gray-300">{t('invoiceTemplate.rate')}</th>
                 <th className="p-2 text-right border border-gray-300">
-                  Amount
+                  {t('invoiceTemplate.amount')}
                 </th>
               </tr>
             </thead>
@@ -84,17 +86,17 @@ const Template2 = ({ data }) => {
         <div className="flex justify-end">
           <div className="w-1/3">
             <div className="flex justify-between mb-2">
-              <span>Subtotal:</span>
+              <span>{t('invoiceTemplate.subtotal')}:</span>
               <span>{formatCurrency(subTotal, selectedCurrency)}</span>
             </div>
             {taxPercentage > 0 && (
               <div className="flex justify-between mb-2">
-                <span>Tax ({taxPercentage}%):</span>
+                <span>{t('invoiceTemplate.tax')} ({taxPercentage}%):</span>
                 <span>{formatCurrency(taxAmount, selectedCurrency)}</span>
               </div>
             )}
             <div className="flex justify-between font-bold">
-              <span>Total:</span>
+              <span>{t('invoiceTemplate.total')}:</span>
               <span>{formatCurrency(grandTotal, selectedCurrency)}</span>
             </div>
           </div>
@@ -102,7 +104,7 @@ const Template2 = ({ data }) => {
 
         {notes && (
           <div className="mt-8 text-sm">
-            <h3 className="font-semibold mb-2">Notes:</h3>
+            <h3 className="font-semibold mb-2">{t('invoiceTemplate.notes')}:</h3>
             <p>{notes}</p>
           </div>
         )}

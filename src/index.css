@@ -5,64 +5,83 @@
 @layer base {
   :root {
     --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    --foreground: 0 0% 0%;
 
     --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    --card-foreground: 0 0% 0%;
  
     --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
+    --popover-foreground: 0 0% 0%;
  
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
+    --primary: 240 100% 50%;
+    --primary-foreground: 0 0% 100%;
+    --primary-glow: 240 100% 70%;
  
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
+    --secondary: 16 100% 50%;
+    --secondary-foreground: 0 0% 100%;
  
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
+    --muted: 0 0% 96%;
+    --muted-foreground: 0 0% 45%;
  
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
+    --accent: 16 100% 50%;
+    --accent-foreground: 0 0% 100%;
  
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
 
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
+    --border: 0 0% 90%;
+    --input: 0 0% 96%;
+    --ring: 240 100% 50%;
  
-    --radius: 0.5rem;
+    --radius: 0.75rem;
+    
+    /* Custom Design Tokens */
+    --gradient-primary: linear-gradient(135deg, hsl(240 100% 50%), hsl(240 100% 70%));
+    --gradient-secondary: linear-gradient(135deg, hsl(16 100% 50%), hsl(240 100% 50%));
+    --gradient-subtle: linear-gradient(180deg, hsl(0 0% 100%), hsl(0 0% 96%));
+    --shadow-elegant: 0 10px 30px -10px hsl(240 100% 50% / 0.15);
+    --shadow-glow: 0 0 40px hsl(240 100% 50% / 0.1);
+    --shadow-accent: 0 4px 20px hsl(16 100% 50% / 0.25);
+    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   }
  
   .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
+    --background: 0 0% 0%;
+    --foreground: 0 0% 100%;
  
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
+    --card: 0 0% 8%;
+    --card-foreground: 0 0% 100%;
  
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
+    --popover: 0 0% 8%;
+    --popover-foreground: 0 0% 100%;
  
-    --primary: 210 40% 98%;
-    --primary-foreground: 222.2 47.4% 11.2%;
+    --primary: 240 100% 60%;
+    --primary-foreground: 0 0% 100%;
+    --primary-glow: 240 100% 80%;
  
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
+    --secondary: 16 100% 60%;
+    --secondary-foreground: 0 0% 100%;
  
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
+    --muted: 0 0% 12%;
+    --muted-foreground: 0 0% 70%;
  
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
+    --accent: 16 100% 60%;
+    --accent-foreground: 0 0% 100%;
  
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
  
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 212.7 26.8% 83.9%;
+    --border: 0 0% 20%;
+    --input: 0 0% 12%;
+    --ring: 240 100% 60%;
+    
+    /* Dark Mode Gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(240 100% 60%), hsl(240 100% 80%));
+    --gradient-secondary: linear-gradient(135deg, hsl(16 100% 60%), hsl(240 100% 60%));
+    --gradient-subtle: linear-gradient(180deg, hsl(0 0% 8%), hsl(0 0% 12%));
+    --shadow-elegant: 0 10px 30px -10px hsl(240 100% 60% / 0.3);
+    --shadow-glow: 0 0 40px hsl(240 100% 60% / 0.2);
+    --shadow-accent: 0 4px 20px hsl(16 100% 60% / 0.4);
   }
 }
  
@@ -71,6 +90,121 @@
     @apply border-border;
   }
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground min-h-screen;
+    font-feature-settings: "cv11", "ss01";
+    font-variant-numeric: oldstyle-nums;
   }
 }
+
+@layer components {
+  .glass-card {
+    @apply bg-card/90 backdrop-blur-sm border border-border/40 shadow-lg;
+  }
+  
+  .elegant-shadow {
+    box-shadow: var(--shadow-elegant);
+  }
+  
+  .glow-shadow {
+    box-shadow: var(--shadow-glow);
+  }
+  
+  .accent-shadow {
+    box-shadow: var(--shadow-accent);
+  }
+  
+  .transition-smooth {
+    transition: var(--transition-smooth);
+  }
+  
+  .btn-primary {
+    @apply text-primary-foreground px-8 py-3 rounded-xl font-semibold elegant-shadow hover:shadow-xl transition-smooth hover:scale-105 hover:-translate-y-0.5;
+    background: var(--gradient-primary);
+  }
+  
+  .btn-secondary {
+    @apply bg-gradient-to-r from-secondary to-secondary/80 text-secondary-foreground px-8 py-3 rounded-xl font-semibold border border-border/30 hover:border-secondary/50 transition-smooth hover:scale-105;
+  }
+  
+  .btn-accent {
+    @apply bg-gradient-to-r from-accent to-accent/90 text-accent-foreground px-8 py-3 rounded-xl font-semibold accent-shadow hover:shadow-xl transition-smooth hover:scale-105 hover:-translate-y-0.5;
+  }
+  
+  .card-modern {
+    @apply glass-card rounded-2xl p-8 elegant-shadow hover:shadow-xl transition-smooth;
+  }
+  
+  .gradient-text {
+    @apply bg-gradient-to-r from-primary via-secondary to-accent bg-clip-text text-transparent font-bold;
+  }
+}
+/*.... Receipt section....*/
+ .custom-radio {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    position: relative;
+    padding-left: 2rem;
+    margin-bottom: 0.5rem;
+  }
+  
+  .custom-radio input[type="radio"] {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+  }
+  
+  .custom-radio .radio-label {
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    background-color: #f8fafc;
+    border: 2px solid #e2e8f0;
+    transition: all 0.3s ease;
+    font-weight: 500;
+    color: #4a5568;
+  }
+  
+  .custom-radio input[type="radio"]:checked + .radio-label {
+    background-color: #3b82f6;
+    border-color: #3b82f6;
+    color: white;
+    box-shadow: 0 4px 6px -1px rgba(59, 130, 246, 0.3);
+  }
+  
+  .custom-radio input[type="radio"]:focus + .radio-label {
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+  }
+  
+  .custom-radio:hover .radio-label {
+    border-color: #3b82f6;
+    transform: translateY(-1px);
+  }
+  
+  /* Card Modern Style */
+  .card-modern {
+    background: white;
+    border-radius: 1rem;
+    padding: 1.5rem;
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    transition: all 0.3s ease;
+  }
+  
+  .card-modern:hover {
+    box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.15), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  }
+  
+  /* Gradient Text */
+  .gradient-text {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  
+  /* Responsive Adjustments */
+  @media (max-width: 1023px) {
+    .card-modern {
+      padding: 1rem;
+    }
+  }
