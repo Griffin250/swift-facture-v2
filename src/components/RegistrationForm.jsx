@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -8,6 +9,7 @@ import { useToast } from "@/components/ui/use-toast";
 const RegistrationForm = ({ plan, billing, onClose }) => {
   const { t } = useTranslation('common');
   const { toast } = useToast();
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -27,15 +29,22 @@ const RegistrationForm = ({ plan, billing, onClose }) => {
     e.preventDefault();
     setIsSubmitting(true);
 
-    // Simulate API call
+    // Store plan selection in sessionStorage
+    sessionStorage.setItem('selectedPlan', JSON.stringify({
+      plan: plan.name,
+      billing,
+      formData
+    }));
+
+    toast({
+      title: "Redirecting...",
+      description: "Please sign up or login to complete your subscription.",
+    });
+
+    // Redirect to login page
     setTimeout(() => {
-      toast({
-        title: t('common.success'),
-        description: `Registration for ${plan.name} (${billing}) successful!`,
-      });
-      setIsSubmitting(false);
-      onClose();
-    }, 1500);
+      navigate('/login');
+    }, 1000);
   };
 
   const price = billing === "monthly" 

@@ -128,18 +128,26 @@ const AuthPage = () => {
     }
   };
 
-  // Check if user is already logged in
+  // Check if user is already logged in and listen for auth changes
   useEffect(() => {
-    const checkUser = async () => {
-      const { data: { session } } = await supabase.auth.getSession();
+    // Set up auth state listener
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
+      (event, session) => {
+        if (session) {
+          navigate('/');
+        }
+      }
+    );
+
+    // Check for existing session
+    supabase.auth.getSession().then(({ data: { session } }) => {
       if (session) {
         navigate('/');
-      } else {
-        setIsLoading(false);
       }
-    };
+      setIsLoading(false);
+    });
 
-    checkUser();
+    return () => subscription.unsubscribe();
   }, [navigate]);
 
   if (isLoading) {
