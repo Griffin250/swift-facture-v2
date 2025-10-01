@@ -84,7 +84,7 @@ const Header = () => {
   };
 
   return (
-    <header className="glass-card sticky top-0 z-50 px-4 py-3 animate-fade-in bg-gray-100">
+    <header className="glass-card sticky top-0 z-50 px-4 py-3 animate-fade-in bg-background/80 backdrop-blur-md border-b border-border/50">
       <div className="container mx-auto flex items-center justify-between">
         <div className="flex items-center space-x-3">
           <div className="relative flex items-center">
@@ -106,7 +106,7 @@ const Header = () => {
                 <h1 className="text-xl md:text-2xl font-bold gradient-text">
                   {t('brand.name')}
                 </h1>
-                <p className="text-xs md:text-sm text-muted-foreground hidden md:block font-bold">
+                <p className="text-xs md:text-sm text-gray-600 hidden md:block font-bold">
                   {t('brand.tagline')}
                 </p>
               </div>
@@ -118,10 +118,10 @@ const Header = () => {
             <button
               key={item.to}
               onClick={() => handleNavigation(item.to)}
-              className={`text-sm font-medium px-3 py-2 hover:text-blue-700 rounded-md transition-smooth ${
+              className={`text-sm font-medium px-3 py-2 rounded-md transition-smooth ${
                 isActive(item.to)
-                  ? "bg-primary/10 text-primary"
-                  : "text-muted-foreground hover:text-foreground"
+                  ? "bg-blue-100 text-blue-700"
+                  : "text-gray-600 hover:text-gray-900 hover:bg-gray-100"
               }`}
             >
               {item.label}
@@ -146,7 +146,7 @@ const Header = () => {
                     </span>
                   </>
                 )}
-                <ChevronDown className="h-3 w-3 md:h-4 md:w-4 text-gray-800 font-bold" />
+                <ChevronDown className="h-3 w-3 md:h-4 md:w-4 text-foreground font-bold" />
               </button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-32">
@@ -158,7 +158,7 @@ const Header = () => {
                     setLanguage(lang.code);
                   }}
                   className={`flex items-center gap-2 cursor-pointer ${
-                    language === lang.code ? "bg-blue-50 text-blue-700" : ""
+                    language === lang.code ? "bg-primary/10 text-primary" : ""
                   }`}
                 >
                   <img
@@ -192,15 +192,15 @@ const Header = () => {
 
             {/* Show user profile if logged in, otherwise show login button */}
             {loading ? (
-              <div className="px-4 py-2.5 rounded-lg bg-gray-100 animate-pulse">
-                <div className="h-4 w-16 bg-gray-300 rounded"></div>
+              <div className="px-4 py-2.5 rounded-lg bg-muted animate-pulse">
+                <div className="h-4 w-16 bg-muted-foreground/30 rounded"></div>
               </div>
             ) : user ? (
               <UserProfile />
             ) : (
               <button
                 onClick={() => handleNavigation("/login")}
-                className="px-4 py-2.5 rounded-lg bg-white border border-gray-300 text-gray-700 font-semibold text-sm shadow-md hover:shadow-lg transform transition-all duration-200 hover:scale-105 active:scale-95 focus:outline-none focus:ring-2 focus:ring-gray-200 focus:ring-opacity-50 hover:bg-gray-50 hover:border-gray-400"
+                className="px-4 py-2.5 rounded-lg bg-background border border-border text-foreground font-semibold text-sm shadow-md hover:shadow-lg transform transition-all duration-200 hover:scale-105 active:scale-95 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:ring-opacity-50 hover:bg-muted/50 hover:border-primary/50"
               >
                 <span className="flex items-center justify-center">
                   <svg
@@ -225,7 +225,7 @@ const Header = () => {
 
           {/* Mobile menu button */}
           <button
-            className="md:hidden p-2 rounded-md hover:bg-muted/50"
+            className="md:hidden p-2 rounded-md hover:bg-gray-100"
             aria-label="Toggle menu"
             aria-expanded={open}
             onClick={() => setOpen((v) => !v)}
@@ -237,7 +237,7 @@ const Header = () => {
 
       {/* Mobile menu panel */}
       {open && (
-        <div className="md:hidden bg-background/80 border-t border-border/20">
+        <div className="md:hidden bg-white border-t border-gray-200">
           <div className="container mx-auto px-4 py-3 flex flex-col">
             {navItems.map((item) => (
               <button
@@ -245,8 +245,8 @@ const Header = () => {
                 onClick={() => handleNavigation(item.to)}
                 className={`text-left w-full px-3 py-2 rounded-md text-sm ${
                   isActive(item.to)
-                    ? "bg-primary/10 text-primary"
-                    : "text-muted-foreground hover:bg-muted/30"
+                    ? "bg-blue-100 text-blue-700"
+                    : "text-gray-600 hover:bg-gray-100"
                 }`}
               >
                 {item.label}
@@ -272,8 +272,8 @@ const Header = () => {
 
               {/* Mobile user profile or login button */}
               {loading ? (
-                <div className="flex-1 px-3 py-2 rounded-md bg-gray-100 animate-pulse">
-                  <div className="h-4 bg-gray-300 rounded"></div>
+                <div className="flex-1 px-3 py-2 rounded-md bg-muted animate-pulse">
+                  <div className="h-4 bg-muted-foreground/30 rounded"></div>
                 </div>
               ) : user ? (
                 <div className="flex-1">
@@ -282,7 +282,7 @@ const Header = () => {
               ) : (
                 <button
                   onClick={() => handleNavigation("/login")}
-                  className="flex-1 px-3 py-2 rounded-md bg-accent/10 text-accent-foreground bg-white border border-gray-300 text-gray-700 font-semibold text-sm shadow-md hover:shadow-lg transform transition-all duration-200 hover:scale-105 active:scale-95 focus:outline-none focus:ring-2 focus:ring-gray-200 focus:ring-opacity-50 hover:bg-gray-50 hover:border-gray-400"
+                  className="flex-1 px-3 py-2 rounded-md bg-background border border-border text-foreground font-semibold text-sm shadow-md hover:shadow-lg transform transition-all duration-200 hover:scale-105 active:scale-95 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:ring-opacity-50 hover:bg-muted/50 hover:border-primary/50"
                 >
                   <span className="flex items-center justify-center">
                     <svg

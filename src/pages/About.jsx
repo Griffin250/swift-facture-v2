@@ -34,6 +34,12 @@ const About = () => {
   const [openFaq, setOpenFaq] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const { t } = useTranslation('common');
+
+  // Handle navigation with scroll to top
+  const handleNavigation = (path) => {
+    navigate(path);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
   
   // Get translated data
   const steps = getSteps(t);
@@ -63,8 +69,8 @@ const About = () => {
               <p className="mt-4 text-muted-foreground max-w-xl">{t('about.subtitle')}</p>
 
               <div className="mt-6 flex flex-wrap gap-3">
-                <button onClick={() => navigate('/invoice')} className="px-4 py-2 rounded-md bg-primary text-primary-foreground font-semibold">{t('buttons.createInvoice')}</button>
-                <button onClick={() => navigate('/receipt')} className="px-4 py-2 rounded-md border border-border text-muted-foreground">{t('buttons.openReceipt')}</button>
+                <button onClick={() => handleNavigation('/invoice')} className="px-4 py-2 rounded-md bg-primary text-primary-foreground font-semibold">{t('buttons.createInvoice')}</button>
+                <button onClick={() => handleNavigation('/receipt')} className="px-4 py-2 rounded-md border border-border text-muted-foreground">{t('buttons.openReceipt')}</button>
               </div>
             </div>
 
@@ -135,8 +141,8 @@ const About = () => {
             <div className="text-sm text-muted-foreground">{t('about.cta.subtitle')}</div>
           </div>
           <div className="flex gap-3">
-            <button onClick={() => navigate('/invoice')} className="px-4 py-2 rounded-md bg-primary text-primary-foreground font-semibold">{t('buttons.createInvoice')}</button>
-            <button onClick={() => navigate('/premium')} className="px-4 py-2 rounded-md border border-border text-muted-foreground">{t('buttons.viewPricing')}</button>
+            <button onClick={() => handleNavigation('/invoice')} className="px-4 py-2 rounded-md bg-primary text-primary-foreground font-semibold">{t('buttons.createInvoice')}</button>
+            <button onClick={() => handleNavigation('/premium')} className="px-4 py-2 rounded-md border border-border text-muted-foreground">{t('buttons.viewPricing')}</button>
           </div>
         </div>
       </section>

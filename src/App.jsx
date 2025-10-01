@@ -20,7 +20,9 @@ import { AuthProvider } from "./contexts/AuthContext";
 // Profile pages
 import Profile from "./pages/Profile";
 import EditProfile from "./pages/EditProfile";
+import Settings from "./pages/Settings";
 import DebugAuth from "./pages/DebugAuth";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 const queryClient = new QueryClient();
 
@@ -45,8 +47,9 @@ const App = () => (
             <Route path="/estimate" element={<Estimate />} />
             <Route path="/login" element={<Login />} />
             <Route path="/about" element={<About />} />
-            <Route path="/profile" element={<Profile />} />
-            <Route path="/profile/edit" element={<EditProfile />} />
+            <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
+            <Route path="/profile/edit" element={<ProtectedRoute><EditProfile /></ProtectedRoute>} />
+            <Route path="/settings" element={<ProtectedRoute><Settings /></ProtectedRoute>} />
             <Route path="/debug-auth" element={<DebugAuth />} />
         
 

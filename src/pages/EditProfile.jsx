@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, Save, Upload, Camera, X } from 'lucide-react';
+import { ArrowLeft, Save, Camera, X } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/components/ui/use-toast';
@@ -22,6 +22,12 @@ const EditProfile = () => {
   const [avatarFile, setAvatarFile] = useState(null);
   const [avatarPreview, setAvatarPreview] = useState(null);
   const fileInputRef = useRef(null);
+
+  // Handle navigation with scroll to top
+  const handleNavigation = (path) => {
+    navigate(path);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
@@ -189,7 +195,7 @@ const EditProfile = () => {
           <Button
             variant="ghost"
             size="icon"
-            onClick={() => navigate('/profile')}
+            onClick={() => handleNavigation('/profile')}
             className="rounded-full"
           >
             <ArrowLeft className="h-4 w-4" />
@@ -329,7 +335,7 @@ const EditProfile = () => {
                 <Button
                   type="button"
                   variant="outline"
-                  onClick={() => navigate('/profile')}
+                  onClick={() => handleNavigation('/profile')}
                   disabled={loading}
                 >
                   {t('common.cancel', 'Cancel')}

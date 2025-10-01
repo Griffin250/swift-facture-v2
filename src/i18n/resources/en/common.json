@@ -314,6 +314,10 @@
     },
     "quickActions": {
       "title": "Quick Actions",
+      "createInvoice": "Create Invoice",
+      "generateReceipt": "Generate Receipt", 
+      "manageCustomers": "Manage Customers",
+      "exportReports": "Export Reports",
       "newInvoice": {
         "title": "New Invoice",
         "description": "Create professional invoices"
@@ -754,6 +758,7 @@
     "accountSettings": "Account Settings",
     "editProfile": "Edit Profile",
     "viewProfile": "View Profile",
+    "settings": "Settings",
     "signOut": "Sign Out",
     "signingOut": "Signing out...",
     "profilePicture": "Profile Picture",
@@ -780,5 +785,75 @@
     "twoFactorDesc": "Add an extra layer of security",
     "change": "Change",
     "enable": "Enable"
+  },
+  "settings": {
+    "title": "Settings",
+    "description": "Customize your experience and manage your preferences",
+    "save": "Save Changes",
+    "reset": "Reset to Defaults",
+    "saved": "Settings saved successfully",
+    "saveError": "Failed to save settings",
+    "unsavedChanges": "You have unsaved changes",
+    "exportSuccess": "Settings exported successfully",
+    "exportError": "Failed to export settings",
+    "importSuccess": "Settings imported successfully",
+    "importError": "Failed to import settings",
+    "userInfo": "Logged in as {{email}}",
+    "lastLogin": "Last login: {{date}}",
+    "appearance": {
+      "title": "Appearance",
+      "description": "Customize the look and feel of the application"
+    },
+    "theme": {
+      "title": "Theme",
+      "current": "Current theme",
+      "light": "Light",
+      "dark": "Dark",
+      "system": "System"
+    },
+    "language": {
+      "title": "Language",
+      "select": "Select Language"
+    },
+    "notifications": {
+      "title": "Notifications",
+      "description": "Manage your notification preferences",
+      "email": "Email Notifications",
+      "emailDesc": "Receive updates via email",
+      "push": "Push Notifications",
+      "pushDesc": "Receive browser push notifications",
+      "invoiceReminders": "Invoice Reminders",
+      "invoiceRemindersDesc": "Get notified about upcoming invoice deadlines",
+      "paymentAlerts": "Payment Alerts",
+      "paymentAlertsDesc": "Get notified when payments are received"
+    },
+    "business": {
+      "title": "Business Preferences",
+      "description": "Configure your business settings and defaults",
+      "currency": "Default Currency",
+      "dateFormat": "Date Format",
+      "invoicePrefix": "Invoice Number Prefix",
+      "autoSave": "Auto-save",
+      "autoSaveDesc": "Automatically save your work"
+    },
+    "preferences": {
+      "compactMode": "Compact Mode",
+      "compactModeDesc": "Use smaller interface elements"
+    },
+    "data": {
+      "title": "Data Management",
+      "description": "Export, import, and manage your data",
+      "export": "Export Settings",
+      "exportButton": "Export Data",
+      "import": "Import Settings",
+      "importButton": "Import Data"
+    },
+    "privacy": {
+      "title": "Privacy & Security",
+      "analytics": "Analytics",
+      "analyticsDesc": "Help improve the app by sharing usage data",
+      "crashReports": "Crash Reports",
+      "crashReportsDesc": "Automatically send crash reports to help fix issues"
+    }
   }
 }

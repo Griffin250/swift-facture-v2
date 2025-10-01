@@ -82,6 +82,12 @@ const Dashboard = () => {
   const { t } = useTranslation('common');
   const { user } = useAuth();
 
+  // Handle navigation with scroll to top
+  const handleNavigation = (path) => {
+    navigate(path);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
   // Get user display name from metadata or email
   const getUserDisplayName = () => {
     if (!user) return 'User';
@@ -294,14 +300,14 @@ const Dashboard = () => {
                 {/* Action buttons */}
                 <div className="flex flex-wrap gap-3">
                   <Button
-                    onClick={() => navigate("/invoice")}
+                    onClick={() => handleNavigation("/invoice")}
                     className="gap-2 bg-white text-blue-600 hover:bg-blue-50 shadow-lg hover:shadow-xl transition-all duration-300"
                   >
                     <Plus className="h-4 w-4" />
                     {t('dashboard.buttons.newInvoice', 'Create Invoice')}
                   </Button>
                   <Button
-                    onClick={() => navigate("/receipt")}
+                    onClick={() => handleNavigation("/receipt")}
                     variant="outline"
                     className="gap-2 border-white/30 text-orange-600 hover:bg-white/10 backdrop-blur-sm"
                   >
@@ -309,7 +315,7 @@ const Dashboard = () => {
                     {t('dashboard.buttons.createReceipt', 'Create Receipt')}
                   </Button>
                   <Button
-                    onClick={() => navigate("/customers")}
+                    onClick={() => handleNavigation("/customers")}
                     variant="outline"
                     className="gap-2 border-white/30 text-orange-600 hover:bg-white/10 backdrop-blur-sm"
                   >
@@ -339,7 +345,7 @@ const Dashboard = () => {
                     </p>
                     <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
                       <Button
-                        onClick={() => navigate("/login")}
+                        onClick={() => handleNavigation("/login")}
                         size="lg"
                         className="gap-3 bg-white text-blue-900 hover:bg-blue-50 shadow-xl hover:shadow-2xl transition-all duration-300 text-lg px-8 py-4 rounded-xl font-semibold"
                       >
@@ -347,7 +353,7 @@ const Dashboard = () => {
                         {t('dashboard.guest.buttons.getStarted', 'Get Started Free')}
                       </Button>
                       <Button
-                        onClick={() => navigate("/about")}
+                        onClick={() => handleNavigation("/about")}
                         variant="outline"
                         size="lg"
                         className="gap-3 border-white/30 text-orange-600 hover:bg-white/10 backdrop-blur-sm text-lg px-8 py-4 rounded-xl font-semibold"
@@ -454,7 +460,7 @@ const Dashboard = () => {
                       </div>
                     </div>
                     <Button 
-                      onClick={() => navigate("/login")}
+                      onClick={() => handleNavigation("/login")}
                       className="w-full mt-4 bg-blue-600 hover:bg-blue-700"
                     >
                       {t('dashboard.guest.benefits.productivity.cta', 'Sign Up to Save Time')}
@@ -509,7 +515,7 @@ const Dashboard = () => {
                       </div>
                     </div>
                     <Button 
-                      onClick={() => navigate("/login")}
+                      onClick={() => handleNavigation("/login")}
                       className="w-full mt-4 bg-green-600 hover:bg-green-700"
                     >
                       {t('dashboard.guest.benefits.business.cta', 'Start Growing Today')}
@@ -530,7 +536,7 @@ const Dashboard = () => {
                     </p>
                     <div className="flex flex-col sm:flex-row gap-4 justify-center">
                       <Button
-                        onClick={() => navigate("/invoice")}
+                        onClick={() => handleNavigation("/invoice")}
                         variant="outline"
                         className="gap-2 border-purple-300 text-purple-700 hover:bg-purple-100"
                       >
@@ -538,7 +544,7 @@ const Dashboard = () => {
                         {t('dashboard.guest.tryNow.tryInvoice', 'Try Creating Invoice')}
                       </Button>
                       <Button
-                        onClick={() => navigate("/receipt")}
+                        onClick={() => handleNavigation("/receipt")}
                         variant="outline"
                         className="gap-2 border-purple-300 text-purple-700 hover:bg-purple-100"
                       >
@@ -568,7 +574,7 @@ const Dashboard = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
               <Card 
                 className="bg-gradient-to-br from-blue-50 to-blue-100 border-blue-200 hover:shadow-lg transition-all duration-300 cursor-pointer group"
-                onClick={() => navigate("/invoice")}
+                onClick={() => handleNavigation("/invoice")}
               >
                 <CardContent className="p-4">
                   <div className="flex items-center gap-3">
@@ -589,7 +595,7 @@ const Dashboard = () => {
 
               <Card 
                 className="bg-gradient-to-br from-green-50 to-green-100 border-green-200 hover:shadow-lg transition-all duration-300 cursor-pointer group"
-                onClick={() => navigate("/estimate")}
+                onClick={() => handleNavigation("/estimate")}
               >
                 <CardContent className="p-4">
                   <div className="flex items-center gap-3">
@@ -610,7 +616,7 @@ const Dashboard = () => {
 
               <Card 
                 className="bg-gradient-to-br from-purple-50 to-purple-100 border-purple-200 hover:shadow-lg transition-all duration-300 cursor-pointer group"
-                onClick={() => navigate("/customers")}
+                onClick={() => handleNavigation("/customers")}
               >
                 <CardContent className="p-4">
                   <div className="flex items-center gap-3">
@@ -631,7 +637,7 @@ const Dashboard = () => {
 
               <Card 
                 className="bg-gradient-to-br from-orange-50 to-orange-100 border-orange-200 hover:shadow-lg transition-all duration-300 cursor-pointer group"
-                onClick={() => navigate("/receipt")}
+                onClick={() => handleNavigation("/receipt")}
               >
                 <CardContent className="p-4">
                   <div className="flex items-center gap-3">
@@ -869,15 +875,15 @@ const Dashboard = () => {
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <TrendingUp className="h-5 w-5 text-green-600" />
-                  {t('dashboard.quickActions.title')}
+                  {t('dashboard.quickActions.title', 'Quick Actions')}
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-3">
                 {[
-                  { icon: FileText, label: t('dashboard.quickActions.createInvoice'), action: () => navigate("/invoice") },
-                  { icon: Receipt, label: t('dashboard.quickActions.generateReceipt'), action: () => navigate("/receipt") },
-                  { icon: Users, label: t('dashboard.quickActions.manageCustomers'), action: () => {} },
-                  { icon: Download, label: t('dashboard.quickActions.exportReports'), action: () => {} },
+                  { icon: FileText, label: t('dashboard.quickActions.createInvoice', 'Create Invoice'), action: () => handleNavigation("/invoice") },
+                  { icon: Receipt, label: t('dashboard.quickActions.generateReceipt', 'Generate Receipt'), action: () => handleNavigation("/receipt") },
+                  { icon: Users, label: t('dashboard.quickActions.manageCustomers', 'Manage Customers'), action: () => handleNavigation("/customers") },
+                  { icon: Download, label: t('dashboard.quickActions.exportReports', 'Export Reports'), action: () => {} },
                 ].map((action, index) => (
                   <Button
                     key={index}
@@ -952,7 +958,7 @@ const Dashboard = () => {
                         size="sm"
                         variant="link"
                         className="text-indigo-600 p-0 h-auto"
-                        onClick={() => navigate("/customers")}
+                        onClick={() => handleNavigation("/customers")}
                       >
                         {t('dashboard.tips.step1.action', 'Add Customer →')}
                       </Button>
@@ -976,7 +982,7 @@ const Dashboard = () => {
                         size="sm"
                         variant="link"
                         className="text-indigo-600 p-0 h-auto"
-                        onClick={() => navigate("/invoice")}
+                        onClick={() => handleNavigation("/invoice")}
                       >
                         {t('dashboard.tips.step2.action', 'Create Invoice →')}
                       </Button>
@@ -1000,7 +1006,7 @@ const Dashboard = () => {
                         size="sm"
                         variant="link"
                         className="text-indigo-600 p-0 h-auto"
-                        onClick={() => navigate("/premium")}
+                        onClick={() => handleNavigation("/premium")}
                       >
                         {t('dashboard.tips.step3.action', 'Learn More →')}
                       </Button>
@@ -1024,7 +1030,7 @@ const Dashboard = () => {
                   </div>
                   <Button
                     size="sm"
-                    onClick={() => navigate("/template")}
+                    onClick={() => handleNavigation("/template")}
                     className="bg-indigo-600 hover:bg-indigo-700"
                   >
                     {t('dashboard.tips.proTip.action', 'Explore Templates')}

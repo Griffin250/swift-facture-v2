@@ -314,6 +314,10 @@
     },
     "quickActions": {
       "title": "Actions Rapides",
+      "createInvoice": "Créer une Facture",
+      "generateReceipt": "Générer un Reçu",
+      "manageCustomers": "Gérer les Clients", 
+      "exportReports": "Exporter les Rapports",
       "newInvoice": {
         "title": "Nouvelle Facture",
         "description": "Créer des factures professionnelles"
@@ -754,6 +758,7 @@
     "accountSettings": "Paramètres du Compte",
     "editProfile": "Modifier le Profil",
     "viewProfile": "Voir le Profil",
+    "settings": "Paramètres",
     "signOut": "Se Déconnecter",
     "signingOut": "Déconnexion...",
     "profilePicture": "Photo de Profil",
@@ -780,5 +785,75 @@
     "twoFactorDesc": "Ajouter une couche de sécurité supplémentaire",
     "change": "Changer",
     "enable": "Activer"
+  },
+  "settings": {
+    "title": "Paramètres",
+    "description": "Personnalisez votre expérience et gérez vos préférences",
+    "save": "Sauvegarder les Modifications",
+    "reset": "Réinitialiser par Défaut",
+    "saved": "Paramètres sauvegardés avec succès",
+    "saveError": "Échec de la sauvegarde des paramètres",
+    "unsavedChanges": "Vous avez des modifications non sauvegardées",
+    "exportSuccess": "Paramètres exportés avec succès",
+    "exportError": "Échec de l'export des paramètres",
+    "importSuccess": "Paramètres importés avec succès",
+    "importError": "Échec de l'import des paramètres",
+    "userInfo": "Connecté en tant que {{email}}",
+    "lastLogin": "Dernière connexion : {{date}}",
+    "appearance": {
+      "title": "Apparence",
+      "description": "Personnalisez l'apparence de l'application"
+    },
+    "theme": {
+      "title": "Thème",
+      "current": "Thème actuel",
+      "light": "Clair",
+      "dark": "Sombre",
+      "system": "Système"
+    },
+    "language": {
+      "title": "Langue",
+      "select": "Sélectionner la langue"
+    },
+    "notifications": {
+      "title": "Notifications",
+      "description": "Gérez vos préférences de notification",
+      "email": "Notifications Email",
+      "emailDesc": "Recevoir les mises à jour par email",
+      "push": "Notifications Push",
+      "pushDesc": "Recevoir les notifications push du navigateur",
+      "invoiceReminders": "Rappels de Factures",
+      "invoiceRemindersDesc": "Être notifié des échéances de factures",
+      "paymentAlerts": "Alertes de Paiement",
+      "paymentAlertsDesc": "Être notifié lors de la réception des paiements"
+    },
+    "business": {
+      "title": "Préférences Commerciales",
+      "description": "Configurez vos paramètres commerciaux et valeurs par défaut",
+      "currency": "Devise par Défaut",
+      "dateFormat": "Format de Date",
+      "invoicePrefix": "Préfixe de Numéro de Facture",
+      "autoSave": "Sauvegarde automatique",
+      "autoSaveDesc": "Sauvegarder automatiquement votre travail"
+    },
+    "preferences": {
+      "compactMode": "Mode Compact",
+      "compactModeDesc": "Utiliser des éléments d'interface plus petits"
+    },
+    "data": {
+      "title": "Gestion des Données",
+      "description": "Exporter, importer et gérer vos données",
+      "export": "Exporter les Paramètres",
+      "exportButton": "Exporter les Données",
+      "import": "Importer les Paramètres",
+      "importButton": "Importer les Données"
+    },
+    "privacy": {
+      "title": "Confidentialité et Sécurité",
+      "analytics": "Analytiques",
+      "analyticsDesc": "Aider à améliorer l'app en partageant les données d'usage",
+      "crashReports": "Rapports de Plantage",
+      "crashReportsDesc": "Envoyer automatiquement les rapports de plantage pour corriger les problèmes"
+    }
   }
 }

@@ -6,6 +6,12 @@ const NotFound = () => {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(true);
 
+  // Handle navigation with scroll to top
+  const handleNavigation = (path) => {
+    navigate(path);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
   // Loading simulation
   useEffect(() => {
     const timer = setTimeout(() => setIsLoading(false), 1000);
@@ -32,7 +38,7 @@ const NotFound = () => {
           <p className="text-muted-foreground mb-6">We couldn&apos;t find the page you&apos;re looking for. It may have been moved or the URL is incorrect.</p>
 
           <div className="flex justify-center gap-3">
-            <Button onClick={() => navigate('/')} className="px-4">Go home</Button>
+            <Button onClick={() => handleNavigation('/')} className="px-4">Go home</Button>
             <Button variant="outline" onClick={() => navigate(-1)} className="px-4">Go back</Button>
           </div>
         </div>

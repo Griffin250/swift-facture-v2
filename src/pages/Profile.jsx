@@ -11,6 +11,12 @@ const Profile = () => {
   const { t } = useTranslation('common');
   const navigate = useNavigate();
 
+  // Handle navigation with scroll to top
+  const handleNavigation = (path) => {
+    navigate(path);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
   if (!user) {
     navigate('/login');
     return null;
@@ -76,7 +82,7 @@ const Profile = () => {
                 {t('profile.personalInfo', 'Personal Information')}
               </CardTitle>
               <Button
-                onClick={() => navigate('/profile/edit')}
+                onClick={() => handleNavigation('/profile/edit')}
                 className="bg-primary hover:bg-primary/90"
               >
                 <Edit className="h-4 w-4 mr-2" />

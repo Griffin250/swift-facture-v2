@@ -56,7 +56,7 @@ const UserProfile = () => {
         title: "Success",
         description: "You have been logged out successfully.",
       });
-      navigate('/');
+      handleNavigation('/');
     } catch (error) {
       toast({
         title: "Error",
@@ -68,14 +68,20 @@ const UserProfile = () => {
     }
   };
 
+  const handleNavigation = (to) => {
+    navigate(to);
+    // Scroll to top of the page
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
   const handleEditProfile = () => {
-    navigate('/profile/edit');
+    handleNavigation('/profile/edit');
   };
 
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <button className="flex items-center gap-2 px-3 py-2 rounded-lg border border-gray-300 bg-white hover:bg-gray-50 transition-colors duration-200 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-primary focus:ring-opacity-50">
+        <button className="flex items-center gap-2 px-3 py-2 rounded-lg border border-gray-300 bg-white hover:bg-gray-50 transition-colors duration-200 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50">
           <Avatar className="h-6 w-6">
             <AvatarImage src={user.user_metadata?.avatar_url} alt={getUserDisplayName()} />
             <AvatarFallback className="text-xs font-semibold bg-primary/10 text-primary">
@@ -103,16 +109,24 @@ const UserProfile = () => {
           onClick={handleEditProfile}
           className="cursor-pointer flex items-center gap-2 py-2"
         >
-          <Settings className="h-4 w-4" />
+          <User className="h-4 w-4" />
           <span>{t('profile.editProfile', 'Edit Profile')}</span>
         </DropdownMenuItem>
         
         <DropdownMenuItem
-          onClick={() => navigate('/profile')}
+          onClick={() => handleNavigation('/profile')}
           className="cursor-pointer flex items-center gap-2 py-2"
         >
           <User className="h-4 w-4" />
           <span>{t('profile.viewProfile', 'View Profile')}</span>
+        </DropdownMenuItem>
+        
+        <DropdownMenuItem
+          onClick={() => handleNavigation('/settings')}
+          className="cursor-pointer flex items-center gap-2 py-2"
+        >
+          <Settings className="h-4 w-4" />
+          <span>{t('profile.settings', 'Settings')}</span>
         </DropdownMenuItem>
         
         <DropdownMenuSeparator />
