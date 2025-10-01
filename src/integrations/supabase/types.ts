@@ -14,127 +14,13 @@ export type Database = {
   }
   public: {
     Tables: {
-      conversations: {
-        Row: {
-          created_at: string
-          id: string
-          last_message: string | null
-          last_message_at: string | null
-          participant_ids: string[]
-          updated_at: string
-        }
-        Insert: {
-          created_at?: string
-          id?: string
-          last_message?: string | null
-          last_message_at?: string | null
-          participant_ids: string[]
-          updated_at?: string
-        }
-        Update: {
-          created_at?: string
-          id?: string
-          last_message?: string | null
-          last_message_at?: string | null
-          participant_ids?: string[]
-          updated_at?: string
-        }
-        Relationships: []
-      }
-      messages: {
-        Row: {
-          content: string | null
-          conversation_id: string
-          created_at: string
-          delivered_at: string | null
-          id: string
-          image_url: string | null
-          message_type: string
-          read_at: string | null
-          read_by: string[] | null
-          sender_id: string
-        }
-        Insert: {
-          content?: string | null
-          conversation_id: string
-          created_at?: string
-          delivered_at?: string | null
-          id?: string
-          image_url?: string | null
-          message_type?: string
-          read_at?: string | null
-          read_by?: string[] | null
-          sender_id: string
-        }
-        Update: {
-          content?: string | null
-          conversation_id?: string
-          created_at?: string
-          delivered_at?: string | null
-          id?: string
-          image_url?: string | null
-          message_type?: string
-          read_at?: string | null
-          read_by?: string[] | null
-          sender_id?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "messages_conversation_id_fkey"
-            columns: ["conversation_id"]
-            isOneToOne: false
-            referencedRelation: "conversations"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      profiles: {
-        Row: {
-          avatar_url: string | null
-          created_at: string
-          id: string
-          name: string
-          phone_number: string | null
-          updated_at: string
-          user_id: string
-        }
-        Insert: {
-          avatar_url?: string | null
-          created_at?: string
-          id?: string
-          name: string
-          phone_number?: string | null
-          updated_at?: string
-          user_id: string
-        }
-        Update: {
-          avatar_url?: string | null
-          created_at?: string
-          id?: string
-          name?: string
-          phone_number?: string | null
-          updated_at?: string
-          user_id?: string
-        }
-        Relationships: []
-      }
+      [_ in never]: never
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      delete_conversation: {
-        Args: { conversation_id: string }
-        Returns: undefined
-      }
-      mark_message_delivered: {
-        Args: { message_id: string }
-        Returns: undefined
-      }
-      mark_message_read: {
-        Args: { message_id: string; user_id: string }
-        Returns: undefined
-      }
+      [_ in never]: never
     }
     Enums: {
       [_ in never]: never
