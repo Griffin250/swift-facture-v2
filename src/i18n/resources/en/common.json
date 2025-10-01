@@ -30,7 +30,10 @@
     "signUp": "Sign up",
     "createAccount": "Create Account",
     "continueWithGoogle": "Continue with Google",
-    "continueWithGitHub": "Continue with GitHub"
+    "continueWithGitHub": "Continue with GitHub",
+    "createReceipt": "Create Receipt",
+    "newInvoice": "New Invoice",
+    "manageCustomers": "Manage Customers"
   },
   "common": {
     "loading": "Loading...",
@@ -240,13 +243,6 @@
   "dashboard": {
     "title": "Dashboard",
     "subtitle": "Welcome back! Here's what's happening with your business today.",
-    "stats": {
-      "totalInvoices": "Total Invoices",
-      "totalRevenue": "Total Revenue",
-      "outstanding": "Outstanding",
-      "thisMonth": "This Month",
-      "total": "Total"
-    },
     "charts": {
       "revenueOverview": "Revenue Overview",
       "revenueDescription": "Monthly revenue performance for the last 7 months",
@@ -286,12 +282,135 @@
         "status": "STATUS"
       }
     },
+    "greeting": {
+      "morning": "Good morning",
+      "afternoon": "Good afternoon",
+      "evening": "Good evening"
+    },
+    "welcome": {
+      "message": "Welcome to your SwiftFacture dashboard",
+      "features": {
+        "invoices": {
+          "title": "Create Invoices",
+          "description": "Professional invoicing made simple"
+        },
+        "tracking": {
+          "title": "Track Progress",
+          "description": "Monitor your business performance"
+        },
+        "payments": {
+          "title": "Get Paid Faster",
+          "description": "Streamline your payment process"
+        }
+      }
+    },
+    "stats": {
+      "title": "Your Business Overview",
+      "totalInvoices": "Total Invoices",
+      "totalRevenue": "Total Revenue",
+      "outstanding": "Outstanding",
+      "thisMonth": "This Month",
+      "total": "Total"
+    },
     "quickActions": {
       "title": "Quick Actions",
-      "createInvoice": "Create Invoice",
-      "generateReceipt": "Generate Receipt",
-      "manageCustomers": "Manage Customers",
-      "exportReports": "Export Reports"
+      "newInvoice": {
+        "title": "New Invoice",
+        "description": "Create professional invoices"
+      },
+      "newEstimate": {
+        "title": "New Estimate",
+        "description": "Send project estimates"
+      },
+      "addCustomer": {
+        "title": "Add Customer",
+        "description": "Manage client information"
+      },
+      "newReceipt": {
+        "title": "New Receipt",
+        "description": "Generate payment receipts"
+      }
+    },
+    "gettingStarted": {
+      "title": "Getting Started with SwiftFacture",
+      "subtitle": "Here are some tips to help you get the most out of your invoicing experience"
+    },
+    "tips": {
+      "step1": {
+        "title": "Add Your First Customer",
+        "description": "Start by adding customer information to make invoicing faster",
+        "action": "Add Customer →"
+      },
+      "step2": {
+        "title": "Create Your First Invoice",
+        "description": "Choose from our professional templates and customize as needed",
+        "action": "Create Invoice →"
+      },
+      "step3": {
+        "title": "Track Your Business",
+        "description": "Monitor your revenue and payment status from this dashboard",
+        "action": "Learn More →"
+      },
+      "proTip": {
+        "title": "Pro Tip",
+        "description": "Save time by creating invoice templates for recurring clients and services",
+        "action": "Explore Templates"
+      }
+    },
+    "guest": {
+      "hero": {
+        "title": "Professional Invoicing Made Simple",
+        "subtitle": "Create beautiful invoices, track payments, and manage your business with SwiftFacture"
+      },
+      "buttons": {
+        "getStarted": "Get Started Free",
+        "learnMore": "Learn More"
+      },
+      "features": {
+        "invoicing": {
+          "title": "Smart Invoicing",
+          "description": "Create professional invoices in minutes with our beautiful templates and smart automation"
+        },
+        "customers": {
+          "title": "Customer Management",
+          "description": "Keep track of all your clients, their contact details, and payment history in one place"
+        },
+        "analytics": {
+          "title": "Business Insights",
+          "description": "Track your revenue, monitor payment status, and get insights to grow your business"
+        }
+      },
+      "benefits": {
+        "productivity": {
+          "title": "Boost Your Productivity",
+          "subtitle": "Sign up to unlock powerful features that save you hours every week",
+          "feature1": "Save Customer Information",
+          "feature1Desc": "Never type client details again with our customer database",
+          "feature2": "Template Library",
+          "feature2Desc": "Access professional invoice templates for every industry",
+          "feature3": "Payment Tracking",
+          "feature3Desc": "Monitor which invoices are paid, pending, or overdue",
+          "cta": "Sign Up to Save Time"
+        },
+        "business": {
+          "title": "Grow Your Business",
+          "subtitle": "Professional tools to help you get paid faster and look more credible",
+          "feature1": "Professional Branding",
+          "feature1Desc": "Add your logo and brand colors to every invoice",
+          "feature2": "Revenue Analytics",
+          "feature2Desc": "See your income trends and identify your best clients",
+          "feature3": "Multi-language Support",
+          "feature3Desc": "Create invoices in French and English for global clients",
+          "cta": "Start Growing Today"
+        }
+      },
+      "tryNow": {
+        "title": "Want to Try Before You Sign Up?",
+        "description": "Explore our invoice templates and create a sample invoice to see how easy it is",
+        "tryInvoice": "Try Creating Invoice",
+        "tryReceipt": "Try Creating Receipt",
+        "note": "Sign up to save your work and access all features"
+      }
     },
     "recentActivity": {
       "title": "Recent Activity",
@@ -628,5 +747,38 @@
     "notes": "Notes",
     "thankyou": "Thank you for your business!",
     "na": "N/A"
+  },
+  "profile": {
+    "title": "Profile",
+    "personalInfo": "Personal Information",
+    "accountSettings": "Account Settings",
+    "editProfile": "Edit Profile",
+    "viewProfile": "View Profile",
+    "signOut": "Sign Out",
+    "signingOut": "Signing out...",
+    "profilePicture": "Profile Picture",
+    "changeAvatar": "Change Avatar",
+    "uploading": "Uploading...",
+    "removePreview": "Remove Preview",
+    "avatarGuidelines": "Supported formats: JPG, PNG, GIF. Max size: 5MB.",
+    "firstName": "First Name",
+    "lastName": "Last Name",
+    "email": "Email",
+    "fullName": "Full Name",
+    "enterFirstName": "Enter your first name",
+    "enterLastName": "Enter your last name",
+    "emailCannotChange": "Email address cannot be changed",
+    "updating": "Updating...",
+    "saveChanges": "Save Changes",
+    "joinedDate": "Joined",
+    "lastSignIn": "Last Sign In",
+    "verified": "Verified",
+    "notVerified": "Not Verified",
+    "changePassword": "Change Password",
+    "changePasswordDesc": "Update your account password",
+    "twoFactor": "Two-Factor Authentication",
+    "twoFactorDesc": "Add an extra layer of security",
+    "change": "Change",
+    "enable": "Enable"
   }
 }

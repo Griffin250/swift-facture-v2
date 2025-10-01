@@ -30,7 +30,10 @@
     "signUp": "S'inscrire",
     "createAccount": "Créer un compte",
     "continueWithGoogle": "Continuer avec Google",
-    "continueWithGitHub": "Continuer avec GitHub"
+    "continueWithGitHub": "Continuer avec GitHub",
+    "createReceipt": "Créer un Reçu",
+    "newInvoice": "Nouvelle Facture",
+    "manageCustomers": "Gérer les Clients"
   },
   "common": {
     "loading": "Chargement...",
@@ -240,7 +243,30 @@
   "dashboard": {
     "title": "Tableau de bord",
     "subtitle": "Bon retour ! Voici ce qui se passe avec votre entreprise aujourd'hui.",
+    "greeting": {
+      "morning": "Bonjour",
+      "afternoon": "Bon après-midi",
+      "evening": "Bonsoir"
+    },
+    "welcome": {
+      "message": "Bienvenue sur votre tableau de bord SwiftFacture",
+      "features": {
+        "invoices": {
+          "title": "Créer des Factures",
+          "description": "Facturation professionnelle simplifiée"
+        },
+        "tracking": {
+          "title": "Suivre les Progrès",
+          "description": "Surveillez les performances de votre entreprise"
+        },
+        "payments": {
+          "title": "Être Payé Plus Vite",
+          "description": "Rationalisez votre processus de paiement"
+        }
+      }
+    },
     "stats": {
+      "title": "Aperçu de Votre Entreprise",
       "totalInvoices": "Total des factures",
       "totalRevenue": "Chiffre d'affaires total",
       "outstanding": "En attente",
@@ -287,11 +313,104 @@
       }
     },
     "quickActions": {
-      "title": "Actions rapides",
-      "createInvoice": "Créer une facture",
-      "generateReceipt": "Générer un reçu",
-      "manageCustomers": "Gérer les clients",
-      "exportReports": "Exporter les rapports"
+      "title": "Actions Rapides",
+      "newInvoice": {
+        "title": "Nouvelle Facture",
+        "description": "Créer des factures professionnelles"
+      },
+      "newEstimate": {
+        "title": "Nouveau Devis",
+        "description": "Envoyer des estimations de projet"
+      },
+      "addCustomer": {
+        "title": "Ajouter un Client",
+        "description": "Gérer les informations client"
+      },
+      "newReceipt": {
+        "title": "Nouveau Reçu",
+        "description": "Générer des reçus de paiement"
+      }
+    },
+    "gettingStarted": {
+      "title": "Commencer avec SwiftFacture",
+      "subtitle": "Voici quelques conseils pour tirer le meilleur parti de votre expérience de facturation"
+    },
+    "tips": {
+      "step1": {
+        "title": "Ajoutez Votre Premier Client",
+        "description": "Commencez par ajouter les informations client pour une facturation plus rapide",
+        "action": "Ajouter un Client →"
+      },
+      "step2": {
+        "title": "Créez Votre Première Facture",
+        "description": "Choisissez parmi nos modèles professionnels et personnalisez selon vos besoins",
+        "action": "Créer une Facture →"
+      },
+      "step3": {
+        "title": "Suivez Votre Entreprise",
+        "description": "Surveillez vos revenus et l'état des paiements depuis ce tableau de bord",
+        "action": "En Savoir Plus →"
+      },
+      "proTip": {
+        "title": "Conseil Pro",
+        "description": "Gagnez du temps en créant des modèles de factures pour les clients et services récurrents",
+        "action": "Explorer les Modèles"
+      }
+    },
+    "guest": {
+      "hero": {
+        "title": "Facturation Professionnelle Simplifiée",
+        "subtitle": "Créez de belles factures, suivez les paiements et gérez votre entreprise avec SwiftFacture"
+      },
+      "buttons": {
+        "getStarted": "Commencer Gratuitement",
+        "learnMore": "En Savoir Plus"
+      },
+      "features": {
+        "invoicing": {
+          "title": "Facturation Intelligente",
+          "description": "Créez des factures professionnelles en quelques minutes avec nos beaux modèles et l'automatisation intelligente"
+        },
+        "customers": {
+          "title": "Gestion Client",
+          "description": "Gardez une trace de tous vos clients, leurs coordonnées et l'historique des paiements en un seul endroit"
+        },
+        "analytics": {
+          "title": "Insights Métier",
+          "description": "Suivez vos revenus, surveillez l'état des paiements et obtenez des informations pour développer votre entreprise"
+        }
+      },
+      "benefits": {
+        "productivity": {
+          "title": "Boostez Votre Productivité",
+          "subtitle": "Inscrivez-vous pour débloquer des fonctionnalités puissantes qui vous font économiser des heures chaque semaine",
+          "feature1": "Sauvegarder les Informations Client",
+          "feature1Desc": "Ne retapez plus jamais les détails client avec notre base de données client",
+          "feature2": "Bibliothèque de Modèles",
+          "feature2Desc": "Accédez à des modèles de factures professionnels pour chaque secteur",
+          "feature3": "Suivi des Paiements",
+          "feature3Desc": "Surveillez quelles factures sont payées, en attente ou en retard",
+          "cta": "S'inscrire pour Gagner du Temps"
+        },
+        "business": {
+          "title": "Développez Votre Entreprise",
+          "subtitle": "Outils professionnels pour vous aider à être payé plus rapidement et paraître plus crédible",
+          "feature1": "Image de Marque Professionnelle",
+          "feature1Desc": "Ajoutez votre logo et vos couleurs de marque à chaque facture",
+          "feature2": "Analyses de Revenus",
+          "feature2Desc": "Voyez vos tendances de revenus et identifiez vos meilleurs clients",
+          "feature3": "Support Multilingue",
+          "feature3Desc": "Créez des factures en français et en anglais pour les clients internationaux",
+          "cta": "Commencer à Grandir Aujourd'hui"
+        }
+      },
+      "tryNow": {
+        "title": "Vous Voulez Essayer Avant de Vous Inscrire ?",
+        "description": "Explorez nos modèles de factures et créez un exemple de facture pour voir comme c'est facile",
+        "tryInvoice": "Essayer de Créer une Facture",
+        "tryReceipt": "Essayer de Créer un Reçu",
+        "note": "Inscrivez-vous pour sauvegarder votre travail et accéder à toutes les fonctionnalités"
+      }
     },
     "recentActivity": {
       "title": "Activité récente",
@@ -628,5 +747,38 @@
     "notes": "Notes",
     "thankyou": "Merci pour votre confiance !",
     "na": "N/D"
+  },
+  "profile": {
+    "title": "Profil",
+    "personalInfo": "Informations Personnelles",
+    "accountSettings": "Paramètres du Compte",
+    "editProfile": "Modifier le Profil",
+    "viewProfile": "Voir le Profil",
+    "signOut": "Se Déconnecter",
+    "signingOut": "Déconnexion...",
+    "profilePicture": "Photo de Profil",
+    "changeAvatar": "Changer l'Avatar",
+    "uploading": "Téléchargement...",
+    "removePreview": "Supprimer l'Aperçu",
+    "avatarGuidelines": "Formats supportés : JPG, PNG, GIF. Taille max : 5Mo.",
+    "firstName": "Prénom",
+    "lastName": "Nom",
+    "email": "Email",
+    "fullName": "Nom Complet",
+    "enterFirstName": "Entrez votre prénom",
+    "enterLastName": "Entrez votre nom",
+    "emailCannotChange": "L'adresse email ne peut pas être modifiée",
+    "updating": "Mise à jour...",
+    "saveChanges": "Sauvegarder les Modifications",
+    "joinedDate": "Inscrit",
+    "lastSignIn": "Dernière Connexion",
+    "verified": "Vérifié",
+    "notVerified": "Non Vérifié",
+    "changePassword": "Changer le Mot de Passe",
+    "changePasswordDesc": "Mettre à jour votre mot de passe",
+    "twoFactor": "Authentification à Deux Facteurs",
+    "twoFactorDesc": "Ajouter une couche de sécurité supplémentaire",
+    "change": "Changer",
+    "enable": "Activer"
   }
 }

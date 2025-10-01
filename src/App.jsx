@@ -15,6 +15,12 @@ import Dashboard from "./pages/Dashboard";
 import Login from "./pages/Login";
 import Estimate from "./pages/Estimate";
 import Customers from "./pages/Customers";
+import { AuthProvider } from "./contexts/AuthContext";
+
+// Profile pages
+import Profile from "./pages/Profile";
+import EditProfile from "./pages/EditProfile";
+import DebugAuth from "./pages/DebugAuth";
 
 const queryClient = new QueryClient();
 
@@ -22,28 +28,33 @@ const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
       <Toaster />
-      <BrowserRouter>
-        <Header />
+      <AuthProvider>
+        <BrowserRouter>
+          <Header />
 
-        <Routes>
-          {navItems.map(({ to, page }) => (
-            <Route key={to} path={to} element={page} />
-          ))}
-          <Route path="/" element={<Dashboard />} />
-          <Route path="/invoice" element={<Index />} />
-          <Route path="/template" element={<TemplatePage />} />
-          <Route path="/receipt" element={<ReceiptPage />} />
-          <Route path="/premium" element={<Premium />} />
-          <Route path="/customers" element={<Customers />} />
-          <Route path="/estimate" element={<Estimate />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/about" element={<About />} />
-      
+          <Routes>
+            {navItems.map(({ to, page }) => (
+              <Route key={to} path={to} element={page} />
+            ))}
+            <Route path="/" element={<Dashboard />} />
+            <Route path="/invoice" element={<Index />} />
+            <Route path="/template" element={<TemplatePage />} />
+            <Route path="/receipt" element={<ReceiptPage />} />
+            <Route path="/premium" element={<Premium />} />
+            <Route path="/customers" element={<Customers />} />
+            <Route path="/estimate" element={<Estimate />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/about" element={<About />} />
+            <Route path="/profile" element={<Profile />} />
+            <Route path="/profile/edit" element={<EditProfile />} />
+            <Route path="/debug-auth" element={<DebugAuth />} />
+        
 
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-        <Footer />
-      </BrowserRouter>
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+          <Footer />
+        </BrowserRouter>
+      </AuthProvider>
     </TooltipProvider>
   </QueryClientProvider>
 );

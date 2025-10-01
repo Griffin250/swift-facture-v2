@@ -12,12 +12,15 @@ import {
 import usaFlag from "../../public/assets/icons/usaFlag.png";
 import franceFlag from "../../public/assets/icons/franceFlag.png";
 import { useLanguage } from "../hooks/useLanguage";
+import { useAuth } from "../contexts/AuthContext";
+import UserProfile from "./UserProfile";
 
 const Header = () => {
   const [open, setOpen] = useState(false);
   const navigate = useNavigate();
   const { t, ready } = useTranslation('common');
   const { currentLanguage, changeLanguage } = useLanguage();
+  const { user, loading } = useAuth();
 
   // Fallback function for when translations aren't ready
   const getTranslation = (key, fallback) => {
@@ -187,28 +190,37 @@ const Header = () => {
               </span>
             </button>
 
-            <button
-              onClick={() => handleNavigation("/login")}
-              className="px-4 py-2.5 rounded-lg bg-white border border-gray-300 text-gray-700 font-semibold text-sm shadow-md hover:shadow-lg transform transition-all duration-200 hover:scale-105 active:scale-95 focus:outline-none focus:ring-2 focus:ring-gray-200 focus:ring-opacity-50 hover:bg-gray-50 hover:border-gray-400"
-            >
-              <span className="flex items-center justify-center">
-                <svg
-                  className="w-4 h-4 mr-2"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
-                  />
-                </svg>
-                {t('buttons.account')}
-              </span>
-            </button>
+            {/* Show user profile if logged in, otherwise show login button */}
+            {loading ? (
+              <div className="px-4 py-2.5 rounded-lg bg-gray-100 animate-pulse">
+                <div className="h-4 w-16 bg-gray-300 rounded"></div>
+              </div>
+            ) : user ? (
+              <UserProfile />
+            ) : (
+              <button
+                onClick={() => handleNavigation("/login")}
+                className="px-4 py-2.5 rounded-lg bg-white border border-gray-300 text-gray-700 font-semibold text-sm shadow-md hover:shadow-lg transform transition-all duration-200 hover:scale-105 active:scale-95 focus:outline-none focus:ring-2 focus:ring-gray-200 focus:ring-opacity-50 hover:bg-gray-50 hover:border-gray-400"
+              >
+                <span className="flex items-center justify-center">
+                  <svg
+                    className="w-4 h-4 mr-2"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+                    />
+                  </svg>
+                  {t('buttons.account')}
+                </span>
+              </button>
+            )}
           </div>
 
           {/* Mobile menu button */}
@@ -258,28 +270,39 @@ const Header = () => {
                 </span>
               </button>
 
-              <button
-                onClick={() => handleNavigation("/login")}
-                className="flex-1 px-3 py-2 rounded-md bg-accent/10 text-accent-foreground bg-white border border-gray-300 text-gray-700 font-semibold text-sm shadow-md hover:shadow-lg transform transition-all duration-200 hover:scale-105 active:scale-95 focus:outline-none focus:ring-2 focus:ring-gray-200 focus:ring-opacity-50 hover:bg-gray-50 hover:border-gray-400"
-              >
-                <span className="flex items-center justify-center">
-                  <svg
-                    className="w-4 h-4 mr-2"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="2"
-                      d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
-                    />
-                  </svg>
-                  {t('buttons.account')}
-                </span>
-              </button>
+              {/* Mobile user profile or login button */}
+              {loading ? (
+                <div className="flex-1 px-3 py-2 rounded-md bg-gray-100 animate-pulse">
+                  <div className="h-4 bg-gray-300 rounded"></div>
+                </div>
+              ) : user ? (
+                <div className="flex-1">
+                  <UserProfile />
+                </div>
+              ) : (
+                <button
+                  onClick={() => handleNavigation("/login")}
+                  className="flex-1 px-3 py-2 rounded-md bg-accent/10 text-accent-foreground bg-white border border-gray-300 text-gray-700 font-semibold text-sm shadow-md hover:shadow-lg transform transition-all duration-200 hover:scale-105 active:scale-95 focus:outline-none focus:ring-2 focus:ring-gray-200 focus:ring-opacity-50 hover:bg-gray-50 hover:border-gray-400"
+                >
+                  <span className="flex items-center justify-center">
+                    <svg
+                      className="w-4 h-4 mr-2"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+                      />
+                    </svg>
+                    {t('buttons.account')}
+                  </span>
+                </button>
+              )}
             </div>
           </div>
         </div>

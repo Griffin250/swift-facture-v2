@@ -48,7 +48,17 @@ const AuthPage = () => {
         });
         navigate('/');
       } else {
-        // Sign up
+        // Sign up - validate required fields
+        if (!formData.firstName.trim() || !formData.lastName.trim()) {
+          toast({
+            title: "Error",
+            description: "First name and last name are required.",
+            variant: "destructive",
+          });
+          setIsSubmitting(false);
+          return;
+        }
+
         if (formData.password !== formData.confirmPassword) {
           toast({
             title: "Error",
@@ -58,6 +68,22 @@ const AuthPage = () => {
           setIsSubmitting(false);
           return;
         }
+
+        if (formData.password.length < 6) {
+          toast({
+            title: "Error",
+            description: "Password must be at least 6 characters long.",
+            variant: "destructive",
+          });
+          setIsSubmitting(false);
+          return;
+        }
+
+        console.log('Attempting signup with:', {
+          email: formData.email,
+          firstName: formData.firstName,
+          lastName: formData.lastName
+        });
 
         const { data, error } = await supabase.auth.signUp({
           email: formData.email,
@@ -71,18 +97,29 @@ const AuthPage = () => {
           },
         });
 
+        console.log('Signup response:', { data, error });
+
         if (error) throw error;
 
-        toast({
-          title: "Success!",
-          description: "Your account has been created successfully.",
-        });
-        navigate('/');
+        // Check if email confirmation is required
+        if (data.user && !data.session) {
+          toast({
+            title: "Check your email!",
+            description: "We've sent you a confirmation link to complete your registration.",
+          });
+        } else {
+          toast({
+            title: "Success!",
+            description: "Your account has been created successfully.",
+          });
+          navigate('/');
+        }
       }
     } catch (error) {
+      console.error('Auth error:', error);
       toast({
         title: "Error",
-        description: error.message,
+        description: error.message || "An error occurred during authentication",
         variant: "destructive",
       });
     } finally {
@@ -189,6 +226,7 @@ const AuthPage = () => {
                     onChange={handleInputChange}
                     className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
                     placeholder={t('auth.form.placeholders.firstName')}
+                    required
                   />
                 </div>
                 <div>
@@ -203,6 +241,7 @@ const AuthPage = () => {
                     onChange={handleInputChange}
                     className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
                     placeholder={t('auth.form.placeholders.lastName')}
+                    required
                   />
                 </div>
               </div>
