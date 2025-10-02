@@ -20,24 +20,6 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Initialize avatar storage bucket (only needs to be done once)
-    const initStorage = async () => {
-      try {
-        await supabase.storage.createBucket('avatars', {
-          public: true,
-          allowedMimeTypes: ['image/jpeg', 'image/png', 'image/gif', 'image/webp'],
-          fileSizeLimit: 5242880, // 5MB
-        });
-      } catch (error) {
-        // Bucket might already exist, which is fine
-        if (!error.message?.includes('already exists')) {
-          console.log('Avatar storage initialization:', error.message);
-        }
-      }
-    };
-    
-    initStorage();
-
     // Get initial session
     const getSession = async () => {
       try {

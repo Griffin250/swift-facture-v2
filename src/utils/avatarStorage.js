@@ -1,32 +1,6 @@
 import { supabase } from '@/integrations/supabase/client';
 
 /**
- * Initialize the avatars storage bucket with proper policies
- * This should be run once during setup
- */
-export const initializeAvatarStorage = async () => {
-  try {
-    // Create the avatars bucket if it doesn't exist
-    const { data, error } = await supabase.storage.createBucket('avatars', {
-      public: true,
-      allowedMimeTypes: ['image/jpeg', 'image/png', 'image/gif', 'image/webp'],
-      fileSizeLimit: 5242880, // 5MB
-    });
-
-    if (error && error.message !== 'Bucket avatars already exists') {
-      console.error('Error creating avatars bucket:', error);
-      return false;
-    }
-
-    console.log('Avatars bucket initialized successfully');
-    return true;
-  } catch (error) {
-    console.error('Failed to initialize avatar storage:', error);
-    return false;
-  }
-};
-
-/**
  * Upload an avatar image to Supabase storage
  * @param {File} file - The image file to upload
  * @param {string} userId - The user's ID
@@ -34,18 +8,14 @@ export const initializeAvatarStorage = async () => {
  */
 export const uploadAvatar = async (file, userId) => {
   try {
-    // Delete old avatar if exists
-    const oldAvatarPath = `avatars/${userId}`;
-    await supabase.storage.from('avatars').remove([oldAvatarPath]);
-
     const fileExt = file.name.split('.').pop();
-    const fileName = `${userId}-${Date.now()}.${fileExt}`;
-    const filePath = `avatars/${fileName}`;
+    const fileName = `${userId}/${userId}-${Date.now()}.${fileExt}`;
+    const filePath = fileName;
 
     // Upload new file
     const { error: uploadError } = await supabase.storage
       .from('avatars')
-      .upload(filePath, file);
+      .upload(filePath, file, { upsert: true });
 
     if (uploadError) throw uploadError;
 
@@ -68,11 +38,18 @@ export const uploadAvatar = async (file, userId) => {
  */
 export const deleteAvatar = async (userId) => {
   try {
-    const { error } = await supabase.storage
+    const { data: files } = await supabase.storage
       .from('avatars')
-      .remove([`avatars/${userId}`]);
+      .list(userId);
 
-    if (error) throw error;
+    if (files && files.length > 0) {
+      const filePaths = files.map(file => `${userId}/${file.name}`);
+      const { error } = await supabase.storage
+        .from('avatars')
+        .remove(filePaths);
+
+      if (error) throw error;
+    }
     return true;
   } catch (error) {
     console.error('Error deleting avatar:', error);
