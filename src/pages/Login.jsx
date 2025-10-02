@@ -98,30 +98,49 @@ const AuthPage = () => {
         if (error) {
           // Handle specific authentication errors
           let errorMessage = '';
-          switch (error.message) {
-            case 'Invalid login credentials':
-              errorMessage = t('auth.error.invalidCredentials', 'Invalid email or password. Please check your credentials and try again.');
-              break;
-            case 'Email not confirmed':
-              errorMessage = t('auth.error.emailNotConfirmed', 'Please check your email and click the confirmation link before signing in.');
-              break;
-            case 'Too many requests':
-              errorMessage = t('auth.error.tooManyRequests', 'Too many login attempts. Please wait a moment before trying again.');
-              break;
-            case 'User not found':
-              errorMessage = t('auth.error.userNotFound', 'No account found with this email address. Please sign up first.');
-              break;
-            default:
-              // Check if it's a network/connection error
-              if (error.message.includes('Failed to fetch') || error.message.includes('NetworkError')) {
-                errorMessage = t('auth.error.networkError', 'Connection error. Please check your internet connection and try again.');
-              } else {
-                errorMessage = t('auth.error.loginFailed', 'Login failed. Please try again.');
-              }
+          
+          // Check for invalid credentials (wrong email or password)
+          if (error.message === 'Invalid login credentials' || 
+              error.status === 400 || 
+              error.message.includes('credentials')) {
+            errorMessage = t('auth.error.invalidCredentials', 'Email or password is incorrect. Please try again.');
+            // Set field-level errors for both email and password
+            setFieldErrors({
+              email: t('auth.error.invalidCredentials', 'Email or password is incorrect'),
+              password: t('auth.error.invalidCredentials', 'Email or password is incorrect')
+            });
+          } else {
+            // Handle other errors
+            switch (error.message) {
+              case 'Email not confirmed':
+                errorMessage = t('auth.error.emailNotConfirmed', 'Please check your email and click the confirmation link before signing in.');
+                break;
+              case 'Too many requests':
+                errorMessage = t('auth.error.tooManyRequests', 'Too many login attempts. Please wait a moment before trying again.');
+                break;
+              case 'User not found':
+                errorMessage = t('auth.error.userNotFound', 'Email or password is incorrect. Please try again.');
+                setFieldErrors({
+                  email: t('auth.error.invalidCredentials', 'Email or password is incorrect'),
+                  password: t('auth.error.invalidCredentials', 'Email or password is incorrect')
+                });
+                break;
+              default:
+                // Check if it's a network/connection error
+                if (error.message.includes('Failed to fetch') || error.message.includes('NetworkError')) {
+                  errorMessage = t('auth.error.networkError', 'Connection error. Please check your internet connection and try again.');
+                } else {
+                  errorMessage = t('auth.error.loginFailed', 'Email or password is incorrect. Please try again.');
+                  setFieldErrors({
+                    email: t('auth.error.invalidCredentials', 'Email or password is incorrect'),
+                    password: t('auth.error.invalidCredentials', 'Email or password is incorrect')
+                  });
+                }
+            }
           }
           
           toast({
-            title: t('auth.error.title', 'Authentication Error'),
+            title: t('auth.error.title', 'Login Failed'),
             description: errorMessage,
             variant: "destructive",
           });
