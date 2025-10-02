@@ -48,6 +48,7 @@
     "optional": "Optionnel",
     "required": "Requis",
     "search": "Rechercher...",
+    "retry": "Réessayer",
     "noResults": "Aucun résultat trouvé",
     "showing": "Affichage de {{from}} à {{to}} sur {{total}} entrées",
     "itemsPerPage": "Éléments par page"
@@ -276,6 +277,22 @@
       "secure": "Sécurisé",
       "fast": "Configuration rapide",
       "free": "Compte gratuit"
+    },
+    "error": {
+      "title": "Erreur d'authentification",
+      "invalidEmail": "Veuillez saisir une adresse email valide.",
+      "passwordRequired": "Le mot de passe est requis.",
+      "passwordMatch": "Les mots de passe ne correspondent pas.",
+      "invalidCredentials": "Email ou mot de passe invalide. Veuillez vérifier vos identifiants et réessayer.",
+      "emailNotConfirmed": "Veuillez vérifier votre email et cliquer sur le lien de confirmation avant de vous connecter.",
+      "tooManyRequests": "Trop de tentatives de connexion. Veuillez attendre un moment avant de réessayer.",
+      "userNotFound": "Aucun compte trouvé avec cette adresse email. Veuillez vous inscrire d'abord.",
+      "networkError": "Erreur de connexion. Veuillez vérifier votre connexion internet et réessayer.",
+      "loginFailed": "Échec de la connexion. Veuillez réessayer."
+    },
+    "success": {
+      "loginTitle": "Succès !",
+      "loginMessage": "Vous avez été connecté avec succès."
     }
   },
   "dashboard": {
@@ -892,6 +909,165 @@
       "analyticsDesc": "Aider à améliorer l'app en partageant les données d'usage",
       "crashReports": "Rapports de Plantage",
       "crashReportsDesc": "Envoyer automatiquement les rapports de plantage pour corriger les problèmes"
+    }
+  },
+  "admin": {
+    "title": "Tableau de Bord Admin",
+    "search": {
+      "placeholder": "Rechercher utilisateurs, organisations, factures..."
+    },
+    "profile": {
+      "admin": "Admin",
+      "settings": "Paramètres",
+      "logout": "Déconnexion"
+    },
+    "footer": {
+      "support": "Support"
+    },
+    "sidebar": {
+      "dashboard": "Tableau de Bord",
+      "users": "Utilisateurs",
+      "organizations": "Organisations",
+      "subscriptions": "Abonnements",
+      "documents": "Documents",
+      "clients": "Clients",
+      "support": "Support",
+      "monitoring": "Surveillance",
+      "settings": "Paramètres",
+      "expand": "Développer la barre latérale",
+      "collapse": "Réduire la barre latérale"
+    },
+    "dashboard": {
+      "title": "Tableau de Bord Admin",
+      "subtitle": "Aperçu des métriques de la plateforme et activité récente",
+      "metrics": {
+        "totalUsers": "Total Utilisateurs",
+        "totalCustomers": "Total Clients",
+        "totalRevenue": "Revenus Totaux",
+        "organizations": "Organisations",
+        "activeTrials": "Essais Actifs",
+        "monthlyRevenue": "Revenus Mensuels",
+        "vs_last_month": "vs mois dernier"
+      },
+      "charts": {
+        "revenue": "Tendance des Revenus Mensuels",
+        "conversion": "Conversion Essai vers Payant",
+        "placeholder": "Espace réservé graphique - intégrer avec Chart.js/Recharts"
+      },
+      "activity": {
+        "title": "Activité Récente",
+        "noActivity": "Aucune activité récente",
+        "types": {
+          "signup": "Nouvel utilisateur inscrit",
+          "trial_started": "Essai commencé",
+          "subscription": "Nouvel abonnement",
+          "invoice_created": "Facture créée",
+          "estimate_created": "Devis créé",
+          "support_ticket": "Ticket de support ouvert"
+        }
+      }
+    },
+    "users": {
+      "title": "Gestion des Utilisateurs",
+      "subtitle": "Gérer tous les utilisateurs de la plateforme",
+      "search": {
+        "placeholder": "Rechercher par nom, email ou organisation..."
+      },
+      "filters": {
+        "allStatuses": "Tous les Statuts",
+        "active": "Actif",
+        "trial": "Essai",
+        "suspended": "Suspendu",
+        "allRoles": "Tous les Rôles",
+        "owner": "Propriétaire",
+        "admin": "Admin",
+        "user": "Utilisateur"
+      },
+      "table": {
+        "user": "Utilisateur",
+        "role": "Rôle",
+        "organization": "Organisation",
+        "status": "Statut",
+        "lastLogin": "Dernière Connexion",
+        "actions": "Actions"
+      },
+      "status": {
+        "active": "Actif",
+        "trial": "Essai",
+        "suspended": "Suspendu"
+      },
+      "actions": {
+        "addUser": "Ajouter Utilisateur"
+      },
+      "confirmDelete": "Êtes-vous sûr de vouloir supprimer cet utilisateur ?",
+      "deleteError": "Échec de la suppression de l'utilisateur",
+      "passwordResetSuccess": "Email de réinitialisation du mot de passe envoyé avec succès",
+      "passwordResetError": "Échec de la réinitialisation du mot de passe",
+      "pagination": {
+        "showing": "Affichage de {{start}} à {{end}} sur {{total}} utilisateurs",
+        "previous": "Précédent",
+        "next": "Suivant"
+      },
+      "noResults": "Aucun utilisateur trouvé correspondant à vos critères."
+    },
+    "organizations": {
+      "title": "Gestion des Organisations",
+      "subtitle": "Gérer toutes les organisations de la plateforme",
+      "search": {
+        "placeholder": "Rechercher par nom d'organisation ou propriétaire..."
+      },
+      "filters": {
+        "allStatuses": "Tous les Statuts",
+        "active": "Actif",
+        "trial": "Essai",
+        "suspended": "Suspendu"
+      },
+      "table": {
+        "organization": "Organisation",
+        "owner": "Propriétaire",
+        "members": "Membres",
+        "plan": "Plan",
+        "status": "Statut",
+        "stats": "Statistiques",
+        "actions": "Actions",
+        "created": "Créé",
+        "trialEnds": "Fin de l'essai",
+        "invoices": "factures",
+        "clients": "clients"
+      },
+      "status": {
+        "active": "Actif",
+        "trial": "Essai",
+        "suspended": "Suspendu"
+      },
+      "actions": {
+        "addOrganization": "Ajouter Organisation"
+      },
+      "noResults": "Aucune organisation trouvée correspondant à vos critères."
+    },
+    "subscriptions": {
+      "title": "Abonnements et Facturation",
+      "placeholder": "Panneau de gestion des abonnements - Bientôt disponible"
+    },
+    "documents": {
+      "title": "Gestion des Documents",
+      "placeholder": "Panneau de gestion des documents - Bientôt disponible"
+    },
+    "clients": {
+      "title": "Gestion des Clients",
+      "placeholder": "Panneau de gestion des clients - Bientôt disponible"
+    },
+    "support": {
+      "title": "Tickets de Support",
+      "placeholder": "Panneau de gestion des tickets de support - Bientôt disponible"
+    },
+    "monitoring": {
+      "title": "Surveillance Système",
+      "placeholder": "Panneau de surveillance système - Bientôt disponible"
+    },
+    "settings": {
+      "title": "Paramètres Admin",
+      "placeholder": "Panneau de paramètres admin - Bientôt disponible"
     }
   }
 }

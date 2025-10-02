@@ -16,6 +16,7 @@ const AuthPage = () => {
     lastName: '',
     rememberMe: false
   });
+  const [fieldErrors, setFieldErrors] = useState({});
   const { t } = useTranslation('common');
   const navigate = useNavigate();
   const location = useLocation();
@@ -30,6 +31,33 @@ const AuthPage = () => {
       ...prev,
       [name]: type === 'checkbox' ? checked : value
     }));
+
+    // Clear field error when user starts typing
+    if (fieldErrors[name]) {
+      setFieldErrors(prev => ({
+        ...prev,
+        [name]: ''
+      }));
+    }
+
+    // Real-time validation for email
+    if (name === 'email' && value) {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(value)) {
+        setFieldErrors(prev => ({
+          ...prev,
+          email: t('auth.error.invalidEmail', 'Please enter a valid email address.')
+        }));
+      }
+    }
+
+    // Real-time validation for password confirmation
+    if (name === 'confirmPassword' && value && formData.password && value !== formData.password) {
+      setFieldErrors(prev => ({
+        ...prev,
+        confirmPassword: t('auth.error.passwordMatch', 'Passwords do not match.')
+      }));
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -38,17 +66,72 @@ const AuthPage = () => {
 
     try {
       if (isLogin) {
-        // Login
-        const { data, error } = await supabase.auth.signInWithPassword({
+        // Clear any existing field errors
+        setFieldErrors({});
+
+        // Login - First validate email format
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!formData.email.trim()) {
+          setFieldErrors(prev => ({ ...prev, email: t('auth.error.invalidEmail', 'Please enter a valid email address.') }));
+          setIsSubmitting(false);
+          return;
+        }
+        
+        if (!emailRegex.test(formData.email)) {
+          setFieldErrors(prev => ({ ...prev, email: t('auth.error.invalidEmail', 'Please enter a valid email address.') }));
+          setIsSubmitting(false);
+          return;
+        }
+
+        if (!formData.password) {
+          setFieldErrors(prev => ({ ...prev, password: t('auth.error.passwordRequired', 'Password is required.') }));
+          setIsSubmitting(false);
+          return;
+        }
+
+        // Attempt login
+        const { error } = await supabase.auth.signInWithPassword({
           email: formData.email,
           password: formData.password,
         });
 
-        if (error) throw error;
+        if (error) {
+          // Handle specific authentication errors
+          let errorMessage = '';
+          switch (error.message) {
+            case 'Invalid login credentials':
+              errorMessage = t('auth.error.invalidCredentials', 'Invalid email or password. Please check your credentials and try again.');
+              break;
+            case 'Email not confirmed':
+              errorMessage = t('auth.error.emailNotConfirmed', 'Please check your email and click the confirmation link before signing in.');
+              break;
+            case 'Too many requests':
+              errorMessage = t('auth.error.tooManyRequests', 'Too many login attempts. Please wait a moment before trying again.');
+              break;
+            case 'User not found':
+              errorMessage = t('auth.error.userNotFound', 'No account found with this email address. Please sign up first.');
+              break;
+            default:
+              // Check if it's a network/connection error
+              if (error.message.includes('Failed to fetch') || error.message.includes('NetworkError')) {
+                errorMessage = t('auth.error.networkError', 'Connection error. Please check your internet connection and try again.');
+              } else {
+                errorMessage = t('auth.error.loginFailed', 'Login failed. Please try again.');
+              }
+          }
+          
+          toast({
+            title: t('auth.error.title', 'Authentication Error'),
+            description: errorMessage,
+            variant: "destructive",
+          });
+          setIsSubmitting(false);
+          return;
+        }
 
         toast({
-          title: "Success!",
-          description: "You've been logged in successfully.",
+          title: t('auth.success.loginTitle', 'Success!'),
+          description: t('auth.success.loginMessage', "You've been logged in successfully."),
         });
         navigate(from, { replace: true });
       } else {
@@ -261,10 +344,17 @@ const AuthPage = () => {
                 name="email"
                 value={formData.email}
                 onChange={handleInputChange}
-                className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
+                className={`w-full px-4 py-3 border rounded-xl focus:ring-2 focus:border-transparent transition-all duration-200 ${
+                  fieldErrors.email 
+                    ? 'border-red-300 focus:ring-red-500' 
+                    : 'border-gray-300 focus:ring-blue-500'
+                }`}
                 placeholder={t('auth.form.placeholders.email')}
                 required
               />
+              {fieldErrors.email && (
+                <p className="mt-1 text-sm text-red-600">{fieldErrors.email}</p>
+              )}
             </div>
 
             <div>
@@ -277,10 +367,17 @@ const AuthPage = () => {
                 name="password"
                 value={formData.password}
                 onChange={handleInputChange}
-                className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
+                className={`w-full px-4 py-3 border rounded-xl focus:ring-2 focus:border-transparent transition-all duration-200 ${
+                  fieldErrors.password 
+                    ? 'border-red-300 focus:ring-red-500' 
+                    : 'border-gray-300 focus:ring-blue-500'
+                }`}
                 placeholder={t('auth.form.placeholders.password')}
                 required
               />
+              {fieldErrors.password && (
+                <p className="mt-1 text-sm text-red-600">{fieldErrors.password}</p>
+              )}
             </div>
 
             {!isLogin && (
