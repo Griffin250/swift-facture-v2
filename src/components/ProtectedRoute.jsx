@@ -1,10 +1,18 @@
+import { useState, useEffect } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
-import { Navigate, useLocation } from 'react-router-dom';
 import { Loader2 } from 'lucide-react';
+import LoginRequiredModal from './LoginRequiredModal';
 
 const ProtectedRoute = ({ children }) => {
   const { user, loading } = useAuth();
-  const location = useLocation();
+  const [showModal, setShowModal] = useState(false);
+
+  useEffect(() => {
+    // Show modal when user is not authenticated and loading is complete
+    if (!loading && !user) {
+      setShowModal(true);
+    }
+  }, [loading, user]);
 
   if (loading) {
     return (
@@ -18,8 +26,20 @@ const ProtectedRoute = ({ children }) => {
   }
 
   if (!user) {
-    // Redirect to login page with return url
-    return <Navigate to="/login" state={{ from: location }} replace />;
+    return (
+      <div className="relative min-h-screen">
+        {/* Blurred page content */}
+        <div className="blur-sm pointer-events-none">
+          {children}
+        </div>
+        
+        {/* Modal overlay */}
+        <LoginRequiredModal 
+          isOpen={showModal} 
+          onClose={() => setShowModal(false)} 
+        />
+      </div>
+    );
   }
 
   return children;

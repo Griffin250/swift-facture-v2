@@ -238,6 +238,44 @@
       "terms": "Terms of Service",
       "privacy": "Privacy Policy",
       "agreement": "By continuing, you agree to our"
+    },
+    "modal": {
+      "title": "Login Required",
+      "subtitle": "Access Premium Features",
+      "accessTitle": "You need to sign in to access",
+      "benefitsTitle": "What you get with SwiftFacture:",
+      "signInButton": "Sign In / Create Account",
+      "backButton": "Back to Dashboard",
+      "note": "Free account • No credit card required • Start in under 2 minutes"
+    },
+    "features": {
+      "invoice": "Invoice Creation",
+      "invoiceDesc": "Create professional invoices with customizable templates and automatic calculations",
+      "receipt": "Receipt Generation",
+      "receiptDesc": "Generate instant receipts for payments and transactions",
+      "customers": "Customer Management",
+      "customersDesc": "Store and manage all your client information in one place",
+      "estimate": "Estimate Creation",
+      "estimateDesc": "Create detailed project estimates and convert them to invoices",
+      "template": "Template Customization",
+      "templateDesc": "Access premium templates and customize them with your branding",
+      "default": "Premium Features",
+      "defaultDesc": "Access all premium features and tools"
+    },
+    "benefits": {
+      "create": "Create & Save Invoices",
+      "createDesc": "Design professional invoices and save them for future use",
+      "manage": "Manage Customers",
+      "manageDesc": "Store client information and billing history",
+      "track": "Track Payments",
+      "trackDesc": "Monitor which invoices are paid or pending",
+      "templates": "Custom Templates",
+      "templatesDesc": "Access premium templates and branding options"
+    },
+    "trust": {
+      "secure": "Secure",
+      "fast": "Fast Setup",
+      "free": "Free Account"
     }
   },
   "dashboard": {

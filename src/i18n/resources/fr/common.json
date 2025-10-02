@@ -238,6 +238,44 @@
       "terms": "Conditions d'utilisation",
       "privacy": "Politique de confidentialité",
       "agreement": "En continuant, vous acceptez nos"
+    },
+    "modal": {
+      "title": "Connexion requise",
+      "subtitle": "Accéder aux fonctionnalités premium",
+      "accessTitle": "Vous devez vous connecter pour accéder",
+      "benefitsTitle": "Ce que vous obtenez avec SwiftFacture :",
+      "signInButton": "Se connecter / Créer un compte",
+      "backButton": "Retour au tableau de bord",
+      "note": "Compte gratuit • Aucune carte de crédit requise • Commencez en moins de 2 minutes"
+    },
+    "features": {
+      "invoice": "Création de factures",
+      "invoiceDesc": "Créez des factures professionnelles avec des modèles personnalisables et des calculs automatiques",
+      "receipt": "Génération de reçus",
+      "receiptDesc": "Générez des reçus instantanés pour les paiements et transactions",
+      "customers": "Gestion des clients",
+      "customersDesc": "Stockez et gérez toutes les informations de vos clients en un seul endroit",
+      "estimate": "Création de devis",
+      "estimateDesc": "Créez des devis de projet détaillés et convertissez-les en factures",
+      "template": "Personnalisation de modèles",
+      "templateDesc": "Accédez aux modèles premium et personnalisez-les avec votre image de marque",
+      "default": "Fonctionnalités premium",
+      "defaultDesc": "Accédez à toutes les fonctionnalités et outils premium"
+    },
+    "benefits": {
+      "create": "Créer et sauvegarder des factures",
+      "createDesc": "Concevez des factures professionnelles et sauvegardez-les pour une utilisation future",
+      "manage": "Gérer les clients",
+      "manageDesc": "Stockez les informations client et l'historique de facturation",
+      "track": "Suivre les paiements",
+      "trackDesc": "Surveillez quelles factures sont payées ou en attente",
+      "templates": "Modèles personnalisés",
+      "templatesDesc": "Accédez aux modèles premium et aux options de branding"
+    },
+    "trust": {
+      "secure": "Sécurisé",
+      "fast": "Configuration rapide",
+      "free": "Compte gratuit"
     }
   },
   "dashboard": {

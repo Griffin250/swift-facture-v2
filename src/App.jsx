@@ -39,12 +39,12 @@ const App = () => (
               <Route key={to} path={to} element={page} />
             ))}
             <Route path="/" element={<Dashboard />} />
-            <Route path="/invoice" element={<Index />} />
-            <Route path="/template" element={<TemplatePage />} />
-            <Route path="/receipt" element={<ReceiptPage />} />
+            <Route path="/invoice" element={<ProtectedRoute><Index /></ProtectedRoute>} />
+            <Route path="/template" element={<ProtectedRoute><TemplatePage /></ProtectedRoute>} />
+            <Route path="/receipt" element={<ProtectedRoute><ReceiptPage /></ProtectedRoute>} />
             <Route path="/premium" element={<Premium />} />
-            <Route path="/customers" element={<Customers />} />
-            <Route path="/estimate" element={<Estimate />} />
+            <Route path="/customers" element={<ProtectedRoute><Customers /></ProtectedRoute>} />
+            <Route path="/estimate" element={<ProtectedRoute><Estimate /></ProtectedRoute>} />
             <Route path="/login" element={<Login />} />
             <Route path="/about" element={<About />} />
             <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />

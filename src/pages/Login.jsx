@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/components/ui/use-toast';
 
@@ -18,7 +18,11 @@ const AuthPage = () => {
   });
   const { t } = useTranslation('common');
   const navigate = useNavigate();
+  const location = useLocation();
   const { toast } = useToast();
+
+  // Get the redirect path from location state or default to dashboard
+  const from = location.state?.from?.pathname || '/';
 
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -46,7 +50,7 @@ const AuthPage = () => {
           title: "Success!",
           description: "You've been logged in successfully.",
         });
-        navigate('/');
+        navigate(from, { replace: true });
       } else {
         // Sign up - validate required fields
         if (!formData.firstName.trim() || !formData.lastName.trim()) {
@@ -112,7 +116,7 @@ const AuthPage = () => {
             title: "Success!",
             description: "Your account has been created successfully.",
           });
-          navigate('/');
+          navigate(from, { replace: true });
         }
       }
     } catch (error) {
