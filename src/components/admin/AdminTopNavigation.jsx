@@ -1,11 +1,13 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '@/contexts/AuthContext';
-import { Bell, Search, Menu, User, Settings, LogOut, ChevronLeft, ChevronRight } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { Bell, Search, Menu, User, Settings, LogOut, ChevronLeft, ChevronRight, Home } from 'lucide-react';
 
 const AdminTopNavigation = ({ onToggleSidebar, onToggleCollapse, sidebarCollapsed, onPageChange }) => {
   const { t } = useTranslation();
   const { user, signOut } = useAuth();
+  const navigate = useNavigate();
   const [showProfileMenu, setShowProfileMenu] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
 
@@ -17,6 +19,10 @@ const AdminTopNavigation = ({ onToggleSidebar, onToggleCollapse, sidebarCollapse
   const handleProfileSettings = () => {
     onPageChange('account');
     setShowProfileMenu(false);
+  };
+
+  const handleGoHome = () => {
+    navigate('/');
   };
 
   return (
@@ -51,6 +57,16 @@ const AdminTopNavigation = ({ onToggleSidebar, onToggleCollapse, sidebarCollapse
               {t('admin.title')}
             </span>
           </div>
+          
+          {/* Home Link */}
+          <button
+            onClick={handleGoHome}
+            className="flex items-center space-x-2 px-3 py-2 text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
+            title={t('admin.navigation.goToHome', 'Go to Home')}
+          >
+            <Home size={18} />
+            <span className="hidden sm:inline">{t('admin.navigation.home', 'Home')}</span>
+          </button>
         </div>
 
         {/* Center Section - Search */}

@@ -814,6 +814,7 @@
     "editProfile": "Edit Profile",
     "viewProfile": "View Profile",
     "settings": "Settings",
+    "adminDashboard": "Admin Dashboard",
     "signOut": "Sign Out",
     "signingOut": "Signing out...",
     "profilePicture": "Profile Picture",
@@ -915,6 +916,10 @@
     "title": "Admin Dashboard",
     "search": {
       "placeholder": "Search users, organizations, invoices..."
+    },
+    "navigation": {
+      "home": "Home",
+      "goToHome": "Go to Home"
     },
     "profile": {
       "admin": "Admin",

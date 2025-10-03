@@ -814,6 +814,7 @@
     "editProfile": "Modifier le Profil",
     "viewProfile": "Voir le Profil",
     "settings": "Paramètres",
+    "adminDashboard": "Tableau de Bord Admin",
     "signOut": "Se Déconnecter",
     "signingOut": "Déconnexion...",
     "profilePicture": "Photo de Profil",
@@ -915,6 +916,10 @@
     "title": "Tableau de Bord Admin",
     "search": {
       "placeholder": "Rechercher utilisateurs, organisations, factures..."
+    },
+    "navigation": {
+      "home": "Accueil",
+      "goToHome": "Aller à l'accueil"
     },
     "profile": {
       "admin": "Admin",

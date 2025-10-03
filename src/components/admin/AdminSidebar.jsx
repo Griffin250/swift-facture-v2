@@ -9,6 +9,7 @@ import {
   HelpCircle, 
   Activity, 
   Settings,
+  Database,
   X,
   ChevronRight
 } from 'lucide-react';
@@ -25,6 +26,7 @@ const AdminSidebar = ({ isOpen, isCollapsed, activePage, onPageChange, onClose, 
     { id: 'clients', label: t('admin.sidebar.clients'), icon: UserCheck },
     { id: 'support', label: t('admin.sidebar.support'), icon: HelpCircle },
     { id: 'monitoring', label: t('admin.sidebar.monitoring'), icon: Activity },
+    { id: 'database', label: 'Database', icon: Database },
     { id: 'settings', label: t('admin.sidebar.systemSettings'), icon: Settings },
   ];
 

@@ -1,8 +1,9 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { User, Settings, LogOut, ChevronDown } from 'lucide-react';
+import { User, Settings, LogOut, ChevronDown, Shield } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
+import { useRole } from '@/hooks/useRole';
 import { useToast } from '@/components/ui/use-toast';
 import {
   DropdownMenu,
@@ -15,6 +16,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 
 const UserProfile = () => {
   const { user, signOut } = useAuth();
+  const { isAdmin } = useRole();
   const { t } = useTranslation('common');
   const navigate = useNavigate();
   const { toast } = useToast();
@@ -128,6 +130,16 @@ const UserProfile = () => {
           <Settings className="h-4 w-4" />
           <span>{t('profile.settings', 'Settings')}</span>
         </DropdownMenuItem>
+        
+        {isAdmin && (
+          <DropdownMenuItem
+            onClick={() => handleNavigation('/admin')}
+            className="cursor-pointer flex items-center gap-2 py-2"
+          >
+            <Shield className="h-4 w-4" />
+            <span>{t('profile.adminDashboard', 'Admin Dashboard')}</span>
+          </DropdownMenuItem>
+        )}
         
         <DropdownMenuSeparator />
         

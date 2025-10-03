@@ -6,6 +6,7 @@ import AdminUsersPanel from '../components/admin/panels/AdminUsersPanel';
 import AdminOrganizationsPanel from '../components/admin/panels/AdminOrganizationsPanel';
 import AdminSettingsPanel from '../components/admin/panels/AdminSettingsPanel';
 import AdminAccountPanel from '../components/admin/panels/AdminAccountPanel';
+import AdminDatabasePanel from '../components/admin/panels/AdminDatabasePanel';
 
 // Placeholder components for other panels
 const AdminSubscriptionsPanel = () => {
@@ -113,6 +114,8 @@ const AdminPage = () => {
         return <AdminSettingsPanel />;
       case 'account':
         return <AdminAccountPanel />;
+      case 'database':
+        return <AdminDatabasePanel />;
       default:
         return <AdminDashboardPanel />;
     }
