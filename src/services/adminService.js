@@ -90,9 +90,7 @@ export const adminUserService = {
     try {
       let query = supabase
         .from('profiles')
-        .select(`
-          *
-        `, { count: 'exact' });
+        .select('*', { count: 'exact' });
 
       // Apply search filter
       if (search) {
@@ -128,19 +126,25 @@ export const adminUserService = {
       // For better performance, get all counts in bulk then match them up
       const userIds = data?.map(user => user.id) || [];
       
-      // Get counts for all users at once
-      const [customersData, invoicesData, estimatesData, receiptsData] = await Promise.all([
+      // Get roles and counts for all users at once
+      const [rolesData, customersData, invoicesData, estimatesData, receiptsData] = await Promise.all([
+        supabase.from('user_roles').select('user_id, role').in('user_id', userIds),
         supabase.from('customers').select('user_id').in('user_id', userIds),
         supabase.from('invoices').select('user_id').in('user_id', userIds),
         supabase.from('estimates').select('user_id').in('user_id', userIds),
         supabase.from('receipts').select('user_id').in('user_id', userIds)
       ]);
 
-      // Count occurrences for each user
+      // Count occurrences and roles for each user
+      const userRoles = {};
       const customerCounts = {};
       const invoiceCounts = {};
       const estimateCounts = {};
       const receiptCounts = {};
+
+      rolesData.data?.forEach(item => {
+        userRoles[item.user_id] = item.role;
+      });
 
       customersData.data?.forEach(item => {
         customerCounts[item.user_id] = (customerCounts[item.user_id] || 0) + 1;
@@ -164,7 +168,7 @@ export const adminUserService = {
         full_name: user.first_name && user.last_name ? `${user.first_name} ${user.last_name}` : null,
         email: user.email,
         company_name: user.company_name,
-        role: user.role || 'User', // Default role
+        role: userRoles[user.id] || 'user', // Get role from user_roles table
         status: user.status || 'active', // Default status
         last_sign_in_at: user.last_sign_in_at,
         created_at: user.created_at,

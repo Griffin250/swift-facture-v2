@@ -11,12 +11,28 @@ import {
   Clock,
   Loader2,
   AlertCircle,
-  Plus
+  Plus,
+  Shield
 } from 'lucide-react';
 import { adminUserService } from '../../../services/adminService';
+import { roleService } from '../../../services/roleService';
+import { useRole } from '../../../hooks/useRole';
+import { SuperAdminOnly } from '../RoleBasedUI';
+import { 
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+} from '@/components/ui/dialog';
+import { Button } from '@/components/ui/button';
+import { useToast } from '@/components/ui/use-toast';
 
 const AdminUsersPanel = () => {
   const { t } = useTranslation();
+  const { isSuperAdmin } = useRole();
+  const { toast } = useToast();
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -25,6 +41,9 @@ const AdminUsersPanel = () => {
   const [roleFilter, setRoleFilter] = useState('all');
   const [currentPage, setCurrentPage] = useState(1);
   const [totalUsers, setTotalUsers] = useState(0);
+  const [roleDialogOpen, setRoleDialogOpen] = useState(false);
+  const [selectedUser, setSelectedUser] = useState(null);
+  const [newRole, setNewRole] = useState('user');
   const usersPerPage = 10;
 
   useEffect(() => {
@@ -72,6 +91,15 @@ const AdminUsersPanel = () => {
   };
 
   const handleDeleteUser = async (userId) => {
+    if (!isSuperAdmin) {
+      toast({
+        title: "Access Denied",
+        description: "Only super admins can delete users",
+        variant: "destructive",
+      });
+      return;
+    }
+
     if (!confirm(t('admin.users.confirmDelete', 'Are you sure you want to delete this user?'))) {
       return;
     }
@@ -82,11 +110,74 @@ const AdminUsersPanel = () => {
         throw result.error;
       }
       
+      toast({
+        title: "Success",
+        description: "User deleted successfully",
+      });
+      
       // Refresh users list
       fetchUsers();
     } catch (err) {
       console.error('Error deleting user:', err);
-      alert(t('admin.users.deleteError', 'Failed to delete user'));
+      toast({
+        title: "Error",
+        description: "Failed to delete user",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const handleChangeRole = async (user) => {
+    setSelectedUser(user);
+    setNewRole(user.role || 'user');
+    setRoleDialogOpen(true);
+  };
+
+  const handleRoleUpdate = async () => {
+    if (!selectedUser) return;
+
+    try {
+      const result = await roleService.updateUserRole(selectedUser.id, newRole);
+      if (result.error) {
+        throw result.error;
+      }
+      
+      toast({
+        title: "Success",
+        description: `Role updated to ${newRole}`,
+      });
+      
+      setRoleDialogOpen(false);
+      fetchUsers();
+    } catch (err) {
+      console.error('Error updating role:', err);
+      toast({
+        title: "Error",
+        description: "Failed to update role",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const getRoleBadgeColor = (role) => {
+    switch (role) {
+      case 'super_admin':
+        return 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300';
+      case 'admin':
+        return 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300';
+      default:
+        return 'bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-300';
+    }
+  };
+
+  const getRoleLabel = (role) => {
+    switch (role) {
+      case 'super_admin':
+        return 'Super Admin';
+      case 'admin':
+        return 'Admin';
+      default:
+        return 'User';
     }
   };
 
@@ -285,8 +376,8 @@ const AdminUsersPanel = () => {
                     </div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
-                    <span className="text-sm text-gray-900 dark:text-white">
-                      {user.role || 'User'}
+                    <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${getRoleBadgeColor(user.role)}`}>
+                      {getRoleLabel(user.role)}
                     </span>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
@@ -314,6 +405,15 @@ const AdminUsersPanel = () => {
                       >
                         <Edit size={16} />
                       </button>
+                      <SuperAdminOnly>
+                        <button 
+                          onClick={() => handleChangeRole(user)}
+                          className="text-purple-600 hover:text-purple-900 dark:text-purple-400 p-1"
+                          title="Change role"
+                        >
+                          <Shield size={16} />
+                        </button>
+                      </SuperAdminOnly>
                       <button 
                         onClick={() => handleResetPassword(user.id)}
                         className="text-orange-600 hover:text-orange-900 dark:text-orange-400 p-1"
@@ -321,13 +421,15 @@ const AdminUsersPanel = () => {
                       >
                         <Key size={16} />
                       </button>
-                      <button 
-                        onClick={() => handleDeleteUser(user.id)}
-                        className="text-red-600 hover:text-red-900 dark:text-red-400 p-1"
-                        title="Delete user"
-                      >
-                        <UserMinus size={16} />
-                      </button>
+                      <SuperAdminOnly>
+                        <button 
+                          onClick={() => handleDeleteUser(user.id)}
+                          className="text-red-600 hover:text-red-900 dark:text-red-400 p-1"
+                          title="Delete user"
+                        >
+                          <UserMinus size={16} />
+                        </button>
+                      </SuperAdminOnly>
                       <button className="text-gray-400 hover:text-gray-600 p-1">
                         <MoreHorizontal size={16} />
                       </button>
@@ -374,6 +476,45 @@ const AdminUsersPanel = () => {
           </button>
         </div>
       </div>
+
+      {/* Role Change Dialog */}
+      <Dialog open={roleDialogOpen} onOpenChange={setRoleDialogOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Change User Role</DialogTitle>
+            <DialogDescription>
+              Update the role for {selectedUser?.full_name || selectedUser?.email}
+            </DialogDescription>
+          </DialogHeader>
+          <div className="py-4">
+            <label className="block text-sm font-medium mb-2">Select Role</label>
+            <select
+              value={newRole}
+              onChange={(e) => setNewRole(e.target.value)}
+              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+            >
+              <option value="user">User</option>
+              <option value="admin">Admin</option>
+              <option value="super_admin">Super Admin</option>
+            </select>
+            <div className="mt-4 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
+              <p className="text-sm text-blue-800 dark:text-blue-200">
+                {newRole === 'super_admin' && 'Super Admin has full access to all features including deletion and role management.'}
+                {newRole === 'admin' && 'Admin can view and manage users but cannot delete or change roles.'}
+                {newRole === 'user' && 'User has access only to their own data and cannot access admin panel.'}
+              </p>
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setRoleDialogOpen(false)}>
+              Cancel
+            </Button>
+            <Button onClick={handleRoleUpdate}>
+              Update Role
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };

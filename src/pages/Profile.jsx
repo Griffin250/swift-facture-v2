@@ -1,15 +1,40 @@
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, Edit, Mail, User, Calendar } from 'lucide-react';
+import { ArrowLeft, Edit, Mail, User, Calendar, Shield } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
+import { useRole } from '@/hooks/useRole';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Badge } from '@/components/ui/badge';
 
 const Profile = () => {
   const { user } = useAuth();
+  const { role, loading: roleLoading } = useRole();
   const { t } = useTranslation('common');
   const navigate = useNavigate();
+
+  const getRoleBadgeVariant = (userRole) => {
+    switch (userRole) {
+      case 'super_admin':
+        return 'destructive';
+      case 'admin':
+        return 'default';
+      default:
+        return 'secondary';
+    }
+  };
+
+  const getRoleLabel = (userRole) => {
+    switch (userRole) {
+      case 'super_admin':
+        return 'Super Admin';
+      case 'admin':
+        return 'Admin';
+      default:
+        return 'User';
+    }
+  };
 
   // Handle navigation with scroll to top
   const handleNavigation = (path) => {
@@ -117,6 +142,22 @@ const Profile = () => {
                       {t('profile.fullName', 'Full Name')}
                     </p>
                     <p className="text-gray-900">{getUserDisplayName()}</p>
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-3">
+                  <Shield className="h-5 w-5 text-gray-500" />
+                  <div>
+                    <p className="text-sm font-medium text-gray-700">
+                      {t('profile.role', 'Role')}
+                    </p>
+                    {roleLoading ? (
+                      <p className="text-gray-400">Loading...</p>
+                    ) : (
+                      <Badge variant={getRoleBadgeVariant(role)}>
+                        {getRoleLabel(role)}
+                      </Badge>
+                    )}
                   </div>
                 </div>
 

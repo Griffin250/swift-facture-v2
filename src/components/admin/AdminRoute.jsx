@@ -1,16 +1,26 @@
 import { useAuth } from '@/contexts/AuthContext';
 import { useTranslation } from 'react-i18next';
+import { useRole } from '@/hooks/useRole';
+import { Loader2 } from 'lucide-react';
+import { Navigate } from 'react-router-dom';
 
 const AdminRoute = ({ children }) => {
-  const { user } = useAuth();
+  const { user, loading: authLoading } = useAuth();
+  const { isAdmin, loading: roleLoading } = useRole();
   const { t } = useTranslation();
 
-  // In a real app, you would check if the user has admin role
-  // For now, we'll just check if user is authenticated
-  // You can modify this to check user.role === 'admin' or similar
-  const isAdmin = user && user.email; // Placeholder - replace with actual admin check
+  if (authLoading || roleLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center space-y-4">
+          <Loader2 className="h-8 w-8 animate-spin mx-auto text-primary" />
+          <p className="text-muted-foreground">Loading...</p>
+        </div>
+      </div>
+    );
+  }
 
-  if (!isAdmin) {
+  if (!user || !isAdmin) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900">
         <div className="max-w-md w-full bg-white dark:bg-gray-800 shadow-lg rounded-lg p-6">
@@ -27,12 +37,7 @@ const AdminRoute = ({ children }) => {
               {t('admin.access.message', 'You do not have permission to access the admin dashboard.')}
             </p>
             <div className="mt-6">
-              <button
-                onClick={() => window.history.back()}
-                className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-              >
-                {t('admin.access.goBack', 'Go Back')}
-              </button>
+              <Navigate to="/not-found" replace />
             </div>
           </div>
         </div>
