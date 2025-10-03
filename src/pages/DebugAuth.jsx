@@ -1,117 +1,135 @@
-import { useState } from 'react';
-import { supabase } from '@/integrations/supabase/client';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { useAuth } from '../contexts/AuthContext';
+import { useTranslation } from 'react-i18next';
 
 const DebugAuth = () => {
-  const [testResults, setTestResults] = useState([]);
-  const [loading, setLoading] = useState(false);
+  const { user, loading } = useAuth();
+  const { t } = useTranslation();
 
-  const addResult = (test, success, message) => {
-    setTestResults(prev => [...prev, { test, success, message, timestamp: new Date().toLocaleTimeString() }]);
-  };
-
-  const runTests = async () => {
-    setLoading(true);
-    setTestResults([]);
-
-    // Test 1: Check environment variables
-    const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
-    const supabaseKey = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY;
-    
-    if (supabaseUrl && supabaseKey) {
-      addResult('Environment Variables', true, `URL: ${supabaseUrl.substring(0, 30)}...`);
-    } else {
-      addResult('Environment Variables', false, 'Missing VITE_SUPABASE_URL or VITE_SUPABASE_PUBLISHABLE_KEY');
-    }
-
-    // Test 2: Check Supabase connection
-    try {
-      const { data, error } = await supabase.auth.getSession();
-      if (error) throw error;
-      addResult('Supabase Connection', true, 'Successfully connected to Supabase');
-    } catch (error) {
-      addResult('Supabase Connection', false, error.message);
-    }
-
-    // Test 3: Test signup with a dummy email
-    try {
-      const testEmail = `test-${Date.now()}@example.com`;
-      const { data, error } = await supabase.auth.signUp({
-        email: testEmail,
-        password: 'test123456',
-        options: {
-          data: {
-            first_name: 'Test',
-            last_name: 'User',
-          },
-        },
-      });
-
-      if (error) {
-        addResult('Test Signup', false, error.message);
-      } else if (data.user && !data.session) {
-        addResult('Test Signup', true, 'Email confirmation required - this is normal');
-      } else if (data.user && data.session) {
-        addResult('Test Signup', true, 'User created and logged in successfully');
-        // Clean up - sign out the test user
-        await supabase.auth.signOut();
-      } else {
-        addResult('Test Signup', false, 'Unexpected response from signup');
-      }
-    } catch (error) {
-      addResult('Test Signup', false, error.message);
-    }
-
-    setLoading(false);
-  };
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
+          <p className="mt-4 text-gray-600 dark:text-gray-400">{t('common.loading')}</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
-      <div className="container mx-auto px-4 max-w-2xl">
-        <Card>
-          <CardHeader>
-            <CardTitle>Supabase Authentication Debug</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <Button onClick={runTests} disabled={loading} className="w-full">
-              {loading ? 'Running Tests...' : 'Run Authentication Tests'}
-            </Button>
-
-            {testResults.length > 0 && (
-              <div className="space-y-2">
-                <h3 className="text-lg font-semibold">Test Results:</h3>
-                {testResults.map((result, index) => (
-                  <div
-                    key={index}
-                    className={`p-3 rounded-lg border ${
-                      result.success ? 'bg-green-50 border-green-200' : 'bg-red-50 border-red-200'
-                    }`}
-                  >
-                    <div className="flex items-center justify-between">
-                      <span className="font-medium">{result.test}</span>
-                      <span className={`text-sm ${result.success ? 'text-green-600' : 'text-red-600'}`}>
-                        {result.success ? '✓ PASS' : '✗ FAIL'}
-                      </span>
-                    </div>
-                    <p className="text-sm text-gray-600 mt-1">{result.message}</p>
-                    <p className="text-xs text-gray-400">{result.timestamp}</p>
-                  </div>
-                ))}
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-12 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-4xl mx-auto">
+        <div className="bg-white dark:bg-gray-800 shadow rounded-lg">
+          <div className="px-4 py-5 sm:p-6">
+            <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">
+              Authentication Debug Information
+            </h1>
+            
+            <div className="space-y-6">
+              {/* User Status */}
+              <div>
+                <h2 className="text-lg font-medium text-gray-900 dark:text-white mb-3">
+                  User Status
+                </h2>
+                <div className="bg-gray-50 dark:bg-gray-700 p-4 rounded-lg">
+                  <p className="text-sm text-gray-600 dark:text-gray-300">
+                    <strong>Authenticated:</strong> {user ? 'Yes' : 'No'}
+                  </p>
+                  <p className="text-sm text-gray-600 dark:text-gray-300">
+                    <strong>Loading:</strong> {loading ? 'Yes' : 'No'}
+                  </p>
+                </div>
               </div>
-            )}
 
-            <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-              <h4 className="font-semibold text-blue-900">Common Issues:</h4>
-              <ul className="text-sm text-blue-800 mt-2 space-y-1">
-                <li>• Email confirmation might be enabled in Supabase settings</li>
-                <li>• Check that environment variables are properly set</li>
-                <li>• Ensure password meets minimum requirements (6+ characters)</li>
-                <li>• Verify all required fields are filled</li>
-              </ul>
+              {/* User Details */}
+              {user && (
+                <div>
+                  <h2 className="text-lg font-medium text-gray-900 dark:text-white mb-3">
+                    User Details
+                  </h2>
+                  <div className="bg-gray-50 dark:bg-gray-700 p-4 rounded-lg">
+                    <pre className="text-sm text-gray-600 dark:text-gray-300 whitespace-pre-wrap">
+                      {JSON.stringify(user, null, 2)}
+                    </pre>
+                  </div>
+                </div>
+              )}
+
+              {/* Session Info */}
+              <div>
+                <h2 className="text-lg font-medium text-gray-900 dark:text-white mb-3">
+                  Session Information
+                </h2>
+                <div className="bg-gray-50 dark:bg-gray-700 p-4 rounded-lg">
+                  <p className="text-sm text-gray-600 dark:text-gray-300">
+                    <strong>Current URL:</strong> {window.location.href}
+                  </p>
+                  <p className="text-sm text-gray-600 dark:text-gray-300">
+                    <strong>User Agent:</strong> {navigator.userAgent}
+                  </p>
+                  <p className="text-sm text-gray-600 dark:text-gray-300">
+                    <strong>Timestamp:</strong> {new Date().toISOString()}
+                  </p>
+                </div>
+              </div>
+
+              {/* Local Storage */}
+              <div>
+                <h2 className="text-lg font-medium text-gray-900 dark:text-white mb-3">
+                  Local Storage (Supabase)
+                </h2>
+                <div className="bg-gray-50 dark:bg-gray-700 p-4 rounded-lg">
+                  <pre className="text-sm text-gray-600 dark:text-gray-300 whitespace-pre-wrap">
+                    {JSON.stringify(
+                      Object.keys(localStorage)
+                        .filter(key => key.includes('supabase'))
+                        .reduce((obj, key) => {
+                          try {
+                            obj[key] = JSON.parse(localStorage.getItem(key));
+                          } catch {
+                            obj[key] = localStorage.getItem(key);
+                          }
+                          return obj;
+                        }, {}),
+                      null,
+                      2
+                    )}
+                  </pre>
+                </div>
+              </div>
+
+              {/* Actions */}
+              <div>
+                <h2 className="text-lg font-medium text-gray-900 dark:text-white mb-3">
+                  Debug Actions
+                </h2>
+                <div className="space-x-4">
+                  <button
+                    onClick={() => window.location.reload()}
+                    className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg"
+                  >
+                    Reload Page
+                  </button>
+                  <button
+                    onClick={() => localStorage.clear()}
+                    className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg"
+                  >
+                    Clear Local Storage
+                  </button>
+                  <button
+                    onClick={() => {
+                      console.log('User:', user);
+                      console.log('Loading:', loading);
+                    }}
+                    className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg"
+                  >
+                    Log to Console
+                  </button>
+                </div>
+              </div>
             </div>
-          </CardContent>
-        </Card>
+          </div>
+        </div>
       </div>
     </div>
   );

@@ -16,7 +16,7 @@ import {
 const AdminSidebar = ({ isOpen, isCollapsed, activePage, onPageChange, onClose, onToggleCollapse }) => {
   const { t } = useTranslation();
 
-  const menuItems = [
+  const mainMenuItems = [
     { id: 'dashboard', label: t('admin.sidebar.dashboard'), icon: LayoutDashboard },
     { id: 'users', label: t('admin.sidebar.users'), icon: Users },
     { id: 'organizations', label: t('admin.sidebar.organizations'), icon: Building2 },
@@ -25,8 +25,10 @@ const AdminSidebar = ({ isOpen, isCollapsed, activePage, onPageChange, onClose, 
     { id: 'clients', label: t('admin.sidebar.clients'), icon: UserCheck },
     { id: 'support', label: t('admin.sidebar.support'), icon: HelpCircle },
     { id: 'monitoring', label: t('admin.sidebar.monitoring'), icon: Activity },
-    { id: 'settings', label: t('admin.sidebar.settings'), icon: Settings },
+    { id: 'settings', label: t('admin.sidebar.systemSettings'), icon: Settings },
   ];
+
+
 
   const handleItemClick = (pageId) => {
     onPageChange(pageId);
@@ -40,7 +42,7 @@ const AdminSidebar = ({ isOpen, isCollapsed, activePage, onPageChange, onClose, 
     <>
       {/* Sidebar */}
       <aside 
-        className={`fixed left-0 top-0 z-50 h-full bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 transition-all duration-300 transform ${
+        className={`fixed left-0 top-16 z-50 h-[calc(100vh-4rem)] bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 transition-all duration-300 transform ${
           isOpen ? 'translate-x-0' : '-translate-x-64'
         } lg:translate-x-0 lg:z-40 ${
           isCollapsed ? 'w-16' : 'w-64'
@@ -77,25 +79,32 @@ const AdminSidebar = ({ isOpen, isCollapsed, activePage, onPageChange, onClose, 
         )}
 
         {/* Navigation Menu */}
-        <nav className={`mt-16 lg:mt-4 pb-4 ${isCollapsed ? 'px-2' : 'px-4'}`}>
-          <ul className="space-y-2">
-            {menuItems.map((item) => {
-              const Icon = item.icon;
-              const isActive = activePage === item.id;
-              
-              return (
-                <li key={item.id}>
-                  <button
-                    onClick={() => handleItemClick(item.id)}
-                    className={`w-full flex items-center rounded-lg text-sm font-medium transition-colors group relative ${
-                      isCollapsed 
-                        ? 'justify-center px-3 py-3' 
-                        : 'space-x-3 px-3 py-2'
-                    } ${
-                      isActive
-                        ? 'bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300'
-                        : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'
-                    }`}
+        <nav className={`mt-4 pb-4 ${isCollapsed ? 'px-2' : 'px-4'}`}>
+          {/* Main Menu */}
+          <div className="space-y-2">
+            {!isCollapsed && (
+              <h3 className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider px-3 py-2">
+                {t('admin.sidebar.management')}
+              </h3>
+            )}
+            <ul className="space-y-1">
+              {mainMenuItems.map((item) => {
+                const Icon = item.icon;
+                const isActive = activePage === item.id;
+                
+                return (
+                  <li key={item.id}>
+                    <button
+                      onClick={() => handleItemClick(item.id)}
+                      className={`w-full flex items-center rounded-lg text-sm font-medium transition-colors group relative ${
+                        isCollapsed 
+                          ? 'justify-center px-3 py-3' 
+                          : 'space-x-3 px-3 py-2'
+                      } ${
+                        isActive
+                          ? 'bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300'
+                          : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'
+                      }`}
                     title={isCollapsed ? item.label : ''}
                   >
                     <Icon size={18} />
@@ -112,6 +121,8 @@ const AdminSidebar = ({ isOpen, isCollapsed, activePage, onPageChange, onClose, 
               );
             })}
           </ul>
+
+          </div>
         </nav>
 
         {/* Footer */}

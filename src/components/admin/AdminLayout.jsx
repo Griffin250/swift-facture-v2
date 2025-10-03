@@ -25,6 +25,7 @@ const AdminLayout = ({ children, activePage, onPageChange }) => {
         onToggleSidebar={toggleSidebar}
         onToggleCollapse={toggleSidebarCollapse}
         sidebarCollapsed={sidebarCollapsed}
+        onPageChange={onPageChange}
       />
 
       <div className="flex">
@@ -46,8 +47,8 @@ const AdminLayout = ({ children, activePage, onPageChange }) => {
               : 'lg:ml-64' 
             : 'ml-0'
         }`}>
-          <main className="p-4 sm:p-6 pt-24 min-h-screen">
-            <div className="space-y-6">
+          <main className="p-4 sm:p-6 pt-20 min-h-screen">
+            <div className="space-y-6 mt-20">
               {children}
             </div>
           </main>

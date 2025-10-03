@@ -919,6 +919,7 @@
     "profile": {
       "admin": "Admin",
       "settings": "Paramètres",
+      "profileSettings": "Paramètres du Profil",
       "logout": "Déconnexion"
     },
     "footer": {
@@ -934,6 +935,10 @@
       "support": "Support",
       "monitoring": "Surveillance",
       "settings": "Paramètres",
+      "systemSettings": "Paramètres Système",
+      "userSettings": "Paramètres",
+      "account": "Compte",
+      "management": "Gestion",
       "expand": "Développer la barre latérale",
       "collapse": "Réduire la barre latérale"
     },
@@ -1067,7 +1072,110 @@
     },
     "settings": {
       "title": "Paramètres Admin",
-      "placeholder": "Panneau de paramètres admin - Bientôt disponible"
+      "subtitle": "Configurer les paramètres de la plateforme et les préférences système",
+      "saveSuccess": "Paramètres sauvegardés avec succès",
+      "saveError": "Échec de la sauvegarde des paramètres",
+      "platform": {
+        "title": "Paramètres de la Plateforme",
+        "siteName": "Nom du Site",
+        "siteDescription": "Description du Site",
+        "allowRegistration": "Autoriser l'inscription de nouveaux utilisateurs",
+        "requireEmailVerification": "Exiger la vérification de l'e-mail",
+        "maintenanceMode": "Activer le mode maintenance",
+        "maxUsersPerAccount": "Nombre maximum d'utilisateurs par compte",
+        "defaultCurrency": "Devise par Défaut",
+        "defaultLanguage": "Langue par Défaut",
+        "timezone": "Fuseau Horaire par Défaut"
+      },
+      "email": {
+        "title": "Configuration Email",
+        "smtpHost": "Hôte SMTP",
+        "smtpPort": "Port SMTP",
+        "smtpUsername": "Nom d'utilisateur SMTP",
+        "smtpPassword": "Mot de passe SMTP",
+        "fromEmail": "Adresse Email d'Expédition",
+        "fromName": "Nom d'Expédition",
+        "enableEmailNotifications": "Activer les notifications par e-mail",
+        "welcomeEmailEnabled": "Envoyer des e-mails de bienvenue aux nouveaux utilisateurs",
+        "invoiceEmailEnabled": "Envoyer des notifications par e-mail pour les factures"
+      },
+      "security": {
+        "title": "Paramètres de Sécurité",
+        "passwordMinLength": "Longueur Minimale du Mot de Passe",
+        "sessionTimeout": "Délai d'Expiration de Session (heures)",
+        "sessionTimeoutDesc": "Nombre d'heures avant l'expiration des sessions utilisateur",
+        "maxLoginAttempts": "Tentatives de Connexion Maximales",
+        "requireSpecialChars": "Exiger des caractères spéciaux dans les mots de passe",
+        "requireNumbers": "Exiger des chiffres dans les mots de passe",
+        "enableTwoFactor": "Activer l'authentification à deux facteurs",
+        "allowPasswordReset": "Autoriser la réinitialisation du mot de passe par e-mail"
+      },
+      "notifications": {
+        "title": "Paramètres de Notification",
+        "emailDigestFrequency": "Fréquence du Résumé par Email",
+        "enableSystemNotifications": "Activer les notifications système",
+        "enableUserActivityLogs": "Enregistrer l'activité des utilisateurs",
+        "enableErrorReporting": "Activer le rapport d'erreurs",
+        "notifyAdminOnNewUser": "Notifier l'admin lors d'une nouvelle inscription",
+        "notifyAdminOnErrors": "Notifier l'admin lors d'erreurs système"
+      }
+    },
+    "account": {
+      "title": "Paramètres du Compte",
+      "subtitle": "Gérer votre profil et préférences de compte admin",
+      "profileUpdateSuccess": "Profil mis à jour avec succès",
+      "profileUpdateError": "Échec de la mise à jour du profil",
+      "passwordChangeSuccess": "Mot de passe changé avec succès",
+      "passwordChangeError": "Échec du changement de mot de passe",
+      "passwordMismatch": "Les mots de passe ne correspondent pas",
+      "passwordTooShort": "Le mot de passe doit contenir au moins 8 caractères",
+      "preferencesUpdateSuccess": "Préférences mises à jour avec succès",
+      "preferencesUpdateError": "Échec de la mise à jour des préférences",
+      "avatarTooLarge": "Le fichier avatar est trop volumineux (max 5MB)",
+      "profile": {
+        "title": "Informations de Profil",
+        "firstName": "Prénom",
+        "lastName": "Nom de Famille",
+        "email": "Adresse Email",
+        "phone": "Numéro de Téléphone",
+        "jobTitle": "Titre du Poste",
+        "bio": "Biographie",
+        "bioPlaceholder": "Parlez-nous un peu de vous...",
+        "avatarHint": "Cliquez pour télécharger un nouvel avatar (max 5MB, JPG/PNG)",
+        "emailDisabled": "L'email ne peut pas être modifié pour des raisons de sécurité"
+      },
+      "password": {
+        "title": "Changer le Mot de Passe",
+        "current": "Mot de Passe Actuel",
+        "new": "Nouveau Mot de Passe",
+        "confirm": "Confirmer le Nouveau Mot de Passe",
+        "requirements": "Le mot de passe doit contenir au moins 8 caractères avec des chiffres et des caractères spéciaux"
+      },
+      "preferences": {
+        "title": "Préférences",
+        "language": "Langue Préférée",
+        "timezone": "Fuseau Horaire",
+        "dateFormat": "Format de Date",
+        "timeFormat": "Format d'Heure",
+        "currency": "Devise Préférée",
+        "digestFrequency": "Fréquence des Emails de Résumé",
+        "receiveEmailNotifications": "Recevoir les notifications par e-mail",
+        "receiveSystemAlerts": "Recevoir les alertes système",
+        "receiveDashboardDigest": "Recevoir les e-mails de résumé du tableau de bord"
+      },
+      "security": {
+        "title": "Aperçu de la Sécurité",
+        "twoFactor": "Authentification à Deux Facteurs",
+        "twoFactorEnabled": "L'authentification à deux facteurs est activée",
+        "twoFactorDisabled": "L'authentification à deux facteurs est désactivée",
+        "enable": "Activer",
+        "disable": "Désactiver",
+        "activeSessions": "Sessions Actives",
+        "activeSessionsCount": "Vous avez {{count}} session(s) active(s)",
+        "manageSessions": "Gérer les Sessions",
+        "lastPasswordChange": "Dernier Changement de Mot de Passe",
+        "never": "Jamais"
+      }
     }
   }
 }

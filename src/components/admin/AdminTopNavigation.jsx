@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { useAuth } from '@/contexts/AuthContext';
 import { Bell, Search, Menu, User, Settings, LogOut, ChevronLeft, ChevronRight } from 'lucide-react';
 
-const AdminTopNavigation = ({ onToggleSidebar, onToggleCollapse, sidebarCollapsed }) => {
+const AdminTopNavigation = ({ onToggleSidebar, onToggleCollapse, sidebarCollapsed, onPageChange }) => {
   const { t } = useTranslation();
   const { user, signOut } = useAuth();
   const [showProfileMenu, setShowProfileMenu] = useState(false);
@@ -14,9 +14,14 @@ const AdminTopNavigation = ({ onToggleSidebar, onToggleCollapse, sidebarCollapse
     setShowProfileMenu(false);
   };
 
+  const handleProfileSettings = () => {
+    onPageChange('account');
+    setShowProfileMenu(false);
+  };
+
   return (
-    <nav className="fixed top-0 left-0 right-0 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 z-50">
-      <div className="flex items-center justify-between px-4 py-3">
+    <nav className="fixed top-0 left-0 right-0 h-16 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 z-50">
+      <div className="flex items-center justify-between px-4 py-3 h-full">
         {/* Left Section - Logo and Menu Toggle */}
         <div className="flex items-center space-x-4">
           <div className="flex items-center space-x-2">
@@ -82,7 +87,9 @@ const AdminTopNavigation = ({ onToggleSidebar, onToggleCollapse, sidebarCollapse
                 <User size={16} />
               </div>
               <span className="hidden sm:block text-sm font-medium">
-                {user?.email || t('admin.profile.admin')}
+                {user?.user_metadata?.first_name && user?.user_metadata?.last_name 
+                  ? `${user.user_metadata.first_name} ${user.user_metadata.last_name}`
+                  : user?.email || t('admin.profile.admin')}
               </span>
             </button>
 
@@ -90,11 +97,11 @@ const AdminTopNavigation = ({ onToggleSidebar, onToggleCollapse, sidebarCollapse
               <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-md shadow-lg border border-gray-200 dark:border-gray-700 z-50">
                 <div className="py-1">
                   <button
-                    onClick={() => setShowProfileMenu(false)}
+                    onClick={handleProfileSettings}
                     className="flex items-center space-x-2 w-full px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
                   >
                     <Settings size={16} />
-                    <span>{t('admin.profile.settings')}</span>
+                    <span>{t('admin.profile.profileSettings')}</span>
                   </button>
                   <hr className="border-gray-200 dark:border-gray-700" />
                   <button

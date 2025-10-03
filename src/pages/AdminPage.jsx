@@ -4,6 +4,8 @@ import AdminLayout from '../components/admin/AdminLayout';
 import AdminDashboardPanel from '../components/admin/panels/AdminDashboardPanel';
 import AdminUsersPanel from '../components/admin/panels/AdminUsersPanel';
 import AdminOrganizationsPanel from '../components/admin/panels/AdminOrganizationsPanel';
+import AdminSettingsPanel from '../components/admin/panels/AdminSettingsPanel';
+import AdminAccountPanel from '../components/admin/panels/AdminAccountPanel';
 
 // Placeholder components for other panels
 const AdminSubscriptionsPanel = () => {
@@ -86,22 +88,6 @@ const AdminMonitoringPanel = () => {
   );
 };
 
-const AdminSettingsPanel = () => {
-  const { t } = useTranslation();
-  return (
-    <div className="space-y-6">
-      <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
-        {t('admin.settings.title')}
-      </h1>
-      <div className="bg-white dark:bg-gray-800 rounded-lg shadow border border-gray-200 dark:border-gray-700 p-8">
-        <p className="text-gray-500 dark:text-gray-400 text-center">
-          {t('admin.settings.placeholder')}
-        </p>
-      </div>
-    </div>
-  );
-};
-
 const AdminPage = () => {
   const [activePage, setActivePage] = useState('dashboard');
 
@@ -125,6 +111,8 @@ const AdminPage = () => {
         return <AdminMonitoringPanel />;
       case 'settings':
         return <AdminSettingsPanel />;
+      case 'account':
+        return <AdminAccountPanel />;
       default:
         return <AdminDashboardPanel />;
     }

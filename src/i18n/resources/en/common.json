@@ -919,6 +919,7 @@
     "profile": {
       "admin": "Admin",
       "settings": "Settings",
+      "profileSettings": "Profile Settings",
       "logout": "Logout"
     },
     "footer": {
@@ -934,6 +935,10 @@
       "support": "Support",
       "monitoring": "Monitoring",
       "settings": "Settings",
+      "systemSettings": "System Settings",
+      "userSettings": "Settings",
+      "account": "Account",
+      "management": "Management",
       "expand": "Expand sidebar",
       "collapse": "Collapse sidebar"
     },
@@ -1067,7 +1072,110 @@
     },
     "settings": {
       "title": "Admin Settings",
-      "placeholder": "Admin settings panel - Coming soon"
+      "subtitle": "Configure platform settings and system preferences",
+      "saveSuccess": "Settings saved successfully",
+      "saveError": "Failed to save settings",
+      "platform": {
+        "title": "Platform Settings",
+        "siteName": "Site Name",
+        "siteDescription": "Site Description",
+        "allowRegistration": "Allow new user registration",
+        "requireEmailVerification": "Require email verification",
+        "maintenanceMode": "Enable maintenance mode",
+        "maxUsersPerAccount": "Maximum users per account",
+        "defaultCurrency": "Default Currency",
+        "defaultLanguage": "Default Language",
+        "timezone": "Default Timezone"
+      },
+      "email": {
+        "title": "Email Configuration",
+        "smtpHost": "SMTP Host",
+        "smtpPort": "SMTP Port",
+        "smtpUsername": "SMTP Username",
+        "smtpPassword": "SMTP Password",
+        "fromEmail": "From Email Address",
+        "fromName": "From Name",
+        "enableEmailNotifications": "Enable email notifications",
+        "welcomeEmailEnabled": "Send welcome emails to new users",
+        "invoiceEmailEnabled": "Send email notifications for invoices"
+      },
+      "security": {
+        "title": "Security Settings",
+        "passwordMinLength": "Minimum Password Length",
+        "sessionTimeout": "Session Timeout (hours)",
+        "sessionTimeoutDesc": "Number of hours before user sessions expire",
+        "maxLoginAttempts": "Maximum Login Attempts",
+        "requireSpecialChars": "Require special characters in passwords",
+        "requireNumbers": "Require numbers in passwords",
+        "enableTwoFactor": "Enable two-factor authentication",
+        "allowPasswordReset": "Allow password reset via email"
+      },
+      "notifications": {
+        "title": "Notification Settings",
+        "emailDigestFrequency": "Email Digest Frequency",
+        "enableSystemNotifications": "Enable system notifications",
+        "enableUserActivityLogs": "Log user activity",
+        "enableErrorReporting": "Enable error reporting",
+        "notifyAdminOnNewUser": "Notify admin on new user registration",
+        "notifyAdminOnErrors": "Notify admin on system errors"
+      }
+    },
+    "account": {
+      "title": "Account Settings",
+      "subtitle": "Manage your admin account profile and preferences",
+      "profileUpdateSuccess": "Profile updated successfully",
+      "profileUpdateError": "Failed to update profile",
+      "passwordChangeSuccess": "Password changed successfully",
+      "passwordChangeError": "Failed to change password",
+      "passwordMismatch": "Passwords do not match",
+      "passwordTooShort": "Password must be at least 8 characters long",
+      "preferencesUpdateSuccess": "Preferences updated successfully",
+      "preferencesUpdateError": "Failed to update preferences",
+      "avatarTooLarge": "Avatar file is too large (max 5MB)",
+      "profile": {
+        "title": "Profile Information",
+        "firstName": "First Name",
+        "lastName": "Last Name",
+        "email": "Email Address",
+        "phone": "Phone Number",
+        "jobTitle": "Job Title",
+        "bio": "Bio",
+        "bioPlaceholder": "Tell us a bit about yourself...",
+        "avatarHint": "Click to upload a new avatar (max 5MB, JPG/PNG)",
+        "emailDisabled": "Email cannot be changed for security reasons"
+      },
+      "password": {
+        "title": "Change Password",
+        "current": "Current Password",
+        "new": "New Password",
+        "confirm": "Confirm New Password",
+        "requirements": "Password must be at least 8 characters with numbers and special characters"
+      },
+      "preferences": {
+        "title": "Preferences",
+        "language": "Preferred Language",
+        "timezone": "Timezone",
+        "dateFormat": "Date Format",
+        "timeFormat": "Time Format",
+        "currency": "Preferred Currency",
+        "digestFrequency": "Digest Email Frequency",
+        "receiveEmailNotifications": "Receive email notifications",
+        "receiveSystemAlerts": "Receive system alerts",
+        "receiveDashboardDigest": "Receive dashboard digest emails"
+      },
+      "security": {
+        "title": "Security Overview",
+        "twoFactor": "Two-Factor Authentication",
+        "twoFactorEnabled": "Two-factor authentication is enabled",
+        "twoFactorDisabled": "Two-factor authentication is disabled",
+        "enable": "Enable",
+        "disable": "Disable",
+        "activeSessions": "Active Sessions",
+        "activeSessionsCount": "You have {{count}} active session(s)",
+        "manageSessions": "Manage Sessions",
+        "lastPasswordChange": "Last Password Change",
+        "never": "Never"
+      }
     }
   }
 }
