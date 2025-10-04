@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useTranslation } from 'react-i18next';
 import { Button } from "@/components/ui/button";
 import { formatCurrency } from "../utils/formatCurrency"; // Corrected import path
@@ -9,9 +9,9 @@ import ShipToSection from "../components/ShipToSection";
 import ItemDetails from "../components/ItemDetails";
 import { templates } from "../utils/templateRegistry";
 import { FiEdit, FiFileText, FiTrash2 } from "react-icons/fi"; // Added FiTrash2 icon
-import { RefreshCw, Save, Mail } from "lucide-react";
+import { RefreshCw, ChevronDown, Mail, Printer, Download } from "lucide-react";
 import FrenchInvoiceCTA from "../components/FrenchInvoiceCTA";
-import InvoiceDashboard from "../components/InvoiceDashboard";
+import InvoiceTemplate from "../components/InvoiceTemplate";
 
 const generateRandomInvoiceNumber = () => {
   const length = Math.floor(Math.random() * 6) + 3;
@@ -57,7 +57,6 @@ const noteOptions = [
 
 const Index = () => {
   const navigate = useNavigate();
-  const location = useLocation();
   const { t } = useTranslation();
   const [isLoading, setIsLoading] = useState(true);
   const [selectedCurrency, setSelectedCurrency] = useState("USD");
@@ -79,6 +78,8 @@ const Index = () => {
   const [subTotal, setSubTotal] = useState(0);
   const [grandTotal, setGrandTotal] = useState(0);
   const [notes, setNotes] = useState("");
+  const [selectedTemplate, setSelectedTemplate] = useState(1);
+  const [showTemplateDropdown, setShowTemplateDropdown] = useState(false);
 
   const refreshNotes = () => {
     const randomIndex = Math.floor(Math.random() * noteOptions.length);
@@ -86,46 +87,30 @@ const Index = () => {
   };
 
   useEffect(() => {
-    // Check if invoice data was passed from dashboard
-    if (location.state && location.state.invoiceData) {
-      const invoiceData = location.state.invoiceData;
-      setBillTo(invoiceData.billTo || { name: "", address: "", phone: "" });
-      setShipTo(invoiceData.shipTo || { name: "", address: "", phone: "" });
-      setInvoice(invoiceData.invoice || { date: "", paymentDate: "", number: "" });
-      setYourCompany(invoiceData.yourCompany || { name: "", address: "", phone: "" });
-      setItems(invoiceData.items || []);
-      settaxPercentage(invoiceData.taxPercentage || 0);
-      setTaxAmount(invoiceData.taxAmount || 0);
-      setSubTotal(invoiceData.subTotal || 0);
-      setGrandTotal(invoiceData.grandTotal || 0);
-      setNotes(invoiceData.notes || "");
-      setSelectedCurrency(invoiceData.selectedCurrency || "USD");
+    // Load form data from localStorage on component mount
+    const savedFormData = localStorage.getItem("formData");
+    if (savedFormData) {
+      const parsedData = JSON.parse(savedFormData);
+      setBillTo(parsedData.billTo || { name: "", address: "", phone: "" });
+      setShipTo(parsedData.shipTo || { name: "", address: "", phone: "" });
+      setInvoice(
+        parsedData.invoice || { date: "", paymentDate: "", number: "" }
+      );
+      setYourCompany(
+        parsedData.yourCompany || { name: "", address: "", phone: "" }
+      );
+      setItems(parsedData.items || []);
+      settaxPercentage(parsedData.taxPercentage || 0);
+      setNotes(parsedData.notes || "");
+      setSelectedCurrency(parsedData.selectedCurrency || "USD"); // Load selectedCurrency from localStorage
     } else {
-      // Load form data from localStorage on component mount
-      const savedFormData = localStorage.getItem("formData");
-      if (savedFormData) {
-        const parsedData = JSON.parse(savedFormData);
-        setBillTo(parsedData.billTo || { name: "", address: "", phone: "" });
-        setShipTo(parsedData.shipTo || { name: "", address: "", phone: "" });
-        setInvoice(
-          parsedData.invoice || { date: "", paymentDate: "", number: "" }
-        );
-        setYourCompany(
-          parsedData.yourCompany || { name: "", address: "", phone: "" }
-        );
-        setItems(parsedData.items || []);
-        settaxPercentage(parsedData.taxPercentage || 0);
-        setNotes(parsedData.notes || "");
-        setSelectedCurrency(parsedData.selectedCurrency || "USD"); // Load selectedCurrency from localStorage
-      } else {
-        // If no saved data, set invoice number
-        setInvoice((prev) => ({
-          ...prev,
-          number: generateRandomInvoiceNumber(),
-        }));
-      }
+      // If no saved data, set invoice number
+      setInvoice((prev) => ({
+        ...prev,
+        number: generateRandomInvoiceNumber(),
+      }));
     }
-  }, [location.state]);
+  }, []);
 
   useEffect(() => {
     // Save form data to localStorage whenever it changes
@@ -227,24 +212,7 @@ const Index = () => {
     updateTotals();
   }, [items, taxPercentage, updateTotals]); // subTotal, taxAmount, grandTotal removed from deps as they are set by updateTotals & its chain
 
-  const handleTemplateClick = (templateNumber) => {
-    const formData = {
-      billTo,
-      shipTo,
-      invoice,
-      yourCompany,
-      items,
-      taxPercentage,
-      taxAmount,
-      subTotal,
-      grandTotal,
-      notes,
-      selectedCurrency, // Add this
-    };
-    navigate("/template", {
-      state: { formData, selectedTemplate: templateNumber },
-    });
-  };
+
 
   const fillDummyData = () => {
     setBillTo({
@@ -333,104 +301,36 @@ const Index = () => {
     localStorage.removeItem("formData");
   };
 
-  const saveInvoice = () => {
-    const invoiceDataToSave = {
+  // Template and action handlers
+  const handleTemplateChange = (templateIndex) => {
+    setSelectedTemplate(templateIndex);
+    setShowTemplateDropdown(false);
+  };
+
+  const handleSendEmail = () => {
+    const subject = `Invoice ${invoice.number || 'Draft'}`;
+    const body = `Please find the invoice details attached.\n\nFrom: ${yourCompany.name}\nTo: ${billTo.name}\nTotal: ${formatCurrency(grandTotal, selectedCurrency)}`;
+    const mailtoLink = `mailto:${billTo.email || ''}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    window.location.href = mailtoLink;
+  };
+
+  const handlePrint = () => {
+    window.print();
+  };
+
+  const handleDownloadPDF = () => {
+    const formData = {
       billTo,
       shipTo,
       invoice,
       yourCompany,
       items,
       taxPercentage,
-      taxAmount,
-      subTotal,
-      grandTotal,
       notes,
       selectedCurrency,
-      savedAt: new Date().toISOString()
     };
-    
-    // Save to localStorage with a unique key
-    const savedInvoices = JSON.parse(localStorage.getItem('savedInvoices') || '[]');
-    const invoiceIndex = savedInvoices.findIndex(inv => inv.invoice?.number === invoice.number);
-    
-    if (invoiceIndex !== -1) {
-      savedInvoices[invoiceIndex] = invoiceDataToSave;
-    } else {
-      savedInvoices.push(invoiceDataToSave);
-    }
-    
-    localStorage.setItem('savedInvoices', JSON.stringify(savedInvoices));
-    
-    // Also save to current form data storage
-    localStorage.setItem('formData', JSON.stringify(invoiceDataToSave));
-    
-    // Show visual feedback
-    const saveButtons = document.querySelectorAll('.save-invoice-btn');
-    saveButtons.forEach(button => {
-      const originalText = button.textContent || button.querySelector('span')?.textContent;
-      const textElement = button.querySelector('span') || button;
-      if (textElement) {
-        textElement.textContent = t('index.saved');
-        button.style.backgroundColor = '#10b981';
-        setTimeout(() => {
-          textElement.textContent = originalText;
-          button.style.backgroundColor = '';
-        }, 2000);
-      }
-    });
-  };
-
-  const sendViaEmail = () => {
-    // First save the invoice
-    saveInvoice();
-    
-    // Create email content
-    const emailSubject = `Invoice ${invoice.number} from ${yourCompany.name || 'Your Company'}`;
-    const emailBody = `Dear ${billTo.name || 'Customer'},
-
-Please find attached your invoice details:
-
-Invoice Number: ${invoice.number}
-Invoice Date: ${invoice.date}
-Due Date: ${invoice.dueDate}
-Amount: ${formatCurrency(grandTotal, selectedCurrency)}
-
-${notes ? `Notes: ${notes}` : ''}
-
-Thank you for your business!
-
-Best regards,
-${yourCompany.name || 'Your Company'}
-${yourCompany.phone || ''}
-${yourCompany.email || ''}`;
-
-    // Update invoice status to "sent" in localStorage
-    const savedInvoices = JSON.parse(localStorage.getItem('savedInvoices') || '[]');
-    const invoiceIndex = savedInvoices.findIndex(inv => inv.invoice?.number === invoice.number);
-    
-    if (invoiceIndex !== -1) {
-      savedInvoices[invoiceIndex].status = 'sent';
-      savedInvoices[invoiceIndex].sentDate = new Date().toISOString();
-      localStorage.setItem('savedInvoices', JSON.stringify(savedInvoices));
-    }
-
-    // Open email client
-    const mailtoLink = `mailto:${billTo.email || ''}?subject=${encodeURIComponent(emailSubject)}&body=${encodeURIComponent(emailBody)}`;
-    window.open(mailtoLink, '_blank');
-    
-    // Show visual feedback
-    const emailButtons = document.querySelectorAll('.send-email-btn');
-    emailButtons.forEach(button => {
-      const originalText = button.textContent || button.querySelector('span')?.textContent;
-      const textElement = button.querySelector('span') || button;
-      if (textElement) {
-        textElement.textContent = t('index.emailSent');
-        button.style.backgroundColor = '#10b981';
-        setTimeout(() => {
-          textElement.textContent = originalText;
-          button.style.backgroundColor = '';
-        }, 2000);
-      }
+    navigate("/template", {
+      state: { formData, selectedTemplate }
     });
   };
 
@@ -451,7 +351,28 @@ ${yourCompany.email || ''}`;
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-background to-accent/5">
    
-
+        {/* Floating action buttons */}
+        <div className="fixed top-20 left-2 md:left-8 flex flex-col gap-3 z-40">
+          <Button
+            variant="destructive"
+            size="icon"
+            onClick={clearForm}
+            className="rounded-sm p-1 hover:scale-110 transition-smooth mt-8 w-auto text-black text-md font-bold"
+            title={t('index.clearForm')}
+          >
+            <span className="sr-only">{t('index.clearForm')}</span>
+            <FiTrash2 className="w-6" />
+          </Button>
+          <Button
+            variant="outline"
+            size="icon"
+            onClick={fillDummyData}
+            className="rounded-full hover:scale-110 transition-smooth"
+            title={t('index.fillDummyData')}
+          >
+            <FiEdit size={20} />
+          </Button>
+        </div>
         <Button
           variant="accent"
           size="icon"
@@ -480,62 +401,13 @@ ${yourCompany.email || ''}`;
         
         {/* Main content layout */}
        <div className="container mx-auto px-4 md:px-12 py-5">
-          {/* Invoice Dashboard */}
-          <InvoiceDashboard />
-          
           {/* French Invoice CTA - Top Priority */}
           <FrenchInvoiceCTA />
           
-          {/* Action Buttons */}
-          <div className="flex justify-center gap-4 mb-8">
-            <Button
-              variant="outline"
-              onClick={fillDummyData}
-              className="flex items-center gap-2 px-4 py-2 hover:scale-105 transition-all"
-            >
-              <FiEdit size={18} />
-              <span>{t('index.fillDummyData')}</span>
-            </Button>
-            <Button
-              variant="default"
-              onClick={saveInvoice}
-              className="save-invoice-btn flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white hover:scale-105 transition-all"
-            >
-              <Save size={18} />
-              <span>{t('index.saveInvoice')}</span>
-            </Button>
-            <Button
-              variant="default"
-              onClick={sendViaEmail}
-              className="send-email-btn flex items-center gap-2 px-4 py-2 bg-green-600 hover:bg-green-700 text-white hover:scale-105 transition-all"
-            >
-              <Mail size={18} />
-              <span>{t('index.sendViaEmail')}</span>
-            </Button>
-            <Button
-              variant="destructive"
-              onClick={clearForm}
-              className="flex items-center gap-2 px-4 py-2 hover:scale-105 transition-all"
-            >
-              <FiTrash2 size={18} />
-              <span>{t('index.clearForm')}</span>
-            </Button>
-          </div>
-          
           <div className="flex flex-col xl:flex-row gap-8"> 
           {/* Invoice Form Container */}
-          <div className="w-full xl:w-1/2 invoice-form-section"> 
+          <div className="w-full xl:w-1/2"> 
           <div className="bg-white/70 backdrop-blur-sm rounded-3xl shadow-2xl border border-white/20 p-6 md:p-8 hover:shadow-2xl transition-all duration-300">
-            {/* Invoice Form Title */}
-            <div className="text-center mb-8">
-              <h1 className="text-3xl font-bold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
-                {t('index.createInvoiceForm')}
-              </h1>
-              <p className="text-gray-600 mt-2">
-                {t('index.createInvoiceDescription')}
-              </p>
-            </div>
-            
             <div className="animate-fade-in" style={{ animationDelay: "0.2s" }}>
               <BillToSection
                 billTo={billTo}
@@ -693,81 +565,119 @@ ${yourCompany.email || ''}`;
               ></textarea>
             </div>
 
-            {/* Save Invoice Button at form end */}
-            <div className="mt-8 text-center">
-              <Button
-                onClick={saveInvoice}
-                className="save-invoice-btn px-8 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-xl hover:scale-105 transition-all shadow-lg"
-                size="lg"
-              >
-                <Save size={20} className="mr-2" />
-                <span>{t('index.saveInvoice')}</span>
-              </Button>
-            </div>
-
             {/* Clear Form button removed */}
           </div>
         </div>
+        {/* Live Preview Section */}
         <div className="w-full xl:w-1/2">
-          <div className="bg-gradient-to-br from-white to-gray-50/80 backdrop-blur-sm rounded-3xl shadow-2xl border border-white/20 p-6 md:p-8 hover:shadow-2xl transition-all duration-300">
-            <h2 className="text-3xl font-bold mb-8 text-center bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
-              {t('index.chooseTemplate')}
-            </h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {templates.map((template, index) => (
-                <div
-                  key={index}
-                  className="glass-card p-4 rounded-2xl cursor-pointer hover:shadow-xl transition-smooth hover:scale-105 hover:-translate-y-1 group animate-fade-in border-2 border-transparent hover:border-accent/30"
-                  style={{ animationDelay: `${0.3 + index * 0.1}s` }}
-                  onClick={() => handleTemplateClick(index + 1)}
+          <div className="bg-gradient-to-br from-white to-gray-50/80 backdrop-blur-sm rounded-3xl shadow-2xl border border-white/20 p-6 md:p-8 hover:shadow-2xl transition-all duration-300 sticky top-8">
+            {/* Template Selection Header */}
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="text-2xl font-bold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
+                {t('index.livePreview')}
+              </h2>
+              
+              {/* Template Dropdown */}
+              <div className="relative">
+                <button
+                  onClick={() => setShowTemplateDropdown(!showTemplateDropdown)}
+                  className="flex items-center gap-2 px-4 py-2 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors shadow-sm"
                 >
-                  <div className="relative overflow-hidden rounded-xl mb-3 bg-gradient-to-br from-muted/50 to-muted">
-                    <img
-                      src={`/assets/template${index + 1}-preview.png`}
-                      alt={template.name}
-                      className={`w-full ${
-                        template.name === "Template 10"
-                          ? "h-[38px] w-[57px]"
-                          : "h-50"
-                      } object-cover transition-smooth group-hover:scale-110`}
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-primary/10 via-transparent to-accent/5 opacity-0 group-hover:opacity-100 transition-smooth"></div>
-                    <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-smooth">
-                      <div className="w-6 h-6 bg-accent/20 backdrop-blur-sm rounded-full flex items-center justify-center">
-                        <div className="w-2 h-2 bg-accent rounded-full"></div>
-                      </div>
-                    </div>
+                  <span className="text-sm font-medium text-gray-700">
+                    {t('index.template')} {selectedTemplate}
+                  </span>
+                  <ChevronDown className={`w-4 h-4 transition-transform ${showTemplateDropdown ? 'rotate-180' : ''}`} />
+                </button>
+                
+                {/* Dropdown Menu */}
+                {showTemplateDropdown && (
+                  <div className="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg z-50 max-h-64 overflow-y-auto">
+                    {templates.map((template, index) => (
+                      <button
+                        key={index}
+                        onClick={() => handleTemplateChange(index + 1)}
+                        className={`w-full px-4 py-3 text-left hover:bg-gray-50 transition-colors border-b border-gray-100 last:border-b-0 ${
+                          selectedTemplate === index + 1 ? 'bg-blue-50 text-blue-700' : 'text-gray-700'
+                        }`}
+                      >
+                        <div className="flex items-center gap-3">
+                          <img
+                            src={`/assets/template${index + 1}-preview.png`}
+                            alt={`${t('index.template')} ${index + 1}`}
+                            className="w-8 h-10 object-cover rounded border"
+                          />
+                          <span className="font-medium">
+                            {template.name}
+                          </span>
+                        </div>
+                      </button>
+                    ))}
                   </div>
-                  <p className="text-center font-semibold text-foreground group-hover:gradient-text transition-smooth">
-                    {template.name}
-                  </p>
-                </div>
-              ))}
+                )}
+              </div>
+            </div>
 
-              {/* Template Selection Help */}
-              <div className="mt-8 p-4 bg-blue-50 rounded-xl border border-blue-200">
-                <div className="flex items-start gap-3">
-                  <div className="w-6 h- bg-red-500 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
-                    <svg
-                      className="w-3 h-3 text-white"
-                      fill="currentColor"
-                      viewBox="0 0 20 20"
-                    >
-                      <path
-                        fillRule="evenodd"
-                        d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
-                        clipRule="evenodd"
-                      />
-                    </svg>
-                  </div>
-                  <div className="flex-1">
-                    <p className="text-sm text-blue-800 font-medium">
-                      {t('index.templateSelectionTip')}
-                    </p>
-                    <p className="text-xs text-blue-600 mt-1">
-                      {t('index.templateSelectionHelp')}
-                    </p>
-                  </div>
+            {/* Live Invoice Preview */}
+            <div className="bg-white rounded-xl shadow-inner border border-gray-100 mb-6 overflow-hidden">
+              <div className="transform scale-75 origin-top-left w-[133.33%] h-auto">
+                <InvoiceTemplate
+                  template={selectedTemplate}
+                  data={{
+                    billTo,
+                    shipTo,
+                    invoice,
+                    yourCompany,
+                    items,
+                    taxPercentage,
+                    notes,
+                    selectedCurrency,
+                  }}
+                />
+              </div>
+            </div>
+
+            {/* Action Buttons */}
+            <div className="flex flex-wrap gap-3 justify-center">
+              <button
+                onClick={handleSendEmail}
+                className="flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors shadow-sm"
+              >
+                <Mail className="w-4 h-4" />
+                <span className="text-sm font-medium">{t('index.sendEmail')}</span>
+              </button>
+              
+              <button
+                onClick={handlePrint}
+                className="flex items-center gap-2 px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors shadow-sm"
+              >
+                <Printer className="w-4 h-4" />
+                <span className="text-sm font-medium">{t('index.print')}</span>
+              </button>
+              
+              <button
+                onClick={handleDownloadPDF}
+                className="flex items-center gap-2 px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg transition-colors shadow-sm"
+              >
+                <Download className="w-4 h-4" />
+                <span className="text-sm font-medium">{t('index.downloadPDF')}</span>
+              </button>
+            </div>
+
+            {/* Help Text */}
+            <div className="mt-6 p-4 bg-blue-50 rounded-lg border border-blue-200">
+              <div className="flex items-start gap-3">
+                <div className="w-6 h-6 bg-blue-500 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                  <svg className="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
+                  </svg>
+                </div>
+                <div className="flex-1">
+                  <p className="text-sm text-blue-800 font-medium">
+                    {t('index.livePreviewTip')}
+                  </p>
+                  <p className="text-xs text-blue-600 mt-1">
+                    {t('index.livePreviewHelp')}
+                  </p>
                 </div>
               </div>
             </div>
