@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/components/ui/use-toast';
-import { Eye, EyeOff } from 'lucide-react';
+import { Eye, EyeOff, Mail, CheckCircle } from 'lucide-react';
 
 const AuthPage = () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -11,6 +11,8 @@ const AuthPage = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [showSuccessNotification, setShowSuccessNotification] = useState(false);
+  const [registeredEmail, setRegisteredEmail] = useState('');
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -198,7 +200,7 @@ const AuthPage = () => {
           email: formData.email,
           password: formData.password,
           options: {
-            emailRedirectTo: `${window.location.origin}/`,
+            emailRedirectTo: `https://swiftfacture.com/auth/verify`,
             data: {
               first_name: formData.firstName,
               last_name: formData.lastName,
@@ -210,17 +212,38 @@ const AuthPage = () => {
 
         if (error) throw error;
 
+        // Show success toast first
+        toast({
+          title: "Account Created Successfully!",
+          description: "Please check your email to verify your account.",
+          duration: 4000,
+        });
+
         // Check if email confirmation is required
         if (data.user && !data.session) {
-          toast({
-            title: "Check your email!",
-            description: "We've sent you a confirmation link to complete your registration.",
+          // Store the email for reference
+          setRegisteredEmail(formData.email);
+          
+          // Show success notification slide-in
+          setShowSuccessNotification(true);
+          
+          // Switch to login view after showing notification
+          setTimeout(() => {
+            setIsLogin(true);
+            setShowSuccessNotification(false);
+          }, 4000);
+          
+          // Clear form data for security
+          setFormData({
+            email: formData.email, // Keep email for login convenience
+            password: '',
+            confirmPassword: '',
+            firstName: '',
+            lastName: '',
+            rememberMe: false
           });
         } else {
-          toast({
-            title: "Success!",
-            description: "Your account has been created successfully.",
-          });
+          // Auto login successful
           navigate(from, { replace: true });
         }
       }
@@ -241,7 +264,7 @@ const AuthPage = () => {
       const { error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
-          redirectTo: `${window.location.origin}/`,
+          redirectTo: `https://swiftfacture.com/`,
         },
       });
 
@@ -255,12 +278,14 @@ const AuthPage = () => {
     }
   };
 
+
+
   const handleGitHubSignIn = async () => {
     try {
       const { error } = await supabase.auth.signInWithOAuth({
         provider: 'github',
         options: {
-          redirectTo: `${window.location.origin}/`,
+          redirectTo: `https://swiftfacture.com/`,
         },
       });
 
@@ -304,9 +329,40 @@ const AuthPage = () => {
     );
   }
 
+  // Success Notification Slide-in Bar Component
+  const SuccessNotificationBar = () => (
+    <div className={`fixed top-0 left-0 right-0 z-50 transform transition-transform duration-500 ease-in-out ${
+      showSuccessNotification ? 'translate-y-0' : '-translate-y-full'
+    }`}>
+      <div className="bg-gradient-to-r from-green-500 to-emerald-600 text-white px-6 py-4 shadow-lg">
+        <div className="max-w-6xl mx-auto flex items-center justify-between">
+          <div className="flex items-center space-x-3">
+            <CheckCircle className="w-6 h-6 animate-bounce" />
+            <div>
+              <p className="font-semibold text-lg">
+                {t('auth.success.accountCreated', 'Account Created Successfully!')}
+              </p>
+              <p className="text-green-100 text-sm">
+                {registeredEmail ? 
+                  `${t('auth.verification.emailSent', 'Verification email sent to')} ${registeredEmail}` :
+                  t('auth.verification.emailSent', 'Please check your email to verify your account and then login.')
+                }
+              </p>
+            </div>
+          </div>
+          <Mail className="w-8 h-8 text-green-200 animate-pulse" />
+        </div>
+      </div>
+    </div>
+  );
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
-      <div className="max-w-md w-full">
+    <>
+      {/* Success Notification Bar */}
+      <SuccessNotificationBar />
+      
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
+        <div className="max-w-md w-full">
         {/* Header */}
         <div className="text-center mb-8">
           <h1 className="text-3xl font-bold text-gray-900 mb-2">
@@ -541,6 +597,7 @@ const AuthPage = () => {
         </div>
       </div>
     </div>
+    </>
   );
 };
 

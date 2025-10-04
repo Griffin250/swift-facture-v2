@@ -214,7 +214,7 @@ const AdminAccountPanel = () => {
     </div>
   );
 
-  const SettingsCard = ({ title, icon: Icon, children, onSave, showSave = true }) => (
+  const SettingsCard = ({ title, icon: Icon, children, onSave, showSave = true, saveButtonText }) => (
     <div className="bg-white dark:bg-gray-800 rounded-lg shadow border border-gray-200 dark:border-gray-700">
       <div className="p-6 border-b border-gray-200 dark:border-gray-700">
         <div className="flex items-center justify-between">
@@ -233,7 +233,7 @@ const AdminAccountPanel = () => {
               ) : (
                 <Save className="h-4 w-4" />
               )}
-              <span>{t('common.save')}</span>
+              <span>{saveButtonText || t('common.save')}</span>
             </button>
           )}
         </div>
@@ -281,6 +281,7 @@ const AdminAccountPanel = () => {
         title={t('admin.account.profile.title')}
         icon={User}
         onSave={handleSaveProfile}
+        saveButtonText={t('admin.account.saveProfile')}
       >
         <div className="space-y-6">
           {/* Avatar Section */}
@@ -373,6 +374,7 @@ const AdminAccountPanel = () => {
         title={t('admin.account.password.title')}
         icon={Key}
         onSave={handleChangePassword}
+        saveButtonText={t('admin.account.savePassword')}
       >
         <div className="space-y-6">
           <div className="grid grid-cols-1 gap-6">
@@ -437,6 +439,7 @@ const AdminAccountPanel = () => {
         title={t('admin.account.preferences.title')}
         icon={Globe}
         onSave={handleSavePreferences}
+        saveButtonText={t('admin.account.savePreferences')}
       >
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <InputGroup

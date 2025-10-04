@@ -292,7 +292,47 @@
     },
     "success": {
       "loginTitle": "Succès !",
-      "loginMessage": "Vous avez été connecté avec succès."
+      "loginMessage": "Vous avez été connecté avec succès.",
+      "accountCreated": "Compte Créé avec Succès !"
+    },
+    "verification": {
+      "title": "Compte Créé avec Succès ! 🎉",
+      "subtitle": "Vérifiez Votre Adresse Email",
+      "sentTo": "Nous avons envoyé un lien de vérification à :",
+      "emailSent": "Email de vérification envoyé à",
+      "steps": {
+        "step1": "Vérifiez votre boîte de réception (et dossier spam)",
+        "step2": "Cliquez sur le lien de vérification dans l'email",
+        "step3": "Revenez ici pour vous connecter avec votre nouveau compte"
+      },
+      "buttons": {
+        "backToLogin": "Retour à la Connexion",
+        "resendEmail": "Renvoyer l'Email"
+      },
+      "helpText": "Vous n'avez pas reçu l'email ? Vérifiez votre dossier spam ou essayez de renvoyer.",
+      "resendSuccess": "Email de Vérification Renvoyé !",
+      "resendDescription": "Veuillez vérifier your boîte de réception et dossier spam.",
+      "verifying": "Vérification de votre Email...",
+      "pleaseWait": "Veuillez patienter pendant que nous vérifions votre adresse email.",
+      "success": {
+        "title": "Email Vérifié avec Succès !",
+        "message": "Votre compte a été vérifié. Vous allez être redirigé vers la connexion.",
+        "description": "Votre compte a été vérifié avec succès. Vous pouvez maintenant accéder à toutes les fonctionnalités SwiftFacture."
+      },
+      "error": {
+        "title": "Échec de la Vérification",
+        "message": "Il y a eu une erreur lors de la vérification de votre email. Veuillez réessayer.",
+        "description": "Nous n'avons pas pu vérifier votre adresse email. Cela pourrait être dû à un lien expiré ou invalide.",
+        "invalidLink": "Lien de vérification invalide. Veuillez vérifier votre email et réessayer.",
+        "help": "Veuillez essayer de demander un nouvel email de vérification ou contacter notre équipe de support."
+      },
+      "redirecting": "Redirection vers la connexion dans",
+      "seconds": "secondes",
+      "continueToLogin": "Continuer vers la Connexion",
+      "goToLogin": "Aller à la Connexion",
+      "loginMessage": "Votre email a été vérifié. Vous pouvez maintenant vous connecter.",
+      "loginMessageFailed": "Veuillez essayer de vous connecter ou contacter le support.",
+      "footer": "Des problèmes ? Contactez notre équipe de support à support@swiftfacture.com"
     }
   },
   "dashboard": {
@@ -914,6 +954,10 @@
   },
   "admin": {
     "title": "Tableau de Bord Admin",
+    "access": {
+      "title": "Accès Refusé",
+      "message": "Vous n'avez pas la permission d'accéder au tableau de bord administrateur."
+    },
     "search": {
       "placeholder": "Rechercher utilisateurs, organisations, factures..."
     },
@@ -943,6 +987,7 @@
       "systemSettings": "Paramètres Système",
       "userSettings": "Paramètres",
       "account": "Compte",
+      "database": "Base de Données",
       "management": "Gestion",
       "expand": "Développer la barre latérale",
       "collapse": "Réduire la barre latérale"
@@ -1055,6 +1100,39 @@
       },
       "noResults": "Aucune organisation trouvée correspondant à vos critères."
     },
+    "database": {
+      "title": "Gestion de Base de Données",
+      "subtitle": "Gérer les utilisateurs et les rôles",
+      "loading": "Chargement...",
+      "error": "Erreur lors du chargement des informations de la base de données",
+      "users": {
+        "title": "Utilisateurs",
+        "email": "Email",
+        "name": "Nom",
+        "created": "Créé",
+        "noUsers": "Aucun utilisateur trouvé"
+      },
+      "roles": {
+        "title": "Rôles Utilisateur",
+        "user": "Utilisateur",
+        "role": "Rôle",
+        "assignedAt": "Assigné le",
+        "actions": "Actions",
+        "noRoles": "Aucun rôle assigné",
+        "addRole": "Ajouter un Rôle",
+        "updateRole": "Mettre à Jour le Rôle",
+        "deleteRole": "Supprimer le Rôle",
+        "addSuccess": "Rôle ajouté avec succès",
+        "updateSuccess": "Rôle mis à jour avec succès",
+        "deleteSuccess": "Rôle supprimé avec succès",
+        "addError": "Erreur lors de l'ajout du rôle",
+        "updateError": "Erreur lors de la mise à jour du rôle",
+        "deleteError": "Erreur lors de la suppression du rôle",
+        "selectUser": "Sélectionner un utilisateur",
+        "selectRole": "Sélectionner un rôle",
+        "confirmDelete": "Êtes-vous sûr de vouloir supprimer ce rôle ?"
+      }
+    },
     "subscriptions": {
       "title": "Abonnements et Facturation",
       "placeholder": "Panneau de gestion des abonnements - Bientôt disponible"
@@ -1080,6 +1158,7 @@
       "subtitle": "Configurer les paramètres de la plateforme et les préférences système",
       "saveSuccess": "Paramètres sauvegardés avec succès",
       "saveError": "Échec de la sauvegarde des paramètres",
+      "saveButton": "Sauvegarder les Paramètres",
       "platform": {
         "title": "Paramètres de la Plateforme",
         "siteName": "Nom du Site",
@@ -1137,6 +1216,9 @@
       "preferencesUpdateSuccess": "Préférences mises à jour avec succès",
       "preferencesUpdateError": "Échec de la mise à jour des préférences",
       "avatarTooLarge": "Le fichier avatar est trop volumineux (max 5MB)",
+      "saveProfile": "Sauvegarder le Profil",
+      "savePassword": "Changer le Mot de Passe",
+      "savePreferences": "Sauvegarder les Préférences",
       "profile": {
         "title": "Informations de Profil",
         "firstName": "Prénom",

@@ -1,25 +1,17 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { Menu, X, ChevronDown } from "lucide-react";
+import { Menu, X } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import SwiftFactureLogo from "../../public/assets/logo/SwiftFactureLogo.png";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "./ui/dropdown-menu";
-import usaFlag from "../../public/assets/icons/usaFlag.png";
-import franceFlag from "../../public/assets/icons/franceFlag.png";
-import { useLanguage } from "../hooks/useLanguage";
 import { useAuth } from "../contexts/AuthContext";
 import UserProfile from "./UserProfile";
+import LanguageSwitcher from "./LanguageSwitcher";
 
 const Header = () => {
   const [open, setOpen] = useState(false);
   const navigate = useNavigate();
   const { t, ready } = useTranslation('common');
-  const { currentLanguage, changeLanguage } = useLanguage();
+
   const { user, loading } = useAuth();
 
   // Fallback function for when translations aren't ready
@@ -38,34 +30,7 @@ const Header = () => {
     { label: getTranslation('navigation.customers', 'Clients'), to: "/customers" },
   ];
 
-  // Language data with flag components - with fallbacks
-  const languages = {
-    fr: {
-      code: "fr",
-      icon: franceFlag,
-      name: getTranslation('language.french', 'Français'),
-    },
-    en: {
-      code: "en",
-      icon: usaFlag,
-      name: getTranslation('language.english', 'English'),
-    },
-  };
 
-  // Sync local language state with i18n - ensure valid language
-  const [language, setLanguage] = useState(() => {
-    const initialLang = currentLanguage || "fr";
-    return languages[initialLang] ? initialLang : "fr";
-  });
-
-  useEffect(() => {
-    const newLang = currentLanguage || "fr";
-    if (newLang === "fr" || newLang === "en") {
-      setLanguage(newLang);
-    } else {
-      setLanguage("fr"); // fallback to French if invalid language
-    }
-  }, [currentLanguage]);
 
   const location = useLocation();
 
@@ -131,46 +96,7 @@ const Header = () => {
 
         <div className="flex items-center gap-3">
           {/* Language Dropdown - visible on all screen sizes */}
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <button className="flex items-center gap-1 md:gap-2 px-2 md:px-3 py-2 rounded-lg border border-gray-300 bg-white hover:bg-gray-50 transition-colors duration-200 text-sm font-medium">
-                {languages[language] && (
-                  <>
-                    <img
-                      src={languages[language].icon}
-                      alt={`${languages[language].name} flag`}
-                      className="w-4 h-3 md:w-5 md:h-4 object-cover rounded-sm"
-                    />
-                    <span className="hidden sm:inline text-xs md:text-sm">
-                      {languages[language].code.toUpperCase()}
-                    </span>
-                  </>
-                )}
-                <ChevronDown className="h-3 w-3 md:h-4 md:w-4 text-foreground font-bold" />
-              </button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-32">
-              {Object.values(languages).map((lang) => (
-                <DropdownMenuItem
-                  key={lang.code}
-                  onClick={() => {
-                    changeLanguage(lang.code);
-                    setLanguage(lang.code);
-                  }}
-                  className={`flex items-center gap-2 cursor-pointer ${
-                    language === lang.code ? "bg-primary/10 text-primary" : ""
-                  }`}
-                >
-                  <img
-                    src={lang.icon}
-                    alt={`${lang.name} flag`}
-                    className="w-5 h-4 object-cover rounded-sm"
-                  />
-                  <span className="text-sm">{lang.name}</span>
-                </DropdownMenuItem>
-              ))}
-            </DropdownMenuContent>
-          </DropdownMenu>
+          <LanguageSwitcher />
 
           <div className="hidden md:flex items-center space-x-3">
             <button

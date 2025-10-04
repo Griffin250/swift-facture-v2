@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { useAuth } from '@/contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import { Bell, Search, Menu, User, Settings, LogOut, ChevronLeft, ChevronRight, Home } from 'lucide-react';
+import LanguageSwitcher from '../LanguageSwitcher';
 
 const AdminTopNavigation = ({ onToggleSidebar, onToggleCollapse, sidebarCollapsed, onPageChange }) => {
   const { t } = useTranslation();
@@ -83,8 +84,11 @@ const AdminTopNavigation = ({ onToggleSidebar, onToggleCollapse, sidebarCollapse
           </div>
         </div>
 
-        {/* Right Section - Notifications and Profile */}
+        {/* Right Section - Language, Notifications and Profile */}
         <div className="flex items-center space-x-4">
+          {/* Language Switcher */}
+          <LanguageSwitcher compact={true} className="hidden sm:flex" />
+          
           {/* Notifications */}
           <button className="relative p-2 text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-md transition-colors">
             <Bell size={20} />
@@ -112,6 +116,12 @@ const AdminTopNavigation = ({ onToggleSidebar, onToggleCollapse, sidebarCollapse
             {showProfileMenu && (
               <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-md shadow-lg border border-gray-200 dark:border-gray-700 z-50">
                 <div className="py-1">
+                  {/* Language Switcher for mobile */}
+                  <div className="px-4 py-2 sm:hidden">
+                    <LanguageSwitcher compact={false} className="w-full justify-center" />
+                  </div>
+                  <hr className="border-gray-200 dark:border-gray-700 sm:hidden" />
+                  
                   <button
                     onClick={handleProfileSettings}
                     className="flex items-center space-x-2 w-full px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"

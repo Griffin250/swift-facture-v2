@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { supabase } from '@/integrations/supabase/client';
 import { 
   Database, 
@@ -14,6 +15,7 @@ import {
 } from 'lucide-react';
 
 const AdminDatabasePanel = () => {
+  const { t } = useTranslation('common');
   const [users, setUsers] = useState([]);
   const [userRoles, setUserRoles] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -72,7 +74,7 @@ const AdminDatabasePanel = () => {
       fetchData();
     } catch (err) {
       console.error('Error adding role:', err);
-      alert('Error adding role: ' + err.message);
+      alert(t('admin.database.roles.addError') + ': ' + err.message);
     }
   };
 
@@ -89,7 +91,7 @@ const AdminDatabasePanel = () => {
       fetchData();
     } catch (err) {
       console.error('Error updating role:', err);
-      alert('Error updating role: ' + err.message);
+      alert(t('admin.database.roles.updateError') + ': ' + err.message);
     }
   };
 
@@ -107,7 +109,7 @@ const AdminDatabasePanel = () => {
       fetchData();
     } catch (err) {
       console.error('Error deleting role:', err);
-      alert('Error deleting role: ' + err.message);
+      alert(t('admin.database.roles.deleteError') + ': ' + err.message);
     }
   };
 
@@ -126,15 +128,15 @@ const AdminDatabasePanel = () => {
       <div className="space-y-6">
         <div>
           <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
-            Database Management
+            {t('admin.database.title')}
           </h1>
           <p className="text-gray-600 dark:text-gray-400 mt-1">
-            Manage users and roles
+            {t('admin.database.subtitle')}
           </p>
         </div>
         <div className="flex items-center justify-center py-12">
           <Loader2 className="h-8 w-8 animate-spin text-blue-500" />
-          <span className="ml-2 text-gray-600 dark:text-gray-400">Loading...</span>
+          <span className="ml-2 text-gray-600 dark:text-gray-400">{t('admin.database.loading')}</span>
         </div>
       </div>
     );
@@ -145,10 +147,10 @@ const AdminDatabasePanel = () => {
       <div className="space-y-6">
         <div>
           <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
-            Database Management
+            {t('admin.database.title')}
           </h1>
           <p className="text-gray-600 dark:text-gray-400 mt-1">
-            Manage users and roles
+            {t('admin.database.subtitle')}
           </p>
         </div>
         <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4">
@@ -173,10 +175,10 @@ const AdminDatabasePanel = () => {
       <div>
         <h1 className="text-2xl font-bold text-gray-900 dark:text-white flex items-center">
           <Database className="mr-2" />
-          Database Management
+          {t('admin.database.title')}
         </h1>
         <p className="text-gray-600 dark:text-gray-400 mt-1">
-          Manage users and roles in the system
+          {t('admin.database.subtitle')}
         </p>
       </div>
 
@@ -187,7 +189,7 @@ const AdminDatabasePanel = () => {
             <div className="flex items-center">
               <Users className="h-5 w-5 text-gray-500 mr-2" />
               <h3 className="text-lg font-medium text-gray-900 dark:text-white">
-                Users ({users.length})
+                {t('admin.database.users.title')} ({users.length})
               </h3>
             </div>
           </div>

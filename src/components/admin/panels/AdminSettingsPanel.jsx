@@ -105,7 +105,7 @@ const AdminSettingsPanel = () => {
             ) : (
               <Save className="h-4 w-4" />
             )}
-            <span>{t('common.save')}</span>
+            <span>{t('admin.settings.saveButton')}</span>
           </button>
         </div>
       </div>

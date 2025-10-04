@@ -25,6 +25,7 @@ import DebugAuth from "./pages/DebugAuth";
 import ProtectedRoute from "./components/ProtectedRoute";
 import AdminPage from "./pages/AdminPage";
 import AdminRoute from "./components/admin/AdminRoute";
+import EmailVerification from "./pages/EmailVerification";
 
 const queryClient = new QueryClient();
 
@@ -48,6 +49,7 @@ const AppContent = () => {
         <Route path="/customers" element={<ProtectedRoute><Customers /></ProtectedRoute>} />
         <Route path="/estimate" element={<ProtectedRoute><Estimate /></ProtectedRoute>} />
         <Route path="/login" element={<Login />} />
+        <Route path="/auth/verify" element={<EmailVerification />} />
         <Route path="/about" element={<About />} />
         <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
         <Route path="/profile/edit" element={<ProtectedRoute><EditProfile /></ProtectedRoute>} />
