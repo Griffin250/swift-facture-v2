@@ -13,7 +13,7 @@ export const useTheme = () => {
 export const ThemeProvider = ({ children }) => {
   const [theme, setTheme] = useState(() => {
     // Check if user has a saved preference
-    const savedTheme = localStorage.getItem('billify-theme');
+    const savedTheme = localStorage.getItem('swiftfacture-theme');
     if (savedTheme && ['light', 'dark', 'system'].includes(savedTheme)) {
       return savedTheme;
     }
@@ -69,7 +69,7 @@ export const ThemeProvider = ({ children }) => {
 
   // Save theme preference to localStorage
   useEffect(() => {
-    localStorage.setItem('billify-theme', theme);
+    localStorage.setItem('swiftfacture-theme', theme);
   }, [theme]);
 
   const setThemeMode = (newTheme) => {

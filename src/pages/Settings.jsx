@@ -63,7 +63,7 @@ const Settings = () => {
 
   // Load settings from localStorage on mount
   useEffect(() => {
-    const savedSettings = localStorage.getItem('billify-settings');
+    const savedSettings = localStorage.getItem('swiftfacture-settings');
     if (savedSettings) {
       try {
         const parsed = JSON.parse(savedSettings);
@@ -77,7 +77,7 @@ const Settings = () => {
   // Save settings to localStorage
   const saveSettings = useCallback(() => {
     try {
-      localStorage.setItem('billify-settings', JSON.stringify(settings));
+      localStorage.setItem('swiftfacture-settings', JSON.stringify(settings));
       setHasChanges(false);
       toast.success(t('settings.saved'));
     } catch (error) {
@@ -187,7 +187,7 @@ const Settings = () => {
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = `billify-settings-${new Date().toISOString().split('T')[0]}.json`;
+      a.download = `swiftfacture-settings-${new Date().toISOString().split('T')[0]}.json`;
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
