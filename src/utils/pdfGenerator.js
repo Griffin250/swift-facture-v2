@@ -63,6 +63,9 @@ export const generatePDF = async (invoiceData, templateNumber) => {
         case 9:
           fileName = `IN-${date}.pdf`;
           break;
+        case 10:
+          fileName = `Facture_${number}.pdf`;
+          break;
         default:
           fileName = `invoice_template_${templateNumber}.pdf`;
       }

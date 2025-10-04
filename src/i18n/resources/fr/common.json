@@ -742,6 +742,9 @@
     "downloadPDF": "Télécharger le PDF",
     "invoicePreview": "Aperçu de la facture",
     "chooseTemplateStyle": "Choisir le style de modèle",
+    "chooseTemplate": "Choisir le modèle",
+    "currentInvoice": "Facture actuelle",
+    "livePreview": "Aperçu en direct",
     "loading": "Chargement..."
   },
   "estimatePage": {
