@@ -1,15 +1,8 @@
 import { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { ArrowLeft, Loader2, ChevronDown } from 'lucide-react';
+import { ArrowLeft, Loader2 } from 'lucide-react';
 import { Button } from "@/components/ui/button";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import InvoiceTemplate from '../components/InvoiceTemplate';
 import { generatePDF } from '../utils/pdfGenerator';
 import { templates } from '../utils/templateRegistry';
@@ -38,7 +31,7 @@ const TemplatePage = () => {
   }, [location.state]);
 
   const handleTemplateChange = (templateNumber) => {
-    setCurrentTemplate(parseInt(templateNumber));
+    setCurrentTemplate(templateNumber);
   };
 
   const handleDownloadPDF = async () => {
@@ -77,9 +70,8 @@ const TemplatePage = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-background to-accent/5">
+    <div className="min-h-screen bg-gradient-to-br from-sky-50 via-sky-100 to-indigo-50">
       <div className="container mx-auto px-4 py-8">
-        {/* Top Action Bar */}
         <div className="flex justify-between items-center mb-8">
           <Button variant="outline" onClick={handleBack} className="font-semibold">
             <ArrowLeft className="mr-2 h-4 w-4" /> {t('templatePage.backToSwiftFacture')}
@@ -101,76 +93,29 @@ const TemplatePage = () => {
           </Button>
         </div>
 
-        <h1 className="text-3xl font-bold gradient-text mb-6 text-center">
-          {t('templatePage.invoicePreview')}
-        </h1>
-
-        {/* Side-by-Side Layout */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          {/* Left: Current Template with Data */}
-          <div className="flex flex-col">
-            <div className="bg-white/70 backdrop-blur-sm rounded-xl shadow-lg border border-white/20 p-4 mb-4">
-              <h3 className="text-lg font-semibold gradient-text text-center">
-                {t('templatePage.currentInvoice')}
-              </h3>
-              <p className="text-sm text-muted-foreground text-center">
-                {templates[currentTemplate - 1]?.name}
-              </p>
-            </div>
-            <div className="w-full aspect-[210/297] border-2 border-border/30 shadow-2xl rounded-xl overflow-hidden bg-white">
-              <InvoiceTemplate data={formData} templateNumber={currentTemplate} />
-            </div>
-          </div>
-
-          {/* Right: Template Selector & Preview */}
-          <div className="flex flex-col">
-            <div className="bg-white/70 backdrop-blur-sm rounded-xl shadow-lg border border-white/20 p-4 mb-4">
-              <h3 className="text-lg font-semibold gradient-text mb-3 text-center">
-                {t('templatePage.chooseTemplate')}
-              </h3>
-              <Select value={currentTemplate.toString()} onValueChange={handleTemplateChange}>
-                <SelectTrigger className="w-full bg-white border-2 border-primary/20 hover:border-primary/40 transition-colors">
-                  <SelectValue>
-                    <div className="flex items-center justify-between w-full">
-                      <span className="font-semibold">{templates[currentTemplate - 1]?.name}</span>
-                      <ChevronDown className="h-4 w-4 ml-2" />
-                    </div>
-                  </SelectValue>
-                </SelectTrigger>
-                <SelectContent className="max-h-[300px] bg-white">
-                  {templates.map((template, index) => (
-                    <SelectItem 
-                      key={index} 
-                      value={(index + 1).toString()}
-                      className="cursor-pointer hover:bg-accent/10"
-                    >
-                      <div className="flex items-center gap-3 py-1">
-                        <img 
-                          src={`/assets/template${index + 1}-preview.png`}
-                          alt={template.name}
-                          className="w-12 h-16 object-cover rounded border border-gray-200"
-                          onError={(e) => {
-                            e.target.style.display = 'none';
-                          }}
-                        />
-                        <span className="font-medium">{template.name}</span>
-                      </div>
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-
-            {/* Live Preview of Selected Template */}
-            <div className="bg-white/70 backdrop-blur-sm rounded-xl shadow-lg border border-white/20 p-4 mb-4">
-              <h3 className="text-sm font-semibold text-muted-foreground text-center mb-2">
-                {t('templatePage.livePreview')}
-              </h3>
-            </div>
-            <div className="w-full aspect-[210/297] border-2 border-primary/30 shadow-2xl rounded-xl overflow-hidden bg-white ring-2 ring-primary/20">
-              <InvoiceTemplate data={formData} templateNumber={currentTemplate} />
+        <div className="mb-8">
+          <h1 className="text-3xl font-bold gradient-text mb-4 text-center">
+            {t('templatePage.invoicePreview')}
+          </h1>
+          <div className="card-modern bg-blue-200">
+            <h3 className="text-lg font-semibold gradient-text mb-4">{t('templatePage.chooseTemplateStyle')}</h3>
+            <div className="flex flex-wrap gap-3">
+              {templates.map((template, index) => (
+                <Button
+                  key={index}
+                  variant={currentTemplate === index + 1 ? "default" : "outline"}
+                  onClick={() => handleTemplateChange(index + 1)}
+                  className="font-semibold"
+                >
+                  {template.name}
+                </Button>
+              ))}
             </div>
           </div>
+        </div>
+
+        <div className="w-[210mm] h-[297mm] mx-auto border-2 border-border/30 shadow-2xl rounded-xl overflow-hidden bg-white">
+          <InvoiceTemplate data={formData} templateNumber={currentTemplate} />
         </div>
       </div>
     </div>

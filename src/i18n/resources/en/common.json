@@ -742,9 +742,6 @@
     "downloadPDF": "Download PDF",
     "invoicePreview": "Invoice Preview",
     "chooseTemplateStyle": "Choose Template Style",
-    "chooseTemplate": "Choose Template",
-    "currentInvoice": "Current Invoice",
-    "livePreview": "Live Preview",
     "loading": "Loading..."
   },
   "estimatePage": {
