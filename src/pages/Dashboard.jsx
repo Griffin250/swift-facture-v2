@@ -30,6 +30,7 @@ import {
   Target,
   Zap,
 } from "lucide-react";
+import FrenchInvoiceCTA from "../components/FrenchInvoiceCTA";
 
 // Mock chart components (replace with actual chart library)
 const RevenueChart = ({ t }) => (
@@ -1040,6 +1041,9 @@ const Dashboard = () => {
             </CardContent>
           </Card>
         )}
+
+        {/* Customizable Invoice CTA */}
+        <FrenchInvoiceCTA />
       </main>
     </div>
   );
