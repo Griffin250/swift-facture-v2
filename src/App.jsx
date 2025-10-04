@@ -26,6 +26,7 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import AdminPage from "./pages/AdminPage";
 import AdminRoute from "./components/admin/AdminRoute";
 import EmailVerification from "./pages/EmailVerification";
+import FrenchInvoiceDemo from "./pages/FrenchInvoiceDemo";
 
 const queryClient = new QueryClient();
 
@@ -55,6 +56,7 @@ const AppContent = () => {
         <Route path="/profile/edit" element={<ProtectedRoute><EditProfile /></ProtectedRoute>} />
         <Route path="/settings" element={<ProtectedRoute><Settings /></ProtectedRoute>} />
         <Route path="/debug-auth" element={<DebugAuth />} />
+        <Route path="/customizable-invoice" element={<FrenchInvoiceDemo />} />
         <Route path="/admin/*" element={<ProtectedRoute><AdminRoute><AdminPage /></AdminRoute></ProtectedRoute>} />
         <Route path="*" element={<NotFound />} />
       </Routes>
