@@ -69,6 +69,12 @@ const ReceiptPage = () => {
   const [isDownloading, setIsDownloading] = useState(false);
   const receiptRef = useRef(null);
 
+  // Handle navigation with scroll to top
+  const handleNavigation = (path) => {
+    navigate(path);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
   const [billTo, setBillTo] = useState("");
   const [invoice, setInvoice] = useState({
     date: "",
@@ -293,7 +299,7 @@ const ReceiptPage = () => {
             </Button>
             <Button
               variant="outline"
-              onClick={() => navigate("/")}
+              onClick={() => handleNavigation("/")}
               size="icon"
               className="rounded-full"
               title={t('receiptPage.switchToInvoice')}

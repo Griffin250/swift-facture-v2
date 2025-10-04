@@ -30,7 +30,10 @@
     "signUp": "Sign up",
     "createAccount": "Create Account",
     "continueWithGoogle": "Continue with Google",
-    "continueWithGitHub": "Continue with GitHub"
+    "continueWithGitHub": "Continue with GitHub",
+    "createReceipt": "Create Receipt",
+    "newInvoice": "New Invoice",
+    "manageCustomers": "Manage Customers"
   },
   "common": {
     "loading": "Loading...",
@@ -45,6 +48,7 @@
     "optional": "Optional",
     "required": "Required",
     "search": "Search...",
+    "retry": "Retry",
     "noResults": "No results found",
     "showing": "Showing {{from}} to {{to}} of {{total}} entries",
     "itemsPerPage": "Items per page"
@@ -235,18 +239,105 @@
       "terms": "Terms of Service",
       "privacy": "Privacy Policy",
       "agreement": "By continuing, you agree to our"
+    },
+    "modal": {
+      "title": "Login Required",
+      "subtitle": "Access Premium Features",
+      "accessTitle": "You need to sign in to access",
+      "benefitsTitle": "What you get with SwiftFacture:",
+      "signInButton": "Sign In / Create Account",
+      "backButton": "Back to Dashboard",
+      "note": "Free account • No credit card required • Start in under 2 minutes"
+    },
+    "features": {
+      "invoice": "Invoice Creation",
+      "invoiceDesc": "Create professional invoices with customizable templates and automatic calculations",
+      "receipt": "Receipt Generation",
+      "receiptDesc": "Generate instant receipts for payments and transactions",
+      "customers": "Customer Management",
+      "customersDesc": "Store and manage all your client information in one place",
+      "estimate": "Estimate Creation",
+      "estimateDesc": "Create detailed project estimates and convert them to invoices",
+      "template": "Template Customization",
+      "templateDesc": "Access premium templates and customize them with your branding",
+      "default": "Premium Features",
+      "defaultDesc": "Access all premium features and tools"
+    },
+    "benefits": {
+      "create": "Create & Save Invoices",
+      "createDesc": "Design professional invoices and save them for future use",
+      "manage": "Manage Customers",
+      "manageDesc": "Store client information and billing history",
+      "track": "Track Payments",
+      "trackDesc": "Monitor which invoices are paid or pending",
+      "templates": "Custom Templates",
+      "templatesDesc": "Access premium templates and branding options"
+    },
+    "trust": {
+      "secure": "Secure",
+      "fast": "Fast Setup",
+      "free": "Free Account"
+    },
+    "error": {
+      "title": "Authentication Error",
+      "invalidEmail": "Please enter a valid email address.",
+      "passwordRequired": "Password is required.",
+      "passwordMatch": "Passwords do not match.",
+      "invalidCredentials": "Invalid email or password. Please check your credentials and try again.",
+      "emailNotConfirmed": "Please check your email and click the confirmation link before signing in.",
+      "tooManyRequests": "Too many login attempts. Please wait a moment before trying again.",
+      "userNotFound": "No account found with this email address. Please sign up first.",
+      "networkError": "Connection error. Please check your internet connection and try again.",
+      "loginFailed": "Login failed. Please try again."
+    },
+    "success": {
+      "loginTitle": "Success!",
+      "loginMessage": "You've been logged in successfully.",
+      "accountCreated": "Account Created Successfully!"
+    },
+    "verification": {
+      "title": "Account Created Successfully! 🎉",
+      "subtitle": "Verify Your Email Address",
+      "sentTo": "We've sent a verification link to:",
+      "emailSent": "Verification email sent to",
+      "steps": {
+        "step1": "Check your email inbox (and spam folder)",
+        "step2": "Click the verification link in the email",
+        "step3": "Return here to login with your new account"
+      },
+      "buttons": {
+        "backToLogin": "Back to Login",
+        "resendEmail": "Resend Email"
+      },
+      "helpText": "Didn't receive the email? Check your spam folder or try resending.",
+      "resendSuccess": "Verification Email Resent!",
+      "resendDescription": "Please check your email inbox and spam folder.",
+      "verifying": "Verifying Your Email...",
+      "pleaseWait": "Please wait while we verify your email address.",
+      "success": {
+        "title": "Email Verified Successfully!",
+        "message": "Your account has been verified. You will be redirected to login.",
+        "description": "Your account has been verified successfully. You can now access all SwiftFacture features."
+      },
+      "error": {
+        "title": "Verification Failed",
+        "message": "There was an error verifying your email. Please try again.",
+        "description": "We were unable to verify your email address. This might be due to an expired or invalid link.",
+        "invalidLink": "Invalid verification link. Please check your email and try again.",
+        "help": "Please try requesting a new verification email or contact our support team."
+      },
+      "redirecting": "Redirecting to login in",
+      "seconds": "seconds",
+      "continueToLogin": "Continue to Login",
+      "goToLogin": "Go to Login",
+      "loginMessage": "Your email has been verified. You can now login.",
+      "loginMessageFailed": "Please try logging in or contact support.",
+      "footer": "Having trouble? Contact our support team at support@swiftfacture.com"
     }
   },
   "dashboard": {
     "title": "Dashboard",
     "subtitle": "Welcome back! Here's what's happening with your business today.",
-    "stats": {
-      "totalInvoices": "Total Invoices",
-      "totalRevenue": "Total Revenue",
-      "outstanding": "Outstanding",
-      "thisMonth": "This Month",
-      "total": "Total"
-    },
     "charts": {
       "revenueOverview": "Revenue Overview",
       "revenueDescription": "Monthly revenue performance for the last 7 months",
@@ -286,12 +377,139 @@
         "status": "STATUS"
       }
     },
+    "greeting": {
+      "morning": "Good morning",
+      "afternoon": "Good afternoon",
+      "evening": "Good evening"
+    },
+    "welcome": {
+      "message": "Welcome to your SwiftFacture dashboard",
+      "features": {
+        "invoices": {
+          "title": "Create Invoices",
+          "description": "Professional invoicing made simple"
+        },
+        "tracking": {
+          "title": "Track Progress",
+          "description": "Monitor your business performance"
+        },
+        "payments": {
+          "title": "Get Paid Faster",
+          "description": "Streamline your payment process"
+        }
+      }
+    },
+    "stats": {
+      "title": "Your Business Overview",
+      "totalInvoices": "Total Invoices",
+      "totalRevenue": "Total Revenue",
+      "outstanding": "Outstanding",
+      "thisMonth": "This Month",
+      "total": "Total"
+    },
     "quickActions": {
       "title": "Quick Actions",
       "createInvoice": "Create Invoice",
-      "generateReceipt": "Generate Receipt",
+      "generateReceipt": "Generate Receipt", 
       "manageCustomers": "Manage Customers",
-      "exportReports": "Export Reports"
+      "exportReports": "Export Reports",
+      "newInvoice": {
+        "title": "New Invoice",
+        "description": "Create professional invoices"
+      },
+      "newEstimate": {
+        "title": "New Estimate",
+        "description": "Send project estimates"
+      },
+      "addCustomer": {
+        "title": "Add Customer",
+        "description": "Manage client information"
+      },
+      "newReceipt": {
+        "title": "New Receipt",
+        "description": "Generate payment receipts"
+      }
+    },
+    "gettingStarted": {
+      "title": "Getting Started with SwiftFacture",
+      "subtitle": "Here are some tips to help you get the most out of your invoicing experience"
+    },
+    "tips": {
+      "step1": {
+        "title": "Add Your First Customer",
+        "description": "Start by adding customer information to make invoicing faster",
+        "action": "Add Customer →"
+      },
+      "step2": {
+        "title": "Create Your First Invoice",
+        "description": "Choose from our professional templates and customize as needed",
+        "action": "Create Invoice →"
+      },
+      "step3": {
+        "title": "Track Your Business",
+        "description": "Monitor your revenue and payment status from this dashboard",
+        "action": "Learn More →"
+      },
+      "proTip": {
+        "title": "Pro Tip",
+        "description": "Save time by creating invoice templates for recurring clients and services",
+        "action": "Explore Templates"
+      }
+    },
+    "guest": {
+      "hero": {
+        "title": "Professional Invoicing Made Simple",
+        "subtitle": "Create beautiful invoices, track payments, and manage your business with SwiftFacture"
+      },
+      "buttons": {
+        "getStarted": "Get Started Free",
+        "learnMore": "Learn More"
+      },
+      "features": {
+        "invoicing": {
+          "title": "Smart Invoicing",
+          "description": "Create professional invoices in minutes with our beautiful templates and smart automation"
+        },
+        "customers": {
+          "title": "Customer Management",
+          "description": "Keep track of all your clients, their contact details, and payment history in one place"
+        },
+        "analytics": {
+          "title": "Business Insights",
+          "description": "Track your revenue, monitor payment status, and get insights to grow your business"
+        }
+      },
+      "benefits": {
+        "productivity": {
+          "title": "Boost Your Productivity",
+          "subtitle": "Sign up to unlock powerful features that save you hours every week",
+          "feature1": "Save Customer Information",
+          "feature1Desc": "Never type client details again with our customer database",
+          "feature2": "Template Library",
+          "feature2Desc": "Access professional invoice templates for every industry",
+          "feature3": "Payment Tracking",
+          "feature3Desc": "Monitor which invoices are paid, pending, or overdue",
+          "cta": "Sign Up to Save Time"
+        },
+        "business": {
+          "title": "Grow Your Business",
+          "subtitle": "Professional tools to help you get paid faster and look more credible",
+          "feature1": "Professional Branding",
+          "feature1Desc": "Add your logo and brand colors to every invoice",
+          "feature2": "Revenue Analytics",
+          "feature2Desc": "See your income trends and identify your best clients",
+          "feature3": "Multi-language Support",
+          "feature3Desc": "Create invoices in French and English for global clients",
+          "cta": "Start Growing Today"
+        }
+      },
+      "tryNow": {
+        "title": "Want to Try Before You Sign Up?",
+        "description": "Explore our invoice templates and create a sample invoice to see how easy it is",
+        "tryInvoice": "Try Creating Invoice",
+        "tryReceipt": "Try Creating Receipt",
+        "note": "Sign up to save your work and access all features"
+      }
     },
     "recentActivity": {
       "title": "Recent Activity",
@@ -628,5 +846,423 @@
     "notes": "Notes",
     "thankyou": "Thank you for your business!",
     "na": "N/A"
+  },
+  "profile": {
+    "title": "Profile",
+    "personalInfo": "Personal Information",
+    "accountSettings": "Account Settings",
+    "editProfile": "Edit Profile",
+    "viewProfile": "View Profile",
+    "settings": "Settings",
+    "adminDashboard": "Admin Dashboard",
+    "signOut": "Sign Out",
+    "signingOut": "Signing out...",
+    "profilePicture": "Profile Picture",
+    "changeAvatar": "Change Avatar",
+    "uploading": "Uploading...",
+    "removePreview": "Remove Preview",
+    "avatarGuidelines": "Supported formats: JPG, PNG, GIF. Max size: 5MB.",
+    "firstName": "First Name",
+    "lastName": "Last Name",
+    "email": "Email",
+    "fullName": "Full Name",
+    "enterFirstName": "Enter your first name",
+    "enterLastName": "Enter your last name",
+    "emailCannotChange": "Email address cannot be changed",
+    "updating": "Updating...",
+    "saveChanges": "Save Changes",
+    "joinedDate": "Joined",
+    "lastSignIn": "Last Sign In",
+    "verified": "Verified",
+    "notVerified": "Not Verified",
+    "changePassword": "Change Password",
+    "changePasswordDesc": "Update your account password",
+    "twoFactor": "Two-Factor Authentication",
+    "twoFactorDesc": "Add an extra layer of security",
+    "change": "Change",
+    "enable": "Enable"
+  },
+  "settings": {
+    "title": "Settings",
+    "description": "Customize your experience and manage your preferences",
+    "save": "Save Changes",
+    "reset": "Reset to Defaults",
+    "saved": "Settings saved successfully",
+    "saveError": "Failed to save settings",
+    "unsavedChanges": "You have unsaved changes",
+    "exportSuccess": "Settings exported successfully",
+    "exportError": "Failed to export settings",
+    "importSuccess": "Settings imported successfully",
+    "importError": "Failed to import settings",
+    "userInfo": "Logged in as {{email}}",
+    "lastLogin": "Last login: {{date}}",
+    "appearance": {
+      "title": "Appearance",
+      "description": "Customize the look and feel of the application"
+    },
+    "theme": {
+      "title": "Theme",
+      "current": "Current theme",
+      "light": "Light",
+      "dark": "Dark",
+      "system": "System"
+    },
+    "language": {
+      "title": "Language",
+      "select": "Select Language"
+    },
+    "notifications": {
+      "title": "Notifications",
+      "description": "Manage your notification preferences",
+      "email": "Email Notifications",
+      "emailDesc": "Receive updates via email",
+      "push": "Push Notifications",
+      "pushDesc": "Receive browser push notifications",
+      "invoiceReminders": "Invoice Reminders",
+      "invoiceRemindersDesc": "Get notified about upcoming invoice deadlines",
+      "paymentAlerts": "Payment Alerts",
+      "paymentAlertsDesc": "Get notified when payments are received"
+    },
+    "business": {
+      "title": "Business Preferences",
+      "description": "Configure your business settings and defaults",
+      "currency": "Default Currency",
+      "dateFormat": "Date Format",
+      "invoicePrefix": "Invoice Number Prefix",
+      "autoSave": "Auto-save",
+      "autoSaveDesc": "Automatically save your work"
+    },
+    "preferences": {
+      "compactMode": "Compact Mode",
+      "compactModeDesc": "Use smaller interface elements"
+    },
+    "data": {
+      "title": "Data Management",
+      "description": "Export, import, and manage your data",
+      "export": "Export Settings",
+      "exportButton": "Export Data",
+      "import": "Import Settings",
+      "importButton": "Import Data"
+    },
+    "privacy": {
+      "title": "Privacy & Security",
+      "analytics": "Analytics",
+      "analyticsDesc": "Help improve the app by sharing usage data",
+      "crashReports": "Crash Reports",
+      "crashReportsDesc": "Automatically send crash reports to help fix issues"
+    }
+  },
+  "admin": {
+    "title": "Admin Dashboard",
+    "access": {
+      "title": "Access Denied",
+      "message": "You do not have permission to access the admin dashboard."
+    },
+    "search": {
+      "placeholder": "Search users, organizations, invoices..."
+    },
+    "navigation": {
+      "home": "Home",
+      "goToHome": "Go to Home"
+    },
+    "profile": {
+      "admin": "Admin",
+      "settings": "Settings",
+      "profileSettings": "Profile Settings",
+      "logout": "Logout"
+    },
+    "footer": {
+      "support": "Support"
+    },
+    "sidebar": {
+      "dashboard": "Dashboard",
+      "users": "Users",
+      "organizations": "Organizations",
+      "subscriptions": "Subscriptions",
+      "documents": "Documents",
+      "clients": "Clients",
+      "support": "Support",
+      "monitoring": "Monitoring",
+      "settings": "Settings",
+      "systemSettings": "System Settings",
+      "userSettings": "Settings",
+      "account": "Account",
+      "database": "Database",
+      "management": "Management",
+      "expand": "Expand sidebar",
+      "collapse": "Collapse sidebar"
+    },
+    "dashboard": {
+      "title": "Admin Dashboard",
+      "subtitle": "Overview of platform metrics and recent activity",
+      "metrics": {
+        "totalUsers": "Total Users",
+        "totalCustomers": "Total Customers",
+        "totalRevenue": "Total Revenue",
+        "organizations": "Organizations",
+        "activeTrials": "Active Trials",
+        "monthlyRevenue": "Monthly Revenue",
+        "vs_last_month": "vs last month"
+      },
+      "charts": {
+        "revenue": "Monthly Revenue Trend",
+        "conversion": "Trial to Paid Conversion",
+        "placeholder": "Chart placeholder - integrate with Chart.js/Recharts"
+      },
+      "activity": {
+        "title": "Recent Activity",
+        "noActivity": "No recent activity",
+        "types": {
+          "signup": "New user signup",
+          "trial_started": "Trial started",
+          "subscription": "New subscription",
+          "invoice_created": "Invoice created",
+          "estimate_created": "Estimate created",
+          "support_ticket": "Support ticket opened"
+        }
+      }
+    },
+    "users": {
+      "title": "Users Management",
+      "subtitle": "Manage all platform users",
+      "search": {
+        "placeholder": "Search users by name, email, or organization..."
+      },
+      "filters": {
+        "allStatuses": "All Statuses",
+        "active": "Active",
+        "trial": "Trial",
+        "suspended": "Suspended",
+        "allRoles": "All Roles",
+        "owner": "Owner",
+        "admin": "Admin",
+        "user": "User"
+      },
+      "table": {
+        "user": "User",
+        "role": "Role",
+        "organization": "Organization",
+        "status": "Status",
+        "lastLogin": "Last Login",
+        "actions": "Actions"
+      },
+      "status": {
+        "active": "Active",
+        "trial": "Trial",
+        "suspended": "Suspended"
+      },
+      "actions": {
+        "addUser": "Add User"
+      },
+      "confirmDelete": "Are you sure you want to delete this user?",
+      "deleteError": "Failed to delete user",
+      "passwordResetSuccess": "Password reset email sent successfully",
+      "passwordResetError": "Failed to reset password",
+      "pagination": {
+        "showing": "Showing {{start}} to {{end}} of {{total}} users",
+        "previous": "Previous",
+        "next": "Next"
+      },
+      "noResults": "No users found matching your criteria."
+    },
+    "organizations": {
+      "title": "Organizations Management",
+      "subtitle": "Manage all platform organizations",
+      "search": {
+        "placeholder": "Search organizations by name or owner..."
+      },
+      "filters": {
+        "allStatuses": "All Statuses",
+        "active": "Active",
+        "trial": "Trial",
+        "suspended": "Suspended"
+      },
+      "table": {
+        "organization": "Organization",
+        "owner": "Owner",
+        "members": "Members",
+        "plan": "Plan",
+        "status": "Status",
+        "stats": "Stats",
+        "actions": "Actions",
+        "created": "Created",
+        "trialEnds": "Trial ends",
+        "invoices": "invoices",
+        "clients": "clients"
+      },
+      "status": {
+        "active": "Active",
+        "trial": "Trial",
+        "suspended": "Suspended"
+      },
+      "actions": {
+        "addOrganization": "Add Organization"
+      },
+      "noResults": "No organizations found matching your criteria."
+    },
+    "database": {
+      "title": "Database Management",
+      "subtitle": "Manage users and roles",
+      "loading": "Loading...",
+      "error": "Error loading database information",
+      "users": {
+        "title": "Users",
+        "email": "Email",
+        "name": "Name",
+        "created": "Created",
+        "noUsers": "No users found"
+      },
+      "roles": {
+        "title": "User Roles",
+        "user": "User",
+        "role": "Role",
+        "assignedAt": "Assigned At",
+        "actions": "Actions",
+        "noRoles": "No roles assigned",
+        "addRole": "Add Role",
+        "updateRole": "Update Role",
+        "deleteRole": "Delete Role",
+        "addSuccess": "Role added successfully",
+        "updateSuccess": "Role updated successfully",
+        "deleteSuccess": "Role deleted successfully",
+        "addError": "Error adding role",
+        "updateError": "Error updating role",
+        "deleteError": "Error deleting role",
+        "selectUser": "Select a user",
+        "selectRole": "Select a role",
+        "confirmDelete": "Are you sure you want to delete this role?"
+      }
+    },
+    "subscriptions": {
+      "title": "Subscriptions & Billing",
+      "placeholder": "Subscriptions management panel - Coming soon"
+    },
+    "documents": {
+      "title": "Documents Management",
+      "placeholder": "Documents management panel - Coming soon"
+    },
+    "clients": {
+      "title": "Clients Management", 
+      "placeholder": "Clients management panel - Coming soon"
+    },
+    "support": {
+      "title": "Support Tickets",
+      "placeholder": "Support tickets management panel - Coming soon"
+    },
+    "monitoring": {
+      "title": "System Monitoring",
+      "placeholder": "System monitoring panel - Coming soon"
+    },
+    "settings": {
+      "title": "Admin Settings",
+      "subtitle": "Configure platform settings and system preferences",
+      "saveSuccess": "Settings saved successfully",
+      "saveError": "Failed to save settings",
+      "saveButton": "Save Settings",
+      "platform": {
+        "title": "Platform Settings",
+        "siteName": "Site Name",
+        "siteDescription": "Site Description",
+        "allowRegistration": "Allow new user registration",
+        "requireEmailVerification": "Require email verification",
+        "maintenanceMode": "Enable maintenance mode",
+        "maxUsersPerAccount": "Maximum users per account",
+        "defaultCurrency": "Default Currency",
+        "defaultLanguage": "Default Language",
+        "timezone": "Default Timezone"
+      },
+      "email": {
+        "title": "Email Configuration",
+        "smtpHost": "SMTP Host",
+        "smtpPort": "SMTP Port",
+        "smtpUsername": "SMTP Username",
+        "smtpPassword": "SMTP Password",
+        "fromEmail": "From Email Address",
+        "fromName": "From Name",
+        "enableEmailNotifications": "Enable email notifications",
+        "welcomeEmailEnabled": "Send welcome emails to new users",
+        "invoiceEmailEnabled": "Send email notifications for invoices"
+      },
+      "security": {
+        "title": "Security Settings",
+        "passwordMinLength": "Minimum Password Length",
+        "sessionTimeout": "Session Timeout (hours)",
+        "sessionTimeoutDesc": "Number of hours before user sessions expire",
+        "maxLoginAttempts": "Maximum Login Attempts",
+        "requireSpecialChars": "Require special characters in passwords",
+        "requireNumbers": "Require numbers in passwords",
+        "enableTwoFactor": "Enable two-factor authentication",
+        "allowPasswordReset": "Allow password reset via email"
+      },
+      "notifications": {
+        "title": "Notification Settings",
+        "emailDigestFrequency": "Email Digest Frequency",
+        "enableSystemNotifications": "Enable system notifications",
+        "enableUserActivityLogs": "Log user activity",
+        "enableErrorReporting": "Enable error reporting",
+        "notifyAdminOnNewUser": "Notify admin on new user registration",
+        "notifyAdminOnErrors": "Notify admin on system errors"
+      }
+    },
+    "account": {
+      "title": "Account Settings",
+      "subtitle": "Manage your admin account profile and preferences",
+      "profileUpdateSuccess": "Profile updated successfully",
+      "profileUpdateError": "Failed to update profile",
+      "passwordChangeSuccess": "Password changed successfully",
+      "passwordChangeError": "Failed to change password",
+      "passwordMismatch": "Passwords do not match",
+      "passwordTooShort": "Password must be at least 8 characters long",
+      "preferencesUpdateSuccess": "Preferences updated successfully",
+      "preferencesUpdateError": "Failed to update preferences",
+      "avatarTooLarge": "Avatar file is too large (max 5MB)",
+      "saveProfile": "Save Profile",
+      "savePassword": "Change Password",
+      "savePreferences": "Save Preferences",
+      "profile": {
+        "title": "Profile Information",
+        "firstName": "First Name",
+        "lastName": "Last Name",
+        "email": "Email Address",
+        "phone": "Phone Number",
+        "jobTitle": "Job Title",
+        "bio": "Bio",
+        "bioPlaceholder": "Tell us a bit about yourself...",
+        "avatarHint": "Click to upload a new avatar (max 5MB, JPG/PNG)",
+        "emailDisabled": "Email cannot be changed for security reasons"
+      },
+      "password": {
+        "title": "Change Password",
+        "current": "Current Password",
+        "new": "New Password",
+        "confirm": "Confirm New Password",
+        "requirements": "Password must be at least 8 characters with numbers and special characters"
+      },
+      "preferences": {
+        "title": "Preferences",
+        "language": "Preferred Language",
+        "timezone": "Timezone",
+        "dateFormat": "Date Format",
+        "timeFormat": "Time Format",
+        "currency": "Preferred Currency",
+        "digestFrequency": "Digest Email Frequency",
+        "receiveEmailNotifications": "Receive email notifications",
+        "receiveSystemAlerts": "Receive system alerts",
+        "receiveDashboardDigest": "Receive dashboard digest emails"
+      },
+      "security": {
+        "title": "Security Overview",
+        "twoFactor": "Two-Factor Authentication",
+        "twoFactorEnabled": "Two-factor authentication is enabled",
+        "twoFactorDisabled": "Two-factor authentication is disabled",
+        "enable": "Enable",
+        "disable": "Disable",
+        "activeSessions": "Active Sessions",
+        "activeSessionsCount": "You have {{count}} active session(s)",
+        "manageSessions": "Manage Sessions",
+        "lastPasswordChange": "Last Password Change",
+        "never": "Never"
+      }
+    }
   }
 }
