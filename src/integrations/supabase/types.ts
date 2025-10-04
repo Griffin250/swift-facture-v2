@@ -14,106 +14,614 @@ export type Database = {
   }
   public: {
     Tables: {
-      conversations: {
+      activity_logs: {
         Row: {
-          created_at: string
+          action: string
+          created_at: string | null
+          details: Json | null
+          entity_id: string | null
+          entity_type: string | null
           id: string
-          last_message: string | null
-          last_message_at: string | null
-          participant_ids: string[]
-          updated_at: string
+          ip_address: string | null
+          user_agent: string | null
+          user_id: string
         }
         Insert: {
-          created_at?: string
+          action: string
+          created_at?: string | null
+          details?: Json | null
+          entity_id?: string | null
+          entity_type?: string | null
           id?: string
-          last_message?: string | null
-          last_message_at?: string | null
-          participant_ids: string[]
-          updated_at?: string
+          ip_address?: string | null
+          user_agent?: string | null
+          user_id: string
         }
         Update: {
-          created_at?: string
+          action?: string
+          created_at?: string | null
+          details?: Json | null
+          entity_id?: string | null
+          entity_type?: string | null
           id?: string
-          last_message?: string | null
-          last_message_at?: string | null
-          participant_ids?: string[]
-          updated_at?: string
+          ip_address?: string | null
+          user_agent?: string | null
+          user_id?: string
         }
         Relationships: []
       }
-      messages: {
+      customers: {
         Row: {
-          content: string | null
-          conversation_id: string
-          created_at: string
-          delivered_at: string | null
+          address: string | null
+          city: string | null
+          country: string | null
+          created_at: string | null
+          email: string | null
           id: string
-          image_url: string | null
-          message_type: string
-          read_at: string | null
-          read_by: string[] | null
-          sender_id: string
+          name: string
+          phone: string | null
+          postal_code: string | null
+          updated_at: string | null
+          user_id: string
         }
         Insert: {
-          content?: string | null
-          conversation_id: string
-          created_at?: string
-          delivered_at?: string | null
+          address?: string | null
+          city?: string | null
+          country?: string | null
+          created_at?: string | null
+          email?: string | null
           id?: string
-          image_url?: string | null
-          message_type?: string
-          read_at?: string | null
-          read_by?: string[] | null
-          sender_id: string
+          name: string
+          phone?: string | null
+          postal_code?: string | null
+          updated_at?: string | null
+          user_id: string
         }
         Update: {
-          content?: string | null
-          conversation_id?: string
-          created_at?: string
-          delivered_at?: string | null
+          address?: string | null
+          city?: string | null
+          country?: string | null
+          created_at?: string | null
+          email?: string | null
           id?: string
-          image_url?: string | null
-          message_type?: string
-          read_at?: string | null
-          read_by?: string[] | null
-          sender_id?: string
+          name?: string
+          phone?: string | null
+          postal_code?: string | null
+          updated_at?: string | null
+          user_id?: string
         }
         Relationships: [
           {
-            foreignKeyName: "messages_conversation_id_fkey"
-            columns: ["conversation_id"]
+            foreignKeyName: "customers_user_id_fkey"
+            columns: ["user_id"]
             isOneToOne: false
-            referencedRelation: "conversations"
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      estimate_items: {
+        Row: {
+          created_at: string | null
+          description: string
+          estimate_id: string
+          id: string
+          quantity: number
+          sort_order: number | null
+          tax_rate: number | null
+          total: number
+          unit_price: number
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          description: string
+          estimate_id: string
+          id?: string
+          quantity?: number
+          sort_order?: number | null
+          tax_rate?: number | null
+          total?: number
+          unit_price?: number
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          description?: string
+          estimate_id?: string
+          id?: string
+          quantity?: number
+          sort_order?: number | null
+          tax_rate?: number | null
+          total?: number
+          unit_price?: number
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "estimate_items_estimate_id_fkey"
+            columns: ["estimate_id"]
+            isOneToOne: false
+            referencedRelation: "estimates"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      estimates: {
+        Row: {
+          created_at: string | null
+          customer_id: string | null
+          date: string
+          estimate_number: string
+          expiry_date: string | null
+          id: string
+          notes: string | null
+          status: string | null
+          subtotal: number | null
+          tax: number | null
+          template_name: string | null
+          total: number | null
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          customer_id?: string | null
+          date: string
+          estimate_number: string
+          expiry_date?: string | null
+          id?: string
+          notes?: string | null
+          status?: string | null
+          subtotal?: number | null
+          tax?: number | null
+          template_name?: string | null
+          total?: number | null
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          customer_id?: string | null
+          date?: string
+          estimate_number?: string
+          expiry_date?: string | null
+          id?: string
+          notes?: string | null
+          status?: string | null
+          subtotal?: number | null
+          tax?: number | null
+          template_name?: string | null
+          total?: number | null
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "estimates_customer_id_fkey"
+            columns: ["customer_id"]
+            isOneToOne: false
+            referencedRelation: "customers"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      invoice_items: {
+        Row: {
+          created_at: string | null
+          description: string
+          id: string
+          invoice_id: string
+          quantity: number
+          sort_order: number | null
+          tax_rate: number | null
+          total: number
+          unit_price: number
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          description: string
+          id?: string
+          invoice_id: string
+          quantity?: number
+          sort_order?: number | null
+          tax_rate?: number | null
+          total?: number
+          unit_price?: number
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          description?: string
+          id?: string
+          invoice_id?: string
+          quantity?: number
+          sort_order?: number | null
+          tax_rate?: number | null
+          total?: number
+          unit_price?: number
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "invoice_items_invoice_id_fkey"
+            columns: ["invoice_id"]
+            isOneToOne: false
+            referencedRelation: "invoices"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      invoices: {
+        Row: {
+          created_at: string | null
+          customer_id: string | null
+          date: string
+          due_date: string | null
+          id: string
+          invoice_number: string
+          notes: string | null
+          status: string | null
+          subtotal: number | null
+          tax: number | null
+          template_name: string | null
+          total: number | null
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          customer_id?: string | null
+          date: string
+          due_date?: string | null
+          id?: string
+          invoice_number: string
+          notes?: string | null
+          status?: string | null
+          subtotal?: number | null
+          tax?: number | null
+          template_name?: string | null
+          total?: number | null
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          customer_id?: string | null
+          date?: string
+          due_date?: string | null
+          id?: string
+          invoice_number?: string
+          notes?: string | null
+          status?: string | null
+          subtotal?: number | null
+          tax?: number | null
+          template_name?: string | null
+          total?: number | null
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "invoices_customer_id_fkey"
+            columns: ["customer_id"]
+            isOneToOne: false
+            referencedRelation: "customers"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "invoices_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      notifications: {
+        Row: {
+          created_at: string | null
+          id: string
+          link: string | null
+          message: string
+          read: boolean | null
+          title: string
+          type: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          link?: string | null
+          message: string
+          read?: boolean | null
+          title: string
+          type?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          link?: string | null
+          message?: string
+          read?: boolean | null
+          title?: string
+          type?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      payments: {
+        Row: {
+          amount: number
+          created_at: string | null
+          customer_id: string | null
+          id: string
+          invoice_id: string | null
+          notes: string | null
+          payment_date: string
+          payment_method: string | null
+          status: string | null
+          transaction_id: string | null
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          amount: number
+          created_at?: string | null
+          customer_id?: string | null
+          id?: string
+          invoice_id?: string | null
+          notes?: string | null
+          payment_date: string
+          payment_method?: string | null
+          status?: string | null
+          transaction_id?: string | null
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          amount?: number
+          created_at?: string | null
+          customer_id?: string | null
+          id?: string
+          invoice_id?: string | null
+          notes?: string | null
+          payment_date?: string
+          payment_method?: string | null
+          status?: string | null
+          transaction_id?: string | null
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "payments_customer_id_fkey"
+            columns: ["customer_id"]
+            isOneToOne: false
+            referencedRelation: "customers"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "payments_invoice_id_fkey"
+            columns: ["invoice_id"]
+            isOneToOne: false
+            referencedRelation: "invoices"
             referencedColumns: ["id"]
           },
         ]
       }
       profiles: {
         Row: {
-          avatar_url: string | null
-          created_at: string
+          company_name: string | null
+          created_at: string | null
+          email: string
+          first_name: string | null
           id: string
-          name: string
-          phone_number: string | null
-          updated_at: string
+          last_name: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          company_name?: string | null
+          created_at?: string | null
+          email: string
+          first_name?: string | null
+          id: string
+          last_name?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          company_name?: string | null
+          created_at?: string | null
+          email?: string
+          first_name?: string | null
+          id?: string
+          last_name?: string | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      receipt_items: {
+        Row: {
+          created_at: string | null
+          description: string
+          id: string
+          quantity: number
+          receipt_id: string
+          sort_order: number | null
+          tax_rate: number | null
+          total: number
+          unit_price: number
+          updated_at: string | null
           user_id: string
         }
         Insert: {
-          avatar_url?: string | null
-          created_at?: string
+          created_at?: string | null
+          description: string
           id?: string
-          name: string
-          phone_number?: string | null
-          updated_at?: string
+          quantity?: number
+          receipt_id: string
+          sort_order?: number | null
+          tax_rate?: number | null
+          total?: number
+          unit_price?: number
+          updated_at?: string | null
           user_id: string
         }
         Update: {
-          avatar_url?: string | null
-          created_at?: string
+          created_at?: string | null
+          description?: string
           id?: string
-          name?: string
-          phone_number?: string | null
-          updated_at?: string
+          quantity?: number
+          receipt_id?: string
+          sort_order?: number | null
+          tax_rate?: number | null
+          total?: number
+          unit_price?: number
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "receipt_items_receipt_id_fkey"
+            columns: ["receipt_id"]
+            isOneToOne: false
+            referencedRelation: "receipts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      receipts: {
+        Row: {
+          created_at: string | null
+          customer_id: string | null
+          date: string
+          id: string
+          notes: string | null
+          payment_method: string | null
+          receipt_number: string
+          subtotal: number | null
+          tax: number | null
+          template_name: string | null
+          total: number | null
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          customer_id?: string | null
+          date: string
+          id?: string
+          notes?: string | null
+          payment_method?: string | null
+          receipt_number: string
+          subtotal?: number | null
+          tax?: number | null
+          template_name?: string | null
+          total?: number | null
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          customer_id?: string | null
+          date?: string
+          id?: string
+          notes?: string | null
+          payment_method?: string | null
+          receipt_number?: string
+          subtotal?: number | null
+          tax?: number | null
+          template_name?: string | null
+          total?: number | null
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "receipts_customer_id_fkey"
+            columns: ["customer_id"]
+            isOneToOne: false
+            referencedRelation: "customers"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      user_roles: {
+        Row: {
+          created_at: string | null
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      user_settings: {
+        Row: {
+          created_at: string | null
+          date_format: string | null
+          default_currency: string | null
+          default_tax_rate: number | null
+          default_template: string | null
+          estimate_prefix: string | null
+          id: string
+          invoice_prefix: string | null
+          language: string | null
+          receipt_prefix: string | null
+          timezone: string | null
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          date_format?: string | null
+          default_currency?: string | null
+          default_tax_rate?: number | null
+          default_template?: string | null
+          estimate_prefix?: string | null
+          id?: string
+          invoice_prefix?: string | null
+          language?: string | null
+          receipt_prefix?: string | null
+          timezone?: string | null
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          date_format?: string | null
+          default_currency?: string | null
+          default_tax_rate?: number | null
+          default_template?: string | null
+          estimate_prefix?: string | null
+          id?: string
+          invoice_prefix?: string | null
+          language?: string | null
+          receipt_prefix?: string | null
+          timezone?: string | null
+          updated_at?: string | null
           user_id?: string
         }
         Relationships: []
@@ -123,21 +631,20 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      delete_conversation: {
-        Args: { conversation_id: string }
-        Returns: undefined
+      get_user_role: {
+        Args: { _user_id: string }
+        Returns: Database["public"]["Enums"]["app_role"]
       }
-      mark_message_delivered: {
-        Args: { message_id: string }
-        Returns: undefined
-      }
-      mark_message_read: {
-        Args: { message_id: string; user_id: string }
-        Returns: undefined
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
       }
     }
     Enums: {
-      [_ in never]: never
+      app_role: "user" | "admin" | "super_admin"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -264,6 +771,8 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_role: ["user", "admin", "super_admin"],
+    },
   },
 } as const

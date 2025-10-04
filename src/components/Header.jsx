@@ -1,23 +1,18 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { Menu, X, ChevronDown } from "lucide-react";
+import { Menu, X } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import SwiftFactureLogo from "../../public/assets/logo/SwiftFactureLogo.png";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "./ui/dropdown-menu";
-import usaFlag from "../../public/assets/icons/usaFlag.png";
-import franceFlag from "../../public/assets/icons/franceFlag.png";
-import { useLanguage } from "../hooks/useLanguage";
+import { useAuth } from "../contexts/AuthContext";
+import UserProfile from "./UserProfile";
+import LanguageSwitcher from "./LanguageSwitcher";
 
 const Header = () => {
   const [open, setOpen] = useState(false);
   const navigate = useNavigate();
   const { t, ready } = useTranslation('common');
-  const { currentLanguage, changeLanguage } = useLanguage();
+
+  const { user, loading } = useAuth();
 
   // Fallback function for when translations aren't ready
   const getTranslation = (key, fallback) => {
@@ -35,34 +30,7 @@ const Header = () => {
     { label: getTranslation('navigation.customers', 'Clients'), to: "/customers" },
   ];
 
-  // Language data with flag components - with fallbacks
-  const languages = {
-    fr: {
-      code: "fr",
-      icon: franceFlag,
-      name: getTranslation('language.french', 'Français'),
-    },
-    en: {
-      code: "en",
-      icon: usaFlag,
-      name: getTranslation('language.english', 'English'),
-    },
-  };
 
-  // Sync local language state with i18n - ensure valid language
-  const [language, setLanguage] = useState(() => {
-    const initialLang = currentLanguage || "fr";
-    return languages[initialLang] ? initialLang : "fr";
-  });
-
-  useEffect(() => {
-    const newLang = currentLanguage || "fr";
-    if (newLang === "fr" || newLang === "en") {
-      setLanguage(newLang);
-    } else {
-      setLanguage("fr"); // fallback to French if invalid language
-    }
-  }, [currentLanguage]);
 
   const location = useLocation();
 
@@ -81,7 +49,7 @@ const Header = () => {
   };
 
   return (
-    <header className="glass-card sticky top-0 z-50 px-4 py-3 animate-fade-in bg-gray-100">
+    <header className="glass-card sticky top-0 z-50 px-4 py-3 animate-fade-in bg-background/80 backdrop-blur-md border-b border-border/50">
       <div className="container mx-auto flex items-center justify-between">
         <div className="flex items-center space-x-3">
           <div className="relative flex items-center">
@@ -103,7 +71,7 @@ const Header = () => {
                 <h1 className="text-xl md:text-2xl font-bold gradient-text">
                   {t('brand.name')}
                 </h1>
-                <p className="text-xs md:text-sm text-muted-foreground hidden md:block font-bold">
+                <p className="text-xs md:text-sm text-gray-600 hidden md:block font-bold">
                   {t('brand.tagline')}
                 </p>
               </div>
@@ -115,10 +83,10 @@ const Header = () => {
             <button
               key={item.to}
               onClick={() => handleNavigation(item.to)}
-              className={`text-sm font-medium px-3 py-2 hover:text-blue-700 rounded-md transition-smooth ${
+              className={`text-sm font-medium px-3 py-2 rounded-md transition-smooth ${
                 isActive(item.to)
-                  ? "bg-primary/10 text-primary"
-                  : "text-muted-foreground hover:text-foreground"
+                  ? "bg-blue-100 text-blue-700"
+                  : "text-gray-600 hover:text-gray-900 hover:bg-gray-100"
               }`}
             >
               {item.label}
@@ -128,46 +96,7 @@ const Header = () => {
 
         <div className="flex items-center gap-3">
           {/* Language Dropdown - visible on all screen sizes */}
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <button className="flex items-center gap-1 md:gap-2 px-2 md:px-3 py-2 rounded-lg border border-gray-300 bg-white hover:bg-gray-50 transition-colors duration-200 text-sm font-medium">
-                {languages[language] && (
-                  <>
-                    <img
-                      src={languages[language].icon}
-                      alt={`${languages[language].name} flag`}
-                      className="w-4 h-3 md:w-5 md:h-4 object-cover rounded-sm"
-                    />
-                    <span className="hidden sm:inline text-xs md:text-sm">
-                      {languages[language].code.toUpperCase()}
-                    </span>
-                  </>
-                )}
-                <ChevronDown className="h-3 w-3 md:h-4 md:w-4 text-gray-800 font-bold" />
-              </button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-32">
-              {Object.values(languages).map((lang) => (
-                <DropdownMenuItem
-                  key={lang.code}
-                  onClick={() => {
-                    changeLanguage(lang.code);
-                    setLanguage(lang.code);
-                  }}
-                  className={`flex items-center gap-2 cursor-pointer ${
-                    language === lang.code ? "bg-blue-50 text-blue-700" : ""
-                  }`}
-                >
-                  <img
-                    src={lang.icon}
-                    alt={`${lang.name} flag`}
-                    className="w-5 h-4 object-cover rounded-sm"
-                  />
-                  <span className="text-sm">{lang.name}</span>
-                </DropdownMenuItem>
-              ))}
-            </DropdownMenuContent>
-          </DropdownMenu>
+          <LanguageSwitcher />
 
           <div className="hidden md:flex items-center space-x-3">
             <button
@@ -187,33 +116,42 @@ const Header = () => {
               </span>
             </button>
 
-            <button
-              onClick={() => handleNavigation("/login")}
-              className="px-4 py-2.5 rounded-lg bg-white border border-gray-300 text-gray-700 font-semibold text-sm shadow-md hover:shadow-lg transform transition-all duration-200 hover:scale-105 active:scale-95 focus:outline-none focus:ring-2 focus:ring-gray-200 focus:ring-opacity-50 hover:bg-gray-50 hover:border-gray-400"
-            >
-              <span className="flex items-center justify-center">
-                <svg
-                  className="w-4 h-4 mr-2"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
-                  />
-                </svg>
-                {t('buttons.account')}
-              </span>
-            </button>
+            {/* Show user profile if logged in, otherwise show login button */}
+            {loading ? (
+              <div className="px-4 py-2.5 rounded-lg bg-muted animate-pulse">
+                <div className="h-4 w-16 bg-muted-foreground/30 rounded"></div>
+              </div>
+            ) : user ? (
+              <UserProfile />
+            ) : (
+              <button
+                onClick={() => handleNavigation("/login")}
+                className="px-4 py-2.5 rounded-lg bg-background border border-border text-foreground font-semibold text-sm shadow-md hover:shadow-lg transform transition-all duration-200 hover:scale-105 active:scale-95 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:ring-opacity-50 hover:bg-muted/50 hover:border-primary/50"
+              >
+                <span className="flex items-center justify-center">
+                  <svg
+                    className="w-4 h-4 mr-2"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+                    />
+                  </svg>
+                  {t('buttons.account')}
+                </span>
+              </button>
+            )}
           </div>
 
           {/* Mobile menu button */}
           <button
-            className="md:hidden p-2 rounded-md hover:bg-muted/50"
+            className="md:hidden p-2 rounded-md hover:bg-gray-100"
             aria-label="Toggle menu"
             aria-expanded={open}
             onClick={() => setOpen((v) => !v)}
@@ -225,7 +163,7 @@ const Header = () => {
 
       {/* Mobile menu panel */}
       {open && (
-        <div className="md:hidden bg-background/80 border-t border-border/20">
+        <div className="md:hidden bg-white border-t border-gray-200">
           <div className="container mx-auto px-4 py-3 flex flex-col">
             {navItems.map((item) => (
               <button
@@ -233,8 +171,8 @@ const Header = () => {
                 onClick={() => handleNavigation(item.to)}
                 className={`text-left w-full px-3 py-2 rounded-md text-sm ${
                   isActive(item.to)
-                    ? "bg-primary/10 text-primary"
-                    : "text-muted-foreground hover:bg-muted/30"
+                    ? "bg-blue-100 text-blue-700"
+                    : "text-gray-600 hover:bg-gray-100"
                 }`}
               >
                 {item.label}
@@ -258,28 +196,39 @@ const Header = () => {
                 </span>
               </button>
 
-              <button
-                onClick={() => handleNavigation("/login")}
-                className="flex-1 px-3 py-2 rounded-md bg-accent/10 text-accent-foreground bg-white border border-gray-300 text-gray-700 font-semibold text-sm shadow-md hover:shadow-lg transform transition-all duration-200 hover:scale-105 active:scale-95 focus:outline-none focus:ring-2 focus:ring-gray-200 focus:ring-opacity-50 hover:bg-gray-50 hover:border-gray-400"
-              >
-                <span className="flex items-center justify-center">
-                  <svg
-                    className="w-4 h-4 mr-2"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="2"
-                      d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
-                    />
-                  </svg>
-                  {t('buttons.account')}
-                </span>
-              </button>
+              {/* Mobile user profile or login button */}
+              {loading ? (
+                <div className="flex-1 px-3 py-2 rounded-md bg-muted animate-pulse">
+                  <div className="h-4 bg-muted-foreground/30 rounded"></div>
+                </div>
+              ) : user ? (
+                <div className="flex-1">
+                  <UserProfile />
+                </div>
+              ) : (
+                <button
+                  onClick={() => handleNavigation("/login")}
+                  className="flex-1 px-3 py-2 rounded-md bg-background border border-border text-foreground font-semibold text-sm shadow-md hover:shadow-lg transform transition-all duration-200 hover:scale-105 active:scale-95 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:ring-opacity-50 hover:bg-muted/50 hover:border-primary/50"
+                >
+                  <span className="flex items-center justify-center">
+                    <svg
+                      className="w-4 h-4 mr-2"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+                      />
+                    </svg>
+                    {t('buttons.account')}
+                  </span>
+                </button>
+              )}
             </div>
           </div>
         </div>

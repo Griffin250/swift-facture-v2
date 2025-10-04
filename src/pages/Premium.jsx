@@ -2,6 +2,8 @@ import { useState, useEffect } from "react";
 import { Check } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import RegistrationForm from "@/components/RegistrationForm";
 
 const getPlanData = (t) => [
   {
@@ -106,6 +108,8 @@ const Premium = () => {
   const navigate = useNavigate();
   const [billing, setBilling] = useState("yearly"); // 'yearly' or 'monthly'
   const { t } = useTranslation('common');
+  const [selectedPlan, setSelectedPlan] = useState(null);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
   
   // Get translated data
   const plans = getPlanData(t);
@@ -234,17 +238,31 @@ const Premium = () => {
               <div className="mt-6">
                 {billing === "monthly" ? (
                   <button
-                    onClick={() => navigate("/account")}
+                    onClick={() => {
+                      if (p.id === "free") {
+                        navigate("/account");
+                      } else {
+                        setSelectedPlan(p);
+                        setIsDialogOpen(true);
+                      }
+                    }}
                     className="w-full py-2 rounded-full border border-primary text-primary font-semibold"
                   >
-                    {t('buttons.startFreeTrial')}
+                    {p.id === "free" ? t('buttons.signUp') : t('buttons.startFreeTrial')}
                   </button>
                 ) : (
                   <button
-                    onClick={() => navigate("/account")}
+                    onClick={() => {
+                      if (p.id === "free") {
+                        navigate("/account");
+                      } else {
+                        setSelectedPlan(p);
+                        setIsDialogOpen(true);
+                      }
+                    }}
                     className="w-full py-2 rounded-full bg-primary text-primary-foreground font-semibold"
                   >
-                    {t('buttons.upgrade')}
+                    {p.id === "free" ? t('buttons.signUp') : t('buttons.upgrade')}
                   </button>
                 )}
               </div>
@@ -307,6 +325,21 @@ const Premium = () => {
           {t('premium.vatDisclaimer')}
         </p>
       </section>
+
+      <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+        <DialogContent className="sm:max-w-[500px]">
+          <DialogHeader>
+            <DialogTitle>Complete Your Registration</DialogTitle>
+          </DialogHeader>
+          {selectedPlan && (
+            <RegistrationForm
+              plan={selectedPlan}
+              billing={billing}
+              onClose={() => setIsDialogOpen(false)}
+            />
+          )}
+        </DialogContent>
+      </Dialog>
     </main>
   );
 };
