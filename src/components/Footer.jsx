@@ -36,7 +36,7 @@ const Footer = () => {
           </div>
           <p className="text-gray-500 text-sm text-center m-auto font-bold">
             {" "}
-            Version: v2.1.3
+            Version: v2.2.0
           </p>
           {/* Navigation Links */}
           <div className="flex space-x-6 text-sm">
