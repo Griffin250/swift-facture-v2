@@ -253,14 +253,14 @@ const AdminDashboardPanel = () => {
                   {
                     label: 'Revenue ($)',
                     data: [12000, 19000, 15000, 25000, 22000, 30000, 28000, 35000, 32000, 40000, 38000, 45000],
-                    borderColor: 'hsl(var(--primary))',
-                    backgroundColor: 'hsla(var(--primary) / 0.1)',
+                    borderColor: 'rgb(59, 130, 246)',
+                    backgroundColor: 'rgba(59, 130, 246, 0.1)',
                     fill: true,
                     tension: 0.4,
                     borderWidth: 3,
                     pointRadius: 5,
                     pointHoverRadius: 7,
-                    pointBackgroundColor: 'hsl(var(--primary))',
+                    pointBackgroundColor: 'rgb(59, 130, 246)',
                     pointBorderColor: '#fff',
                     pointBorderWidth: 2,
                   }
@@ -329,10 +329,10 @@ const AdminDashboardPanel = () => {
                   {
                     data: [45, 25, 20, 10],
                     backgroundColor: [
-                      'hsl(var(--primary))',
-                      'hsl(var(--secondary))',
-                      'hsl(var(--accent))',
-                      'hsl(var(--muted))'
+                      'rgb(59, 130, 246)',
+                      'rgb(249, 115, 22)',
+                      'rgb(34, 197, 94)',
+                      'rgb(239, 68, 68)'
                     ],
                     borderWidth: 0,
                     hoverOffset: 10
@@ -387,21 +387,21 @@ const AdminDashboardPanel = () => {
                 {
                   label: 'New Users',
                   data: [120, 190, 150, 220, 180, 250, 230, 280, 260, 320, 300, 350],
-                  backgroundColor: 'hsl(var(--primary))',
+                  backgroundColor: 'rgb(59, 130, 246)',
                   borderRadius: 8,
                   barThickness: 20
                 },
                 {
                   label: 'Invoices Created',
                   data: [85, 140, 110, 180, 160, 210, 190, 240, 220, 270, 250, 300],
-                  backgroundColor: 'hsl(var(--secondary))',
+                  backgroundColor: 'rgb(249, 115, 22)',
                   borderRadius: 8,
                   barThickness: 20
                 },
                 {
                   label: 'Subscriptions',
                   data: [45, 75, 60, 95, 80, 110, 100, 130, 115, 145, 135, 160],
-                  backgroundColor: 'hsl(var(--accent))',
+                  backgroundColor: 'rgb(34, 197, 94)',
                   borderRadius: 8,
                   barThickness: 20
                 }
