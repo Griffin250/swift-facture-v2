@@ -12,6 +12,34 @@ import {
   Loader2
 } from 'lucide-react';
 import { adminAnalyticsService } from '../../../services/adminService';
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  BarElement,
+  ArcElement,
+  Title,
+  Tooltip,
+  Legend,
+  Filler
+} from 'chart.js';
+import { Line, Doughnut, Bar } from 'react-chartjs-2';
+
+// Register Chart.js components
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  BarElement,
+  ArcElement,
+  Title,
+  Tooltip,
+  Legend,
+  Filler
+);
 
 const AdminDashboardPanel = () => {
   const { t } = useTranslation();
@@ -210,30 +238,222 @@ const AdminDashboardPanel = () => {
         })}
       </div>
 
-      {/* Charts and Activity */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Revenue Chart Placeholder */}
-        <div className="bg-white dark:bg-gray-800 rounded-lg shadow border border-gray-200 dark:border-gray-700 p-6">
-          <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+      {/* Charts Section */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* Revenue Trend Chart - Takes 2 columns */}
+        <div className="lg:col-span-2 bg-white dark:bg-gray-800 rounded-lg shadow border border-gray-200 dark:border-gray-700 p-6 animate-fade-in">
+          <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-6">
             {t('admin.dashboard.charts.revenue')}
           </h3>
-          <div className="h-64 flex items-center justify-center bg-gray-50 dark:bg-gray-700 rounded">
-            <p className="text-gray-500 dark:text-gray-400">
-              {t('admin.dashboard.charts.placeholder')}
-            </p>
+          <div className="h-80">
+            <Line
+              data={{
+                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+                datasets: [
+                  {
+                    label: 'Revenue ($)',
+                    data: [12000, 19000, 15000, 25000, 22000, 30000, 28000, 35000, 32000, 40000, 38000, 45000],
+                    borderColor: 'hsl(var(--primary))',
+                    backgroundColor: 'hsla(var(--primary) / 0.1)',
+                    fill: true,
+                    tension: 0.4,
+                    borderWidth: 3,
+                    pointRadius: 5,
+                    pointHoverRadius: 7,
+                    pointBackgroundColor: 'hsl(var(--primary))',
+                    pointBorderColor: '#fff',
+                    pointBorderWidth: 2,
+                  }
+                ]
+              }}
+              options={{
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                  legend: {
+                    display: false
+                  },
+                  tooltip: {
+                    backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                    padding: 12,
+                    titleColor: '#fff',
+                    bodyColor: '#fff',
+                    cornerRadius: 8,
+                    displayColors: false,
+                    callbacks: {
+                      label: function(context) {
+                        return '$' + context.parsed.y.toLocaleString();
+                      }
+                    }
+                  }
+                },
+                scales: {
+                  y: {
+                    beginAtZero: true,
+                    grid: {
+                      color: 'rgba(0, 0, 0, 0.05)',
+                      drawBorder: false,
+                    },
+                    ticks: {
+                      callback: function(value) {
+                        return '$' + (value / 1000) + 'k';
+                      }
+                    }
+                  },
+                  x: {
+                    grid: {
+                      display: false,
+                      drawBorder: false,
+                    }
+                  }
+                },
+                animation: {
+                  duration: 2000,
+                  easing: 'easeInOutQuart'
+                }
+              }}
+            />
           </div>
         </div>
 
-        {/* Conversion Chart Placeholder */}
-        <div className="bg-white dark:bg-gray-800 rounded-lg shadow border border-gray-200 dark:border-gray-700 p-6">
-          <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
-            {t('admin.dashboard.charts.conversion')}
+        {/* User Distribution Doughnut Chart */}
+        <div className="bg-white dark:bg-gray-800 rounded-lg shadow border border-gray-200 dark:border-gray-700 p-6 animate-fade-in">
+          <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-6">
+            {t('admin.dashboard.charts.userDistribution', 'User Distribution')}
           </h3>
-          <div className="h-64 flex items-center justify-center bg-gray-50 dark:bg-gray-700 rounded">
-            <p className="text-gray-500 dark:text-gray-400">
-              {t('admin.dashboard.charts.placeholder')}
-            </p>
+          <div className="h-80 flex items-center justify-center">
+            <Doughnut
+              data={{
+                labels: ['Free Users', 'Trial Users', 'Premium Users', 'Enterprise'],
+                datasets: [
+                  {
+                    data: [45, 25, 20, 10],
+                    backgroundColor: [
+                      'hsl(var(--primary))',
+                      'hsl(var(--secondary))',
+                      'hsl(var(--accent))',
+                      'hsl(var(--muted))'
+                    ],
+                    borderWidth: 0,
+                    hoverOffset: 10
+                  }
+                ]
+              }}
+              options={{
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                  legend: {
+                    position: 'bottom',
+                    labels: {
+                      padding: 15,
+                      usePointStyle: true,
+                      pointStyle: 'circle'
+                    }
+                  },
+                  tooltip: {
+                    backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                    padding: 12,
+                    cornerRadius: 8,
+                    callbacks: {
+                      label: function(context) {
+                        return context.label + ': ' + context.parsed + '%';
+                      }
+                    }
+                  }
+                },
+                animation: {
+                  animateRotate: true,
+                  animateScale: true,
+                  duration: 2000,
+                  easing: 'easeInOutQuart'
+                }
+              }}
+            />
           </div>
+        </div>
+      </div>
+
+      {/* Monthly Comparison Bar Chart */}
+      <div className="bg-white dark:bg-gray-800 rounded-lg shadow border border-gray-200 dark:border-gray-700 p-6 animate-fade-in">
+        <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-6">
+          {t('admin.dashboard.charts.monthlyComparison', 'Monthly Comparison')}
+        </h3>
+        <div className="h-80">
+          <Bar
+            data={{
+              labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+              datasets: [
+                {
+                  label: 'New Users',
+                  data: [120, 190, 150, 220, 180, 250, 230, 280, 260, 320, 300, 350],
+                  backgroundColor: 'hsl(var(--primary))',
+                  borderRadius: 8,
+                  barThickness: 20
+                },
+                {
+                  label: 'Invoices Created',
+                  data: [85, 140, 110, 180, 160, 210, 190, 240, 220, 270, 250, 300],
+                  backgroundColor: 'hsl(var(--secondary))',
+                  borderRadius: 8,
+                  barThickness: 20
+                },
+                {
+                  label: 'Subscriptions',
+                  data: [45, 75, 60, 95, 80, 110, 100, 130, 115, 145, 135, 160],
+                  backgroundColor: 'hsl(var(--accent))',
+                  borderRadius: 8,
+                  barThickness: 20
+                }
+              ]
+            }}
+            options={{
+              responsive: true,
+              maintainAspectRatio: false,
+              plugins: {
+                legend: {
+                  position: 'top',
+                  labels: {
+                    padding: 15,
+                    usePointStyle: true,
+                    pointStyle: 'circle'
+                  }
+                },
+                tooltip: {
+                  backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                  padding: 12,
+                  cornerRadius: 8,
+                  displayColors: true
+                }
+              },
+              scales: {
+                y: {
+                  beginAtZero: true,
+                  grid: {
+                    color: 'rgba(0, 0, 0, 0.05)',
+                    drawBorder: false,
+                  }
+                },
+                x: {
+                  grid: {
+                    display: false,
+                    drawBorder: false,
+                  }
+                }
+              },
+              animation: {
+                duration: 2000,
+                easing: 'easeInOutQuart',
+                delay: (context) => {
+                  let delay = 0;
+                  if (context.type === 'data' && context.mode === 'default') {
+                    delay = context.dataIndex * 100 + context.datasetIndex * 50;
+                  }
+                  return delay;
+                }
+              }
+            }}
+          />
         </div>
       </div>
 
