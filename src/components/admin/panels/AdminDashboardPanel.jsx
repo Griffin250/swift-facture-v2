@@ -12,7 +12,6 @@ import {
   Loader2
 } from 'lucide-react';
 import { adminAnalyticsService } from '../../../services/adminService';
-import { supabase } from '../../../integrations/supabase/client';
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -48,11 +47,6 @@ const AdminDashboardPanel = () => {
   const [recentActivity, setRecentActivity] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [chartData, setChartData] = useState({
-    revenue: [],
-    userDistribution: [],
-    monthlyStats: []
-  });
 
   useEffect(() => {
     const fetchDashboardData = async () => {
@@ -60,12 +54,9 @@ const AdminDashboardPanel = () => {
         setLoading(true);
         setError(null);
 
-        const [metricsResult, activityResult, invoicesData, estimatesData, receiptsData] = await Promise.all([
+        const [metricsResult, activityResult] = await Promise.all([
           adminAnalyticsService.getDashboardMetrics(),
-          adminAnalyticsService.getRecentActivity(10),
-          supabase.from('invoices').select('total, created_at, status'),
-          supabase.from('estimates').select('created_at'),
-          supabase.from('receipts').select('created_at')
+          adminAnalyticsService.getRecentActivity(10)
         ]);
 
         if (metricsResult.error) {
@@ -76,85 +67,15 @@ const AdminDashboardPanel = () => {
           throw activityResult.error;
         }
 
-        // Process revenue data by month
-        const revenueByMonth = {};
-        const currentYear = new Date().getFullYear();
-        
-        // Initialize all months with 0
-        for (let i = 0; i < 12; i++) {
-          const monthName = new Date(currentYear, i, 1).toLocaleDateString('en', { month: 'short' });
-          revenueByMonth[monthName] = 0;
-        }
-
-        // Aggregate revenue by month
-        invoicesData.data?.forEach(invoice => {
-          const date = new Date(invoice.created_at);
-          if (date.getFullYear() === currentYear) {
-            const monthName = date.toLocaleDateString('en', { month: 'short' });
-            revenueByMonth[monthName] += parseFloat(invoice.total || 0);
-          }
-        });
-
-        // Process monthly statistics
-        const monthlyStats = {};
-        for (let i = 0; i < 12; i++) {
-          const monthName = new Date(currentYear, i, 1).toLocaleDateString('en', { month: 'short' });
-          monthlyStats[monthName] = { invoices: 0, estimates: 0, receipts: 0 };
-        }
-
-        invoicesData.data?.forEach(item => {
-          const date = new Date(item.created_at);
-          if (date.getFullYear() === currentYear) {
-            const monthName = date.toLocaleDateString('en', { month: 'short' });
-            monthlyStats[monthName].invoices++;
-          }
-        });
-
-        estimatesData.data?.forEach(item => {
-          const date = new Date(item.created_at);
-          if (date.getFullYear() === currentYear) {
-            const monthName = date.toLocaleDateString('en', { month: 'short' });
-            monthlyStats[monthName].estimates++;
-          }
-        });
-
-        receiptsData.data?.forEach(item => {
-          const date = new Date(item.created_at);
-          if (date.getFullYear() === currentYear) {
-            const monthName = date.toLocaleDateString('en', { month: 'short' });
-            monthlyStats[monthName].receipts++;
-          }
-        });
-
-        // Calculate user distribution (mock data based on metrics)
-        const totalUsers = metricsResult.data.totalUsers;
-        const paidUsers = metricsResult.data.paidInvoices || 0;
-        const trialUsers = metricsResult.data.activeTrials || 0;
-        const freeUsers = Math.max(0, totalUsers - paidUsers - trialUsers);
-
-        setChartData({
-          revenue: Object.values(revenueByMonth),
-          userDistribution: [
-            Math.round((freeUsers / totalUsers) * 100),
-            Math.round((trialUsers / totalUsers) * 100),
-            Math.round((paidUsers / totalUsers) * 100),
-            5 // Enterprise placeholder
-          ],
-          monthlyStats: Object.keys(monthlyStats).map(month => ({
-            month,
-            ...monthlyStats[month]
-          }))
-        });
-
         // Format metrics for display
         const formattedMetrics = [
           {
             title: t('admin.dashboard.metrics.totalUsers'),
             value: metricsResult.data.totalUsers.toLocaleString(),
-            change: '+12%',
+            change: '+12%', // Could calculate actual change with historical data
             trend: 'up',
             icon: Users,
-            color: 'primary'
+            color: 'blue'
           },
           {
             title: t('admin.dashboard.metrics.totalCustomers', 'Total Customers'),
@@ -162,7 +83,7 @@ const AdminDashboardPanel = () => {
             change: '+8%',
             trend: 'up',
             icon: Building2,
-            color: 'secondary'
+            color: 'green'
           },
           {
             title: t('admin.dashboard.metrics.activeTrials'),
@@ -170,15 +91,15 @@ const AdminDashboardPanel = () => {
             change: metricsResult.data.activeTrials > 50 ? '+5%' : '-5%',
             trend: metricsResult.data.activeTrials > 50 ? 'up' : 'down',
             icon: CreditCard,
-            color: 'accent'
+            color: 'orange'
           },
           {
             title: t('admin.dashboard.metrics.totalRevenue', 'Total Revenue'),
-            value: `$${Math.round(metricsResult.data.totalRevenue).toLocaleString()}`,
+            value: `$${metricsResult.data.totalRevenue.toLocaleString()}`,
             change: '+18%',
             trend: 'up',
             icon: DollarSign,
-            color: 'primary'
+            color: 'purple'
           }
         ];
 
@@ -277,46 +198,39 @@ const AdminDashboardPanel = () => {
       </div>
 
       {/* Metrics Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         {metrics?.map((metric, index) => {
           const Icon = metric.icon;
-          const bgColorClass = metric.color === 'primary' ? 'bg-primary/10' : 
-                              metric.color === 'secondary' ? 'bg-secondary/10' : 
-                              'bg-accent/10';
-          const textColorClass = metric.color === 'primary' ? 'text-primary' : 
-                                metric.color === 'secondary' ? 'text-secondary' : 
-                                'text-accent';
           return (
             <div
               key={index}
-              className="bg-card rounded-xl shadow-lg border border-border p-4 md:p-6 hover:shadow-xl transition-all duration-300 animate-fade-in"
-              style={{ animationDelay: `${index * 100}ms` }}
+              className="bg-white dark:bg-gray-800 rounded-lg shadow border border-gray-200 dark:border-gray-700 p-6"
             >
               <div className="flex items-center justify-between">
-                <div className="flex-1">
-                  <p className="text-xs md:text-sm font-medium text-muted-foreground">
+                <div>
+                  <p className="text-sm font-medium text-gray-600 dark:text-gray-400">
                     {metric.title}
                   </p>
-                  <p className="text-xl md:text-2xl font-bold text-foreground mt-2">
+                  <p className="text-2xl font-bold text-gray-900 dark:text-white mt-2">
                     {metric.value}
                   </p>
                   <div className="flex items-center mt-2">
                     <TrendingUp 
-                      size={14} 
+                      size={16} 
                       className={`mr-1 ${metric.trend === 'up' ? 'text-green-500' : 'text-red-500'}`}
                     />
-                    <span className={`text-xs md:text-sm font-medium ${
-                      metric.trend === 'up' ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'
+                    <span className={`text-sm font-medium ${
+                      metric.trend === 'up' ? 'text-green-600' : 'text-red-600'
                     }`}>
                       {metric.change}
                     </span>
-                    <span className="text-muted-foreground text-xs ml-1 hidden sm:inline">
+                    <span className="text-gray-500 text-sm ml-1">
                       {t('admin.dashboard.metrics.vs_last_month')}
                     </span>
                   </div>
                 </div>
-                <div className={`p-3 rounded-full ${bgColorClass}`}>
-                  <Icon size={20} className={textColorClass} />
+                <div className={`p-3 rounded-full bg-${metric.color}-100 dark:bg-${metric.color}-900`}>
+                  <Icon size={24} className={`text-${metric.color}-600 dark:text-${metric.color}-400`} />
                 </div>
               </div>
             </div>
@@ -325,29 +239,29 @@ const AdminDashboardPanel = () => {
       </div>
 
       {/* Charts Section */}
-      <div className="grid grid-cols-1 xl:grid-cols-3 gap-4 md:gap-6">
-        {/* Revenue Trend Chart - Takes 2 columns on XL screens */}
-        <div className="xl:col-span-2 bg-card rounded-xl shadow-lg border border-border p-4 md:p-6 animate-fade-in">
-          <h3 className="text-base md:text-lg font-semibold text-foreground mb-4 md:mb-6">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* Revenue Trend Chart - Takes 2 columns */}
+        <div className="lg:col-span-2 bg-white dark:bg-gray-800 rounded-lg shadow border border-gray-200 dark:border-gray-700 p-6 animate-fade-in">
+          <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-6">
             {t('admin.dashboard.charts.revenue')}
           </h3>
-          <div className="h-64 md:h-80">
+          <div className="h-80">
             <Line
               data={{
                 labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
                 datasets: [
                   {
                     label: 'Revenue ($)',
-                    data: chartData.revenue.length > 0 ? chartData.revenue : [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                    data: [12000, 19000, 15000, 25000, 22000, 30000, 28000, 35000, 32000, 40000, 38000, 45000],
                     borderColor: 'hsl(var(--primary))',
-                    backgroundColor: 'hsl(var(--primary) / 0.1)',
+                    backgroundColor: 'hsla(var(--primary) / 0.1)',
                     fill: true,
                     tension: 0.4,
                     borderWidth: 3,
-                    pointRadius: 4,
-                    pointHoverRadius: 6,
+                    pointRadius: 5,
+                    pointHoverRadius: 7,
                     pointBackgroundColor: 'hsl(var(--primary))',
-                    pointBorderColor: 'hsl(var(--card))',
+                    pointBorderColor: '#fff',
                     pointBorderWidth: 2,
                   }
                 ]
@@ -360,17 +274,15 @@ const AdminDashboardPanel = () => {
                     display: false
                   },
                   tooltip: {
-                    backgroundColor: 'hsl(var(--popover))',
-                    titleColor: 'hsl(var(--popover-foreground))',
-                    bodyColor: 'hsl(var(--popover-foreground))',
-                    borderColor: 'hsl(var(--border))',
-                    borderWidth: 1,
+                    backgroundColor: 'rgba(0, 0, 0, 0.8)',
                     padding: 12,
+                    titleColor: '#fff',
+                    bodyColor: '#fff',
                     cornerRadius: 8,
                     displayColors: false,
                     callbacks: {
                       label: function(context) {
-                        return '$' + Math.round(context.parsed.y).toLocaleString();
+                        return '$' + context.parsed.y.toLocaleString();
                       }
                     }
                   }
@@ -379,13 +291,12 @@ const AdminDashboardPanel = () => {
                   y: {
                     beginAtZero: true,
                     grid: {
-                      color: 'hsl(var(--border) / 0.3)',
+                      color: 'rgba(0, 0, 0, 0.05)',
                       drawBorder: false,
                     },
                     ticks: {
-                      color: 'hsl(var(--muted-foreground))',
                       callback: function(value) {
-                        return '$' + (value >= 1000 ? (value / 1000) + 'k' : value);
+                        return '$' + (value / 1000) + 'k';
                       }
                     }
                   },
@@ -393,9 +304,6 @@ const AdminDashboardPanel = () => {
                     grid: {
                       display: false,
                       drawBorder: false,
-                    },
-                    ticks: {
-                      color: 'hsl(var(--muted-foreground))'
                     }
                   }
                 },
@@ -409,25 +317,24 @@ const AdminDashboardPanel = () => {
         </div>
 
         {/* User Distribution Doughnut Chart */}
-        <div className="bg-card rounded-xl shadow-lg border border-border p-4 md:p-6 animate-fade-in">
-          <h3 className="text-base md:text-lg font-semibold text-foreground mb-4 md:mb-6">
+        <div className="bg-white dark:bg-gray-800 rounded-lg shadow border border-gray-200 dark:border-gray-700 p-6 animate-fade-in">
+          <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-6">
             {t('admin.dashboard.charts.userDistribution', 'User Distribution')}
           </h3>
-          <div className="h-64 md:h-80 flex items-center justify-center">
+          <div className="h-80 flex items-center justify-center">
             <Doughnut
               data={{
                 labels: ['Free Users', 'Trial Users', 'Premium Users', 'Enterprise'],
                 datasets: [
                   {
-                    data: chartData.userDistribution.length > 0 ? chartData.userDistribution : [25, 25, 25, 25],
+                    data: [45, 25, 20, 10],
                     backgroundColor: [
                       'hsl(var(--primary))',
                       'hsl(var(--secondary))',
                       'hsl(var(--accent))',
                       'hsl(var(--muted))'
                     ],
-                    borderColor: 'hsl(var(--card))',
-                    borderWidth: 2,
+                    borderWidth: 0,
                     hoverOffset: 10
                   }
                 ]
@@ -439,21 +346,13 @@ const AdminDashboardPanel = () => {
                   legend: {
                     position: 'bottom',
                     labels: {
-                      padding: 12,
+                      padding: 15,
                       usePointStyle: true,
-                      pointStyle: 'circle',
-                      color: 'hsl(var(--foreground))',
-                      font: {
-                        size: 11
-                      }
+                      pointStyle: 'circle'
                     }
                   },
                   tooltip: {
-                    backgroundColor: 'hsl(var(--popover))',
-                    titleColor: 'hsl(var(--popover-foreground))',
-                    bodyColor: 'hsl(var(--popover-foreground))',
-                    borderColor: 'hsl(var(--border))',
-                    borderWidth: 1,
+                    backgroundColor: 'rgba(0, 0, 0, 0.8)',
                     padding: 12,
                     cornerRadius: 8,
                     callbacks: {
@@ -476,41 +375,35 @@ const AdminDashboardPanel = () => {
       </div>
 
       {/* Monthly Comparison Bar Chart */}
-      <div className="bg-card rounded-xl shadow-lg border border-border p-4 md:p-6 animate-fade-in">
-        <h3 className="text-base md:text-lg font-semibold text-foreground mb-4 md:mb-6">
-          {t('admin.dashboard.charts.monthlyComparison', 'Monthly Activity')}
+      <div className="bg-white dark:bg-gray-800 rounded-lg shadow border border-gray-200 dark:border-gray-700 p-6 animate-fade-in">
+        <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-6">
+          {t('admin.dashboard.charts.monthlyComparison', 'Monthly Comparison')}
         </h3>
-        <div className="h-64 md:h-80">
+        <div className="h-80">
           <Bar
             data={{
               labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
               datasets: [
                 {
-                  label: 'Invoices',
-                  data: chartData.monthlyStats.length > 0 
-                    ? chartData.monthlyStats.map(s => s.invoices) 
-                    : [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                  label: 'New Users',
+                  data: [120, 190, 150, 220, 180, 250, 230, 280, 260, 320, 300, 350],
                   backgroundColor: 'hsl(var(--primary))',
-                  borderRadius: 6,
-                  maxBarThickness: 40
+                  borderRadius: 8,
+                  barThickness: 20
                 },
                 {
-                  label: 'Estimates',
-                  data: chartData.monthlyStats.length > 0 
-                    ? chartData.monthlyStats.map(s => s.estimates) 
-                    : [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                  label: 'Invoices Created',
+                  data: [85, 140, 110, 180, 160, 210, 190, 240, 220, 270, 250, 300],
                   backgroundColor: 'hsl(var(--secondary))',
-                  borderRadius: 6,
-                  maxBarThickness: 40
+                  borderRadius: 8,
+                  barThickness: 20
                 },
                 {
-                  label: 'Receipts',
-                  data: chartData.monthlyStats.length > 0 
-                    ? chartData.monthlyStats.map(s => s.receipts) 
-                    : [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                  label: 'Subscriptions',
+                  data: [45, 75, 60, 95, 80, 110, 100, 130, 115, 145, 135, 160],
                   backgroundColor: 'hsl(var(--accent))',
-                  borderRadius: 6,
-                  maxBarThickness: 40
+                  borderRadius: 8,
+                  barThickness: 20
                 }
               ]
             }}
@@ -523,16 +416,11 @@ const AdminDashboardPanel = () => {
                   labels: {
                     padding: 15,
                     usePointStyle: true,
-                    pointStyle: 'circle',
-                    color: 'hsl(var(--foreground))'
+                    pointStyle: 'circle'
                   }
                 },
                 tooltip: {
-                  backgroundColor: 'hsl(var(--popover))',
-                  titleColor: 'hsl(var(--popover-foreground))',
-                  bodyColor: 'hsl(var(--popover-foreground))',
-                  borderColor: 'hsl(var(--border))',
-                  borderWidth: 1,
+                  backgroundColor: 'rgba(0, 0, 0, 0.8)',
                   padding: 12,
                   cornerRadius: 8,
                   displayColors: true
@@ -542,21 +430,14 @@ const AdminDashboardPanel = () => {
                 y: {
                   beginAtZero: true,
                   grid: {
-                    color: 'hsl(var(--border) / 0.3)',
+                    color: 'rgba(0, 0, 0, 0.05)',
                     drawBorder: false,
-                  },
-                  ticks: {
-                    color: 'hsl(var(--muted-foreground))',
-                    stepSize: 1
                   }
                 },
                 x: {
                   grid: {
                     display: false,
                     drawBorder: false,
-                  },
-                  ticks: {
-                    color: 'hsl(var(--muted-foreground))'
                   }
                 }
               },
@@ -566,7 +447,7 @@ const AdminDashboardPanel = () => {
                 delay: (context) => {
                   let delay = 0;
                   if (context.type === 'data' && context.mode === 'default') {
-                    delay = context.dataIndex * 80 + context.datasetIndex * 40;
+                    delay = context.dataIndex * 100 + context.datasetIndex * 50;
                   }
                   return delay;
                 }
@@ -577,40 +458,37 @@ const AdminDashboardPanel = () => {
       </div>
 
       {/* Recent Activity */}
-      <div className="bg-card rounded-xl shadow-lg border border-border animate-fade-in">
-        <div className="p-4 md:p-6 border-b border-border">
-          <h3 className="text-base md:text-lg font-semibold text-foreground">
+      <div className="bg-white dark:bg-gray-800 rounded-lg shadow border border-gray-200 dark:border-gray-700">
+        <div className="p-6 border-b border-gray-200 dark:border-gray-700">
+          <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
             {t('admin.dashboard.activity.title')}
           </h3>
         </div>
-        <div className="divide-y divide-border max-h-96 overflow-y-auto">
+        <div className="divide-y divide-gray-200 dark:divide-gray-700">
           {recentActivity.length > 0 ? (
             recentActivity.map((activity, index) => (
-              <div key={index} className="p-4 md:p-6 flex items-center space-x-3 md:space-x-4 hover:bg-muted/50 transition-colors">
+              <div key={index} className="p-6 flex items-center space-x-4">
                 <div className="flex-shrink-0">
                   {getActivityIcon(activity.type)}
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className="text-xs md:text-sm font-medium text-foreground truncate">
+                  <p className="text-sm font-medium text-gray-900 dark:text-white">
                     {activity.details || t(`admin.dashboard.activity.types.${activity.type}`)}
                   </p>
-                  <p className="text-xs text-muted-foreground truncate">
+                  <p className="text-sm text-gray-500 dark:text-gray-400">
                     {activity.user} • {activity.email}
                   </p>
                 </div>
                 <div className="flex-shrink-0">
-                  <span className="text-xs text-muted-foreground whitespace-nowrap">
+                  <span className="text-sm text-gray-500 dark:text-gray-400">
                     {formatTimeAgo(activity.time)}
                   </span>
                 </div>
               </div>
             ))
           ) : (
-            <div className="p-6 md:p-12 text-center">
-              <Activity className="w-12 h-12 mx-auto mb-3 text-muted-foreground opacity-50" />
-              <p className="text-sm text-muted-foreground">
-                {t('admin.dashboard.activity.noActivity', 'No recent activity')}
-              </p>
+            <div className="p-6 text-center text-gray-500 dark:text-gray-400">
+              {t('admin.dashboard.activity.noActivity', 'No recent activity')}
             </div>
           )}
         </div>
