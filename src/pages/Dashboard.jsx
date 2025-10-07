@@ -31,49 +31,33 @@ import {
   Zap,
 } from "lucide-react";
 import FrenchInvoiceCTA from "../components/FrenchInvoiceCTA";
+import { supabase } from "@/integrations/supabase/client";
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  BarElement,
+  ArcElement,
+  Title,
+  Tooltip,
+  Legend,
+  Filler
+} from 'chart.js';
+import { Line, Doughnut, Bar } from 'react-chartjs-2';
 
-// Mock chart components (replace with actual chart library)
-const RevenueChart = ({ t }) => (
-  <div className="h-48 bg-gradient-to-b from-blue-500/10 to-transparent rounded-lg p-4">
-    <div className="flex items-end justify-between h-32 gap-1">
-      {[65, 80, 60, 90, 75, 95, 70].map((height, i) => (
-        <div
-          key={i}
-          className="flex-1 bg-gradient-to-t from-blue-600 to-blue-400 rounded-t-lg transition-all duration-500 hover:from-blue-500 hover:to-blue-300"
-          style={{ height: `${height}%` }}
-        />
-      ))}
-    </div>
-    <div className="flex justify-between text-xs text-muted-foreground mt-2">
-      {[
-        t('dashboard.charts.months.jan'), 
-        t('dashboard.charts.months.feb'), 
-        t('dashboard.charts.months.mar'), 
-        t('dashboard.charts.months.apr'), 
-        t('dashboard.charts.months.may'), 
-        t('dashboard.charts.months.jun'), 
-        t('dashboard.charts.months.jul')
-      ].map(month => (
-        <span key={month}>{month}</span>
-      ))}
-    </div>
-  </div>
-);
-
-const InvoiceStatusChart = ({ t }) => (
-  <div className="h-48 flex items-center justify-center">
-    <div className="relative w-32 h-32">
-      <div className="absolute inset-0 border-8 border-green-500 rounded-full border-r-transparent transform -rotate-45" />
-      <div className="absolute inset-2 border-8 border-yellow-500 rounded-full border-l-transparent border-b-transparent transform rotate-45" />
-      <div className="absolute inset-4 border-8 border-red-500 rounded-full border-t-transparent border-r-transparent transform rotate-45" />
-      <div className="absolute inset-0 flex items-center justify-center">
-        <div className="text-center">
-          <div className="text-2xl font-bold">156</div>
-          <div className="text-xs text-muted-foreground">{t('dashboard.stats.total')}</div>
-        </div>
-      </div>
-    </div>
-  </div>
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  BarElement,
+  ArcElement,
+  Title,
+  Tooltip,
+  Legend,
+  Filler
 );
 
 const Dashboard = () => {
@@ -82,6 +66,19 @@ const Dashboard = () => {
   const [isLoading, setIsLoading] = useState(true);
   const { t } = useTranslation('common');
   const { user } = useAuth();
+  const [dashboardData, setDashboardData] = useState({
+    totalInvoices: 0,
+    totalRevenue: 0,
+    outstanding: 0,
+    thisMonth: 0,
+    revenueData: [],
+    statusData: { paid: 0, pending: 0, overdue: 0, draft: 0 },
+    monthlyData: [],
+    recentInvoices: [],
+    customers: 0,
+    estimates: 0,
+    receipts: 0
+  });
 
   // Handle navigation with scroll to top
   const handleNavigation = (path) => {
@@ -126,15 +123,135 @@ const Dashboard = () => {
   };
 
   useEffect(() => {
-    // Simulate loading
-    const timer = setTimeout(() => setIsLoading(false), 1000);
-    return () => clearTimeout(timer);
-  }, []);
+    const fetchDashboardData = async () => {
+      if (!user) {
+        setIsLoading(false);
+        return;
+      }
+
+      try {
+        setIsLoading(true);
+
+        // Fetch invoices
+        const { data: invoices, error: invoicesError } = await supabase
+          .from('invoices')
+          .select('*')
+          .eq('user_id', user.id);
+
+        // Fetch estimates
+        const { data: estimates, error: estimatesError } = await supabase
+          .from('estimates')
+          .select('*')
+          .eq('user_id', user.id);
+
+        // Fetch receipts
+        const { data: receipts, error: receiptsError } = await supabase
+          .from('receipts')
+          .select('*')
+          .eq('user_id', user.id);
+
+        // Fetch customers
+        const { data: customers, error: customersError } = await supabase
+          .from('customers')
+          .select('*')
+          .eq('user_id', user.id);
+
+        if (invoicesError) throw invoicesError;
+        if (estimatesError) throw estimatesError;
+        if (receiptsError) throw receiptsError;
+        if (customersError) throw customersError;
+
+        // Calculate statistics
+        const totalInvoices = invoices?.length || 0;
+        const totalRevenue = invoices?.reduce((sum, inv) => sum + (parseFloat(inv.total) || 0), 0) || 0;
+        const outstanding = invoices?.filter(inv => inv.status === 'pending' || inv.status === 'overdue').length || 0;
+        
+        // Calculate this month's revenue
+        const now = new Date();
+        const thisMonthStart = new Date(now.getFullYear(), now.getMonth(), 1);
+        const thisMonth = invoices?.filter(inv => new Date(inv.date) >= thisMonthStart)
+          .reduce((sum, inv) => sum + (parseFloat(inv.total) || 0), 0) || 0;
+
+        // Status breakdown
+        const statusData = {
+          paid: invoices?.filter(inv => inv.status === 'paid').length || 0,
+          pending: invoices?.filter(inv => inv.status === 'pending').length || 0,
+          overdue: invoices?.filter(inv => inv.status === 'overdue').length || 0,
+          draft: invoices?.filter(inv => inv.status === 'draft').length || 0
+        };
+
+        // Revenue by month (last 12 months)
+        const revenueData = [];
+        const monthlyData = [];
+        for (let i = 11; i >= 0; i--) {
+          const date = new Date(now.getFullYear(), now.getMonth() - i, 1);
+          const monthInvoices = invoices?.filter(inv => {
+            const invDate = new Date(inv.date);
+            return invDate.getMonth() === date.getMonth() && 
+                   invDate.getFullYear() === date.getFullYear();
+          }) || [];
+          
+          const monthRevenue = monthInvoices.reduce((sum, inv) => sum + (parseFloat(inv.total) || 0), 0);
+          revenueData.push(monthRevenue);
+          
+          monthlyData.push({
+            invoices: monthInvoices.length,
+            estimates: estimates?.filter(est => {
+              const estDate = new Date(est.date);
+              return estDate.getMonth() === date.getMonth() && 
+                     estDate.getFullYear() === date.getFullYear();
+            }).length || 0,
+            receipts: receipts?.filter(rec => {
+              const recDate = new Date(rec.date);
+              return recDate.getMonth() === date.getMonth() && 
+                     recDate.getFullYear() === date.getFullYear();
+            }).length || 0
+          });
+        }
+
+        // Recent invoices
+        const recentInvoices = (invoices || [])
+          .sort((a, b) => new Date(b.date) - new Date(a.date))
+          .slice(0, 5)
+          .map(inv => ({
+            id: inv.id,
+            number: inv.invoice_number,
+            customer: customers?.find(c => c.id === inv.customer_id)?.name || 'N/A',
+            date: new Date(inv.date).toLocaleDateString(),
+            dueDate: inv.due_date ? new Date(inv.due_date).toLocaleDateString() : 'N/A',
+            amount: `$${parseFloat(inv.total || 0).toFixed(2)}`,
+            status: inv.status || 'draft',
+            priority: inv.status === 'overdue' ? 'high' : inv.status === 'pending' ? 'medium' : 'low'
+          }));
+
+        setDashboardData({
+          totalInvoices,
+          totalRevenue,
+          outstanding,
+          thisMonth,
+          revenueData,
+          statusData,
+          monthlyData,
+          recentInvoices,
+          customers: customers?.length || 0,
+          estimates: estimates?.length || 0,
+          receipts: receipts?.length || 0
+        });
+
+      } catch (error) {
+        console.error('Error fetching dashboard data:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchDashboardData();
+  }, [user]);
 
   const stats = [
     {
       title: t('dashboard.stats.totalInvoices'),
-      value: "156",
+      value: dashboardData.totalInvoices.toString(),
       icon: FileText,
       change: "+12%",
       trend: "up",
@@ -142,7 +259,7 @@ const Dashboard = () => {
     },
     {
       title: t('dashboard.stats.totalRevenue'),
-      value: "$45,231",
+      value: `$${dashboardData.totalRevenue.toFixed(2)}`,
       icon: DollarSign,
       change: "+18%",
       trend: "up",
@@ -150,7 +267,7 @@ const Dashboard = () => {
     },
     {
       title: t('dashboard.stats.outstanding'),
-      value: "23",
+      value: dashboardData.outstanding.toString(),
       icon: TrendingUp,
       change: "-5%",
       trend: "down",
@@ -158,7 +275,7 @@ const Dashboard = () => {
     },
     {
       title: t('dashboard.stats.thisMonth'),
-      value: "$12,543",
+      value: `$${dashboardData.thisMonth.toFixed(2)}`,
       icon: Calendar,
       change: "+25%",
       trend: "up",
@@ -166,48 +283,191 @@ const Dashboard = () => {
     },
   ];
 
-  const recentInvoices = [
-    {
-      id: 1,
-      number: "INV-1001",
-      customer: "Acme Corporation",
-      date: "Jan 15, 2024",
-      dueDate: "Feb 14, 2024",
-      amount: "$3,250",
-      status: "Paid",
-      priority: "high",
+  // Revenue Chart Data
+  const revenueChartData = {
+    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+    datasets: [
+      {
+        label: 'Revenue ($)',
+        data: dashboardData.revenueData,
+        borderColor: 'rgb(59, 130, 246)',
+        backgroundColor: 'rgba(59, 130, 246, 0.1)',
+        fill: true,
+        tension: 0.4,
+        borderWidth: 3,
+        pointRadius: 5,
+        pointHoverRadius: 8,
+        pointBackgroundColor: 'rgb(59, 130, 246)',
+        pointBorderColor: '#fff',
+        pointBorderWidth: 2,
+        pointHoverBackgroundColor: '#fff',
+        pointHoverBorderColor: 'rgb(59, 130, 246)',
+        pointHoverBorderWidth: 3,
+      }
+    ]
+  };
+
+  const revenueChartOptions = {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: {
+        display: false,
+      },
+      tooltip: {
+        backgroundColor: 'rgba(0, 0, 0, 0.8)',
+        padding: 12,
+        titleFont: { size: 14, weight: 'bold' },
+        bodyFont: { size: 13 },
+        cornerRadius: 8,
+        callbacks: {
+          label: (context) => `Revenue: $${context.parsed.y.toFixed(2)}`
+        }
+      }
     },
-    {
-      id: 2,
-      number: "INV-1002",
-      customer: "Tech Solutions Inc",
-      date: "Jan 14, 2024",
-      dueDate: "Feb 13, 2024",
-      amount: "$1,850",
-      status: "Pending",
-      priority: "medium",
+    scales: {
+      y: {
+        beginAtZero: true,
+        grid: {
+          color: 'rgba(0, 0, 0, 0.05)',
+          drawBorder: false,
+        },
+        ticks: {
+          callback: (value) => `$${value}`
+        }
+      },
+      x: {
+        grid: {
+          display: false,
+          drawBorder: false,
+        }
+      }
     },
-    {
-      id: 3,
-      number: "INV-1003",
-      customer: "Digital Agency Ltd",
-      date: "Jan 13, 2024",
-      dueDate: "Feb 12, 2024",
-      amount: "$4,100",
-      status: "Overdue",
-      priority: "high",
+    animation: {
+      duration: 2000,
+      easing: 'easeInOutQuart',
+    }
+  };
+
+  // Status Doughnut Chart
+  const statusChartData = {
+    labels: ['Paid', 'Pending', 'Overdue', 'Draft'],
+    datasets: [
+      {
+        data: [
+          dashboardData.statusData.paid,
+          dashboardData.statusData.pending,
+          dashboardData.statusData.overdue,
+          dashboardData.statusData.draft
+        ],
+        backgroundColor: [
+          'rgb(34, 197, 94)',
+          'rgb(59, 130, 246)',
+          'rgb(239, 68, 68)',
+          'rgb(249, 115, 22)'
+        ],
+        borderWidth: 0,
+        hoverOffset: 15,
+        spacing: 2,
+      }
+    ]
+  };
+
+  const statusChartOptions = {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: {
+        position: 'bottom',
+        labels: {
+          padding: 15,
+          font: { size: 12, weight: '600' },
+          usePointStyle: true,
+          pointStyle: 'circle',
+        }
+      },
+      tooltip: {
+        backgroundColor: 'rgba(0, 0, 0, 0.8)',
+        padding: 12,
+        cornerRadius: 8,
+      }
     },
-    {
-      id: 4,
-      number: "INV-1004",
-      customer: "StartUp Co",
-      date: "Jan 12, 2024",
-      dueDate: "Feb 11, 2024",
-      amount: "$750",
-      status: "Paid",
-      priority: "low",
+    cutout: '60%',
+    animation: {
+      animateRotate: true,
+      animateScale: true,
+      duration: 2000,
+      easing: 'easeInOutQuart',
+    }
+  };
+
+  // Monthly Activity Bar Chart
+  const monthlyChartData = {
+    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+    datasets: [
+      {
+        label: 'Invoices',
+        data: dashboardData.monthlyData.map(m => m.invoices),
+        backgroundColor: 'rgb(59, 130, 246)',
+        borderRadius: 8,
+        barThickness: 18
+      },
+      {
+        label: 'Estimates',
+        data: dashboardData.monthlyData.map(m => m.estimates),
+        backgroundColor: 'rgb(249, 115, 22)',
+        borderRadius: 8,
+        barThickness: 18
+      },
+      {
+        label: 'Receipts',
+        data: dashboardData.monthlyData.map(m => m.receipts),
+        backgroundColor: 'rgb(34, 197, 94)',
+        borderRadius: 8,
+        barThickness: 18
+      }
+    ]
+  };
+
+  const monthlyChartOptions = {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: {
+        position: 'top',
+        labels: {
+          padding: 15,
+          font: { size: 12, weight: '600' },
+          usePointStyle: true,
+        }
+      },
+      tooltip: {
+        backgroundColor: 'rgba(0, 0, 0, 0.8)',
+        padding: 12,
+        cornerRadius: 8,
+      }
     },
-  ];
+    scales: {
+      y: {
+        beginAtZero: true,
+        grid: {
+          color: 'rgba(0, 0, 0, 0.05)',
+        },
+        ticks: {
+          precision: 0
+        }
+      },
+      x: {
+        grid: {
+          display: false,
+        }
+      }
+    },
+    animation: {
+      duration: 2000,
+      easing: 'easeInOutQuart',
+    }
+  };
 
   if (isLoading) {
     return (
@@ -711,46 +971,101 @@ const Dashboard = () => {
           <div>
             <div className="grid grid-cols-1 xl:grid-cols-3 gap-8 mb-8">
           {/* Revenue Chart */}
-          <Card className="xl:col-span-2 bg-white/80 backdrop-blur-sm border-gray-200/50">
+          <Card className="xl:col-span-2 bg-white/80 backdrop-blur-sm border-gray-200/50 elegant-shadow hover:shadow-xl transition-smooth animate-fade-in">
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <TrendingUp className="h-5 w-5 text-blue-600" />
-                {t('dashboard.charts.revenueOverview')}
+                {t('dashboard.charts.revenueOverview', 'Revenue Overview')}
               </CardTitle>
               <CardDescription>
-                {t('dashboard.charts.revenueDescription')}
+                {t('dashboard.charts.revenueDescription', 'Monthly revenue trends over the last 12 months')}
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <RevenueChart t={t} />
+              <div className="h-64 w-full">
+                <Line data={revenueChartData} options={revenueChartOptions} />
+              </div>
             </CardContent>
           </Card>
 
           {/* Invoice Status Chart */}
-          <Card className="bg-white/80 backdrop-blur-sm border-gray-200/50">
+          <Card className="bg-white/80 backdrop-blur-sm border-gray-200/50 elegant-shadow hover:shadow-xl transition-smooth animate-fade-in">
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <FileText className="h-5 w-5 text-purple-600" />
-                {t('dashboard.charts.invoiceStatus')}
+                {t('dashboard.charts.invoiceStatus', 'Invoice Status')}
               </CardTitle>
               <CardDescription>
-                {t('dashboard.charts.invoiceStatusDescription')}
+                {t('dashboard.charts.invoiceStatusDescription', 'Distribution of invoice statuses')}
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <InvoiceStatusChart t={t} />
-              <div className="flex justify-center gap-4 mt-4 text-xs">
-                <div className="flex items-center gap-1">
-                  <div className="w-3 h-3 bg-green-500 rounded-full"></div>
-                  <span>{t('dashboard.charts.statuses.paid')}</span>
+              <div className="h-64 w-full flex items-center justify-center">
+                <div className="w-full max-w-[240px]">
+                  <Doughnut data={statusChartData} options={statusChartOptions} />
                 </div>
-                <div className="flex items-center gap-1">
-                  <div className="w-3 h-3 bg-yellow-500 rounded-full"></div>
-                  <span>{t('dashboard.charts.statuses.pending')}</span>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Monthly Activity Chart */}
+        <Card className="bg-white/80 backdrop-blur-sm border-gray-200/50 elegant-shadow hover:shadow-xl transition-smooth animate-fade-in mb-8">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Calendar className="h-5 w-5 text-green-600" />
+              {t('dashboard.charts.monthlyActivity', 'Monthly Activity')}
+            </CardTitle>
+            <CardDescription>
+              {t('dashboard.charts.monthlyActivityDescription', 'Invoices, estimates, and receipts created per month')}
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="h-80 w-full">
+              <Bar data={monthlyChartData} options={monthlyChartOptions} />
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Additional Stats Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+          <Card className="bg-gradient-to-br from-blue-50 to-cyan-50 border-blue-200 elegant-shadow hover:shadow-xl transition-smooth animate-fade-in hover:scale-105">
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-blue-700 text-sm font-medium mb-1">Total Customers</p>
+                  <p className="text-3xl font-bold text-blue-900">{dashboardData.customers}</p>
                 </div>
-                <div className="flex items-center gap-1">
-                  <div className="w-3 h-3 bg-red-500 rounded-full"></div>
-                  <span>{t('dashboard.charts.statuses.overdue')}</span>
+                <div className="p-4 bg-blue-600 rounded-xl shadow-lg">
+                  <Users className="h-7 w-7 text-white" />
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card className="bg-gradient-to-br from-orange-50 to-amber-50 border-orange-200 elegant-shadow hover:shadow-xl transition-smooth animate-fade-in hover:scale-105">
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-orange-700 text-sm font-medium mb-1">Total Estimates</p>
+                  <p className="text-3xl font-bold text-orange-900">{dashboardData.estimates}</p>
+                </div>
+                <div className="p-4 bg-orange-600 rounded-xl shadow-lg">
+                  <FileText className="h-7 w-7 text-white" />
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card className="bg-gradient-to-br from-green-50 to-emerald-50 border-green-200 elegant-shadow hover:shadow-xl transition-smooth animate-fade-in hover:scale-105">
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-green-700 text-sm font-medium mb-1">Total Receipts</p>
+                  <p className="text-3xl font-bold text-green-900">{dashboardData.receipts}</p>
+                </div>
+                <div className="p-4 bg-green-600 rounded-xl shadow-lg">
+                  <Receipt className="h-7 w-7 text-white" />
                 </div>
               </div>
             </CardContent>
@@ -769,8 +1084,8 @@ const Dashboard = () => {
                       {t('dashboard.invoices.description')}
                     </CardDescription>
                   </div>
-                  <Badge variant="secondary" className="w-fit bg-blue-100 text-blue-700 hover:bg-blue-200">
-                    {t('dashboard.invoices.freeMonthly')}
+                    <Badge variant="secondary" className="w-fit bg-blue-100 text-blue-700 hover:bg-blue-200">
+                    {dashboardData.recentInvoices.length} {t('dashboard.invoices.freeMonthly', 'invoices')}
                   </Badge>
                 </div>
               </CardHeader>
@@ -779,13 +1094,13 @@ const Dashboard = () => {
                   <div className="flex flex-col lg:flex-row gap-4 items-start lg:items-center justify-between">
                     <TabsList className="grid w-full lg:w-auto grid-cols-4 bg-muted/50 p-1">
                       <TabsTrigger value="all" className="data-[state=active]:bg-white data-[state=active]:shadow-sm">
-                        {t('dashboard.invoices.tabs.all')} ({recentInvoices.length})
+                        {t('dashboard.invoices.tabs.all', 'All')} ({dashboardData.recentInvoices.length})
                       </TabsTrigger>
                       <TabsTrigger value="outstanding" className="data-[state=active]:bg-white data-[state=active]:shadow-sm">
-                        {t('dashboard.invoices.tabs.outstanding')} (2)
+                        {t('dashboard.invoices.tabs.outstanding', 'Outstanding')} ({dashboardData.outstanding})
                       </TabsTrigger>
                       <TabsTrigger value="drafts" className="data-[state=active]:bg-white data-[state=active]:shadow-sm">
-                        {t('dashboard.invoices.tabs.drafts')} (0)
+                        {t('dashboard.invoices.tabs.drafts', 'Drafts')} ({dashboardData.statusData.draft})
                       </TabsTrigger>
                       <TabsTrigger value="more" className="data-[state=active]:bg-white data-[state=active]:shadow-sm">
                         {t('dashboard.invoices.tabs.more')}
@@ -817,27 +1132,52 @@ const Dashboard = () => {
 
                       {/* Table Rows */}
                       <div className="divide-y divide-gray-200/30">
-                        {recentInvoices.map((invoice) => (
-                          <div
-                            key={invoice.id}
-                            className="grid grid-cols-12 gap-4 p-4 hover:bg-blue-50/30 transition-all duration-200 cursor-pointer group"
-                          >
-                            <div className="col-span-3 font-medium text-sm">
-                              {invoice.number}
+                        {dashboardData.recentInvoices.length === 0 ? (
+                          <div className="p-8 text-center text-muted-foreground">
+                            <FileText className="h-12 w-12 mx-auto mb-3 opacity-30" />
+                            <p className="text-sm">{t('dashboard.invoices.noInvoices', 'No invoices yet. Create your first one!')}</p>
+                          </div>
+                        ) : (
+                          dashboardData.recentInvoices.map((invoice) => (
+                            <div
+                              key={invoice.id}
+                              className="grid grid-cols-12 gap-4 p-4 hover:bg-blue-50/30 transition-all duration-200 cursor-pointer group animate-fade-in"
+                            >
+                              <div className="col-span-3 font-medium text-sm">
+                                {invoice.number}
+                              </div>
+                              <div className="col-span-3 text-sm">
+                                {invoice.customer}
+                              </div>
+                              <div className="col-span-2 text-sm text-muted-foreground">
+                                {invoice.dueDate}
+                              </div>
+                              <div className="col-span-2 font-medium text-sm">
+                                {invoice.amount}
+                              </div>
+                              <div className="col-span-2">
+                                <Badge
+                                  variant={
+                                    invoice.status === "paid"
+                                      ? "default"
+                                      : invoice.status === "overdue"
+                                      ? "destructive"
+                                      : "secondary"
+                                  }
+                                  className={`
+                                    ${invoice.status === "paid" ? "bg-green-100 text-green-700 hover:bg-green-200" : ""}
+                                    ${invoice.status === "pending" ? "bg-blue-100 text-blue-700 hover:bg-blue-200" : ""}
+                                    ${invoice.status === "overdue" ? "bg-red-100 text-red-700 hover:bg-red-200" : ""}
+                                    ${invoice.status === "draft" ? "bg-gray-100 text-gray-700 hover:bg-gray-200" : ""}
+                                  `}
+                                >
+                                  {invoice.status.charAt(0).toUpperCase() + invoice.status.slice(1)}
+                                </Badge>
+                              </div>
                             </div>
-                            <div className="col-span-3 text-sm">
-                              {invoice.customer}
-                            </div>
-                            <div className="col-span-2 text-sm text-muted-foreground">
-                              {invoice.dueDate}
-                            </div>
-                            <div className="col-span-2 font-medium text-sm">
-                              {invoice.amount}
-                            </div>
-                            <div className="col-span-2">
-                              <Badge
-                                variant={
-                                  invoice.status === "Paid"
+                          ))
+                        )}
+                      </div>
                                     ? "default"
                                     : invoice.status === "Overdue"
                                     ? "destructive"
