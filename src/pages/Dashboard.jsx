@@ -1178,30 +1178,6 @@ const Dashboard = () => {
                           ))
                         )}
                       </div>
-                                    ? "default"
-                                    : invoice.status === "Overdue"
-                                    ? "destructive"
-                                    : "secondary"
-                                }
-                                className={`text-xs ${
-                                  invoice.status === "Paid" 
-                                    ? "bg-green-100 text-green-700 hover:bg-green-200" 
-                                    : invoice.status === "Overdue"
-                                    ? "bg-red-100 text-red-700 hover:bg-red-200"
-                                    : "bg-amber-100 text-amber-700 hover:bg-amber-200"
-                                }`}
-                              >
-                                {invoice.status === "Paid" 
-                                  ? t('dashboard.charts.statuses.paid')
-                                  : invoice.status === "Overdue"
-                                  ? t('dashboard.charts.statuses.overdue')
-                                  : t('dashboard.charts.statuses.pending')
-                                }
-                              </Badge>
-                            </div>
-                          </div>
-                        ))}
-                      </div>
                     </div>
                   </TabsContent>
                 </Tabs>
