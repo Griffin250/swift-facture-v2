@@ -1,1 +1,10 @@
 project_id = "kvvqkzwrkselznrnqcbi"
+
+[functions.check-trial-expiry]
+verify_jwt = false
+
+[functions.send-trial-reminders]
+verify_jwt = false
+
+[functions.send-trial-email]
+verify_jwt = false

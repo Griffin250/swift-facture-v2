@@ -27,6 +27,8 @@ import AdminPage from "./pages/AdminPage";
 import AdminRoute from "./components/admin/AdminRoute";
 import EmailVerification from "./pages/EmailVerification";
 import FrenchInvoiceDemo from "./pages/FrenchInvoiceDemo";
+import Billing from "./pages/Billing";
+import { TrialExpiredModal } from "./components/billing/TrialExpiredModal";
 
 const queryClient = new QueryClient();
 
@@ -37,6 +39,7 @@ const AppContent = () => {
   return (
     <>
       {!isAdminRoute && <Header />}
+      <TrialExpiredModal />
       
       <Routes>
         {navItems.map(({ to, page }) => (
@@ -55,6 +58,7 @@ const AppContent = () => {
         <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
         <Route path="/profile/edit" element={<ProtectedRoute><EditProfile /></ProtectedRoute>} />
         <Route path="/settings" element={<ProtectedRoute><Settings /></ProtectedRoute>} />
+        <Route path="/billing" element={<ProtectedRoute><Billing /></ProtectedRoute>} />
         <Route path="/debug-auth" element={<DebugAuth />} />
         <Route path="/customizable-invoice" element={<FrenchInvoiceDemo />} />
         <Route path="/admin/*" element={<ProtectedRoute><AdminRoute><AdminPage /></AdminRoute></ProtectedRoute>} />
