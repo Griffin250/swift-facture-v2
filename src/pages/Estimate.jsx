@@ -12,11 +12,18 @@ import {
 } from "@/components/ui/dialog";
 import EstimateTemplate from "@/components/templates/EstimateTemplate";
 import EstimateProfessional from "@/components/templates/EstimateProfessional";
+import SmartCustomerSelector from "@/components/SmartCustomerSelector";
+
+import html2canvas from "html2canvas";
+import { estimateService } from "@/services/estimateService";
+import { jsPDF } from "jspdf";
 // ...existing code...
 
 const currencyFmt = (n, currency = "€") => `${currency}${n.toFixed(2)}`;
 
 export const Estimate = () => {
+  // Success message state
+  const [successMsg, setSuccessMsg] = React.useState("");
   const { t } = useTranslation();
   const [isLoading, setIsLoading] = React.useState(true);
   const [showTemplatePreview, setShowTemplatePreview] = React.useState(false);
@@ -81,34 +88,17 @@ export const Estimate = () => {
     setShowTemplatePreview(true);
   };
   // Delete estimate
-  const deleteEstimate = (number) => {
-    const raw = localStorage.getItem("saved_invoices");
-    if (!raw) return;
-    try {
-      let all = JSON.parse(raw);
-      all = all.filter((e) => e.number !== number);
-      localStorage.setItem("saved_invoices", JSON.stringify(all));
-      fetchInvoices();
-    } catch {
-      // Ignore errors
-    }
+  const deleteEstimate = async (id) => {
+    const { error } = await estimateService.deleteEstimate(id);
+    if (!error) fetchInvoices();
+    else setSuccessMsg('Error deleting estimate: ' + error.message);
   };
 
   // Change status
-  const changeStatus = (number, newStatus) => {
-    const raw = localStorage.getItem("saved_invoices");
-    if (!raw) return;
-    try {
-      let all = JSON.parse(raw);
-      const idx = all.findIndex((e) => e.number === number);
-      if (idx !== -1) {
-        all[idx].status = newStatus;
-        localStorage.setItem("saved_invoices", JSON.stringify(all));
-        fetchInvoices();
-      }
-    } catch {
-      // Ignore errors
-    }
+  const changeStatus = async (id, newStatus) => {
+    const { error } = await estimateService.updateEstimateStatus(id, newStatus);
+    if (!error) fetchInvoices();
+    else setSuccessMsg('Error updating status: ' + error.message);
   };
   // Form visibility and edit state
   const [showForm, setShowForm] = React.useState(false);
@@ -142,16 +132,13 @@ export const Estimate = () => {
   // --- Fetch and display all saved invoices ---
   const [invoices, setInvoices] = React.useState([]);
   // Helper to get all saved estimates from localStorage
-  const fetchInvoices = () => {
-    const raw = localStorage.getItem("saved_invoices");
-    if (raw) {
-      try {
-        setInvoices(JSON.parse(raw));
-      } catch {
-        setInvoices([]);
-      }
-    } else {
+  // Fetch estimates from Supabase
+  const fetchInvoices = async () => {
+    const { data, error } = await estimateService.getAllEstimates();
+    if (error || !data) {
       setInvoices([]);
+    } else {
+      setInvoices(data);
     }
   };
   const [searchTerm, setSearchTerm] = React.useState("");
@@ -162,35 +149,26 @@ export const Estimate = () => {
     fetchInvoices();
   }, []);
   // Save as draft
-  const saveDraft = () => {
-    const newDraft = {
-      number: estimateNo,
+  const saveDraft = async () => {
+    const estimateData = {
+      estimate_number: estimateNo,
       date: issueDate,
-      customer,
+      customer_id: selectedCustomer?.id || null,
+      status,
       total,
       currency,
-      status,
       notes,
       items,
-      validUntil,
+      valid_until: validUntil,
       company,
     };
-    let all = [];
-    try {
-      const raw = localStorage.getItem("saved_invoices");
-      if (raw) all = JSON.parse(raw);
-    } catch {
-      // Ignore errors in saveDraft
-    }
-    // If exists, update; else add
-    const idx = all.findIndex((e) => e.number === newDraft.number);
-    if (idx !== -1) {
-      all[idx] = newDraft;
+    const { error } = await estimateService.createEstimate(estimateData);
+    if (error) {
+      setSuccessMsg("Error saving estimate: " + error.message);
     } else {
-      all.push(newDraft);
+      setSuccessMsg("Estimate saved as draft successfully!");
+      fetchInvoices();
     }
-    localStorage.setItem("saved_invoices", JSON.stringify(all));
-    fetchInvoices();
   };
 
   // Save as finalized invoice
@@ -222,12 +200,39 @@ export const Estimate = () => {
     }
     localStorage.setItem("saved_invoices", JSON.stringify(all));
     fetchInvoices();
+    setSuccessMsg("Estimate finalized and saved successfully!");
   };
 
-  // Download as PDF (stub)
-  const downloadPDF = () => {
-    // TODO: Integrate with your PDF generator
-    openSoon("Download PDF");
+  // Download as PDF (functional)
+  const downloadPDF = async () => {
+    const element = document.querySelector('.estimate-preview');
+    if (!element) {
+      setSuccessMsg('Estimate preview not found');
+      return;
+    }
+    const canvas = await html2canvas(element, {
+      scale: 2,
+      useCORS: true,
+      allowTaint: true
+    });
+    const imgData = canvas.toDataURL('image/png');
+    // Strict A4 size: 210 x 297 mm
+    const pdf = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
+    const imgWidth = 210;
+    const pageHeight = 297;
+    const imgHeight = (canvas.height * imgWidth) / canvas.width;
+    let heightLeft = imgHeight;
+    let position = 0;
+    pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+    heightLeft -= pageHeight;
+    while (heightLeft > 0) {
+      position = heightLeft - imgHeight;
+      pdf.addPage();
+      pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+      heightLeft -= pageHeight;
+    }
+    pdf.save(`${estimateNo || 'estimate'}.pdf`);
+    setSuccessMsg('Estimate downloaded as PDF successfully!');
   };
 
   // Send estimate (stub)
@@ -240,8 +245,8 @@ export const Estimate = () => {
   // Filtered invoices
   const filteredInvoices = invoices.filter((inv) => {
     const matchesSearch =
-      inv.number.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      inv.customer.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      (inv.number && inv.number.toLowerCase().includes(searchTerm.toLowerCase())) ||
+      (inv.customer && inv.customer.toLowerCase().includes(searchTerm.toLowerCase())) ||
       (inv.notes && inv.notes.toLowerCase().includes(searchTerm.toLowerCase()));
     const matchesCurrency =
       currencyFilter === "All" || inv.currency === currencyFilter;
@@ -253,6 +258,9 @@ export const Estimate = () => {
   // Basic meta
   const [company, setCompany] = React.useState("My Company Ltd");
   const [customer, setCustomer] = React.useState("Acme Oy");
+  const [selectedCustomer, setSelectedCustomer] = React.useState(null);
+  const [isManualCustomerMode, setIsManualCustomerMode] = React.useState(false);
+
   const [estimateNo, setEstimateNo] = React.useState("EST-0001");
   const [issueDate, setIssueDate] = React.useState(() =>
     new Date().toISOString().slice(0, 10)
@@ -386,8 +394,27 @@ export const Estimate = () => {
     setStatus("draft");
   };
 
-  const isAuthenticated =
-    typeof window !== "undefined" && !!localStorage.getItem("bearer_token");
+  // Handle customer selection from Smart Customer Selector
+  const handleCustomerSelect = (customerData) => {
+    setSelectedCustomer(customerData);
+    if (customerData) {
+      setCustomer(customerData.name || '');
+      if (customerData.company) setCompany(customerData.company);
+      if (customerData.email) setNotes(`Email: ${customerData.email}`);
+      // Add more fields as needed
+    }
+  };
+
+  // Handle manual customer mode toggle
+  const handleManualModeChange = (isManual) => {
+    setIsManualCustomerMode(isManual);
+    if (!isManual) {
+      setSelectedCustomer(null);
+      setCustomer("Acme Oy");
+    }
+  };
+
+
 
   // Loading simulation
   React.useEffect(() => {
@@ -405,6 +432,12 @@ export const Estimate = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-white p-4">
+      {successMsg && (
+        <div className="fixed top-6 left-1/2 transform -translate-x-1/2 z-50 bg-green-100 text-green-800 px-6 py-3 rounded-lg shadow-lg font-semibold animate-fade-in">
+          {successMsg}
+          <button className="ml-4 text-green-600 hover:text-green-900" onClick={() => setSuccessMsg("")}>×</button>
+        </div>
+      )}
       <div className="max-w-7xl mx-auto">
         {/* Header Section */}
         <div className="mb-8 pt-6">
@@ -583,24 +616,13 @@ export const Estimate = () => {
               <table className="w-full text-sm">
                 <thead className="bg-gradient-to-r from-gray-50 to-gray-100">
                   <tr>
-                    <th className="py-4 px-4 font-semibold text-gray-700 text-left">
-                      {t('estimatePage.number')}
-                    </th>
-                    <th className="py-4 px-4 font-semibold text-gray-700 text-left">
-                      {t('estimatePage.date')}
-                    </th>
-                    <th className="py-4 px-4 font-semibold text-gray-700 text-left">
-                      {t('estimatePage.customer')}
-                    </th>
-                    <th className="py-4 px-4 font-semibold text-gray-700 text-left">
-                      {t('estimatePage.total')}
-                    </th>
-                    <th className="py-4 px-4 font-semibold text-gray-700 text-left">
-                      {t('estimatePage.status')}
-                    </th>
-                    <th className="py-4 px-4 font-semibold text-gray-700 text-left">
-                      {t('estimatePage.actions')}
-                    </th>
+                    <th className="py-4 px-4 font-semibold text-gray-700 text-left">#</th>
+                    <th className="py-4 px-4 font-semibold text-gray-700 text-left">{t('estimatePage.number')}</th>
+                    <th className="py-4 px-4 font-semibold text-gray-700 text-left">{t('estimatePage.date')}</th>
+                    <th className="py-4 px-4 font-semibold text-gray-700 text-left">{t('estimatePage.customer')}</th>
+                    <th className="py-4 px-4 font-semibold text-gray-700 text-left">{t('estimatePage.total')}</th>
+                    <th className="py-4 px-4 font-semibold text-gray-700 text-left">{t('estimatePage.status')}</th>
+                    <th className="py-4 px-4 font-semibold text-gray-700 text-left">{t('estimatePage.actions')}</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-100">
@@ -628,24 +650,20 @@ export const Estimate = () => {
                       </td>
                     </tr>
                   ) : (
-                    filteredInvoices.map((inv) => (
-                      <tr
-                        key={inv.number}
-                        className="hover:bg-blue-50 transition-colors"
-                      >
-                        <td className="py-4 px-4 font-mono font-semibold text-blue-700">
-                          {inv.number}
-                        </td>
-                        <td className="py-4 px-4 text-gray-600">{inv.date}</td>
-                        <td className="py-4 px-4 font-semibold text-black">
-                          {inv.customer}
-                        </td>
-                        <td className="py-4 px-4 font-bold text-blue-700">
-                          {currencyFmt(inv.total, inv.currency)}
-                        </td>
-                        <td className="py-4 px-4">
-                          <span
-                            className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium ${
+                    filteredInvoices.map((inv, idx) => {
+                      let customerName = inv.customer;
+                      if (!customerName && inv.customers && inv.customers.name) {
+                        customerName = inv.customers.name;
+                      }
+                      return (
+                        <tr key={inv.number} className="hover:bg-blue-50 transition-colors">
+                          <td className="py-4 px-4 font-mono font-semibold text-blue-700">{idx + 1}</td>
+                          <td className="py-4 px-4 font-mono font-semibold text-blue-700">{inv.number}</td>
+                          <td className="py-4 px-4 text-gray-600">{inv.date}</td>
+                          <td className="py-4 px-4 font-semibold text-black">{customerName}</td>
+                          <td className="py-4 px-4 font-bold text-blue-700">{currencyFmt(inv.total, inv.currency)}</td>
+                          <td className="py-4 px-4">
+                            <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium ${
                               inv.status === "draft"
                                 ? "bg-gray-100 text-gray-800"
                                 : inv.status === "sent"
@@ -653,19 +671,18 @@ export const Estimate = () => {
                                 : inv.status === "accepted"
                                 ? "bg-green-100 text-green-800"
                                 : "bg-red-100 text-red-800"
-                            }`}
-                          >
-                            {inv.status}
-                          </span>
-                        </td>
-                        <td className="py-4 px-4">
-                          <div className="flex gap-2 items-center">
+                            }`}>
+                              {inv.status}
+                            </span>
+                          </td>
+                          <td className="py-4 px-4">
+                            <div className="flex gap-2 items-center">
+                              {/* View Estimate */}
                               <button
                                 onClick={() => {
                                   setShowTemplatePreview(true);
-                                  // Pass estimate data to preview
                                   setCompany(inv.company);
-                                  setCustomer(inv.customer);
+                                  setCustomer(customerName);
                                   setEstimateNo(inv.number);
                                   setIssueDate(inv.date);
                                   setValidUntil(inv.validUntil);
@@ -679,77 +696,49 @@ export const Estimate = () => {
                                 className="text-purple-600 hover:text-purple-800 p-2 rounded hover:bg-purple-50 transition-colors"
                                 title={t('estimatePage.preview')}
                               >
-                                <svg
-                                  className="w-4 h-4"
-                                  fill="none"
-                                  stroke="currentColor"
-                                  viewBox="0 0 24 24"
-                                >
-                                  <path
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    strokeWidth={2}
-                                    d="M15 12a3 3 0 11-6 0 3 3 0 016 0zm6 0a9 9 0 11-18 0 9 9 0 0118 0z"
-                                  />
+                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0zm6 0a9 9 0 11-18 0 9 9 0 0118 0z" />
                                 </svg>
                               </button>
-                            <button
+                              {/* Edit Estimate */}
+                              <button
                                 onClick={() => {
                                   editEstimate(inv.number);
-                                  setShowTemplatePreview(true);
+                                  setShowForm(true);
                                 }}
-                              className="text-blue-600 hover:text-blue-800 p-2 rounded hover:bg-blue-50 transition-colors"
-                              title={t('estimatePage.edit')}
-                            >
-                              <svg
-                                className="w-4 h-4"
-                                fill="none"
-                                stroke="currentColor"
-                                viewBox="0 0 24 24"
+                                className="text-blue-600 hover:text-blue-800 p-2 rounded hover:bg-blue-50 transition-colors"
+                                title={t('estimatePage.edit')}
                               >
-                                <path
-                                  strokeLinecap="round"
-                                  strokeLinejoin="round"
-                                  strokeWidth={2}
-                                  d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
-                                />
-                              </svg>
-                            </button>
-                            <button
-                              onClick={() => deleteEstimate(inv.number)}
-                              className="text-red-600 hover:text-red-800 p-2 rounded hover:bg-red-50 transition-colors"
-                              title={t('estimatePage.delete')}
-                            >
-                              <svg
-                                className="w-4 h-4"
-                                fill="none"
-                                stroke="currentColor"
-                                viewBox="0 0 24 24"
+                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                                </svg>
+                              </button>
+                              {/* Delete Estimate */}
+                              <button
+                                onClick={() => deleteEstimate(inv.id)}
+                                className="text-red-600 hover:text-red-800 p-2 rounded hover:bg-red-50 transition-colors"
+                                title={t('estimatePage.delete')}
                               >
-                                <path
-                                  strokeLinecap="round"
-                                  strokeLinejoin="round"
-                                  strokeWidth={2}
-                                  d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
-                                />
-                              </svg>
-                            </button>
-                            <select
-                              value={inv.status}
-                              onChange={(e) =>
-                                changeStatus(inv.number, e.target.value)
-                              }
-                              className="text-xs border border-gray-200 rounded px-2 py-1 focus:ring-2 focus:ring-blue-500"
-                            >
-                              <option value="draft">Draft</option>
-                              <option value="sent">Sent</option>
-                              <option value="accepted">Accepted</option>
-                              <option value="declined">Declined</option>
-                            </select>
-                          </div>
-                        </td>
-                      </tr>
-                    ))
+                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                </svg>
+                              </button>
+                              {/* Status Dropdown */}
+                              <select
+                                value={inv.status}
+                                onChange={(e) => changeStatus(inv.id, e.target.value)}
+                                className="text-xs border border-gray-200 rounded px-2 py-1 focus:ring-2 focus:ring-blue-500"
+                              >
+                                <option value="draft">Draft</option>
+                                <option value="sent">Sent</option>
+                                <option value="accepted">Accepted</option>
+                                <option value="declined">Declined</option>
+                              </select>
+                            </div>
+                          </td>
+                        </tr>
+                      );
+                    })
                   )}
                 </tbody>
               </table>
@@ -791,30 +780,7 @@ export const Estimate = () => {
             </div>
 
             <div className="p-6">
-              {!isAuthenticated && (
-                <div className="mb-6 rounded-lg bg-orange-50 border border-orange-200 p-4 text-sm text-orange-800">
-                  <div className="flex items-center gap-2">
-                    <svg
-                      className="w-5 h-5"
-                      fill="currentColor"
-                      viewBox="0 0 20 20"
-                    >
-                      <path
-                        fillRule="evenodd"
-                        d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z"
-                        clipRule="evenodd"
-                      />
-                    </svg>
-                    {t('estimatePage.notLoggedInMessage')}
-                  </div>
-                  <a
-                    href="/login"
-                    className="text-orange-600 hover:text-orange-800 underline mt-2 inline-block"
-                  >
-                    {t('estimatePage.goToLogin')}
-                  </a>
-                </div>
-              )}
+            
 {showTemplatePreview && (
   <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm px-2 py-10">
     <div className="relative bg-white rounded-2xl shadow-2xl w-full max-w-2xl mx-auto p-2 md:p-8 animate-fade-in" style={{maxHeight: 'calc(100vh - 5rem)', overflowY: 'auto'}}>
@@ -827,19 +793,35 @@ export const Estimate = () => {
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
         </svg>
       </button>
-      <EstimateProfessional estimate={{
-        company: { name: company },
-        customer: { name: customer },
-        number: estimateNo,
-        date: issueDate,
-        validUntil,
-        currency,
-        taxRate,
-        discount,
-        notes,
-        items,
-        status
-      }} />
+      <div className="estimate-preview">
+        <EstimateProfessional estimate={{
+          company: { name: company },
+          customer: { name: customer },
+          number: estimateNo,
+          date: issueDate,
+          validUntil,
+          currency,
+          taxRate,
+          discount,
+          notes,
+          items,
+          status
+        }} />
+      </div>
+      <div className="flex gap-3 justify-end mt-6">
+        <button
+          onClick={downloadPDF}
+          className="bg-gradient-to-r from-orange-500 to-amber-500 text-white px-4 py-2 rounded-lg font-semibold shadow hover:from-orange-600 hover:to-amber-600 transition-all"
+        >
+          Download PDF
+        </button>
+        <button
+          onClick={saveDraft}
+          className="bg-blue-500 text-white px-4 py-2 rounded-lg font-semibold shadow hover:bg-blue-600 transition-all"
+        >
+          Save Estimate
+        </button>
+      </div>
     </div>
   </div>
 )}
@@ -875,14 +857,12 @@ export const Estimate = () => {
                           className="w-full rounded-lg border border-gray-300 bg-white px-4 py-3 text-black focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                         />
                       </div>
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
-                          {t('estimatePage.customer')}
-                        </label>
-                        <input
-                          value={customer}
-                          onChange={(e) => setCustomer(e.target.value)}
-                          className="w-full rounded-lg border border-gray-300 bg-white px-4 py-3 text-black focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      <div className="md:col-span-2">
+                        <SmartCustomerSelector
+                          onCustomerSelect={handleCustomerSelect}
+                          selectedCustomer={selectedCustomer}
+                          onManualModeChange={handleManualModeChange}
+                          isManualMode={isManualCustomerMode}
                         />
                       </div>
                       <div>
@@ -1216,7 +1196,7 @@ export const Estimate = () => {
         </svg>
       </button>
 
-      {/* Download PDF Button */}
+      {/* Download & Save Buttons on Preview */}
       <button
         onClick={downloadPDF}
         className="group w-full bg-gradient-to-r from-orange-500 to-amber-500 text-white px-4 py-2 rounded-xl hover:from-orange-600 hover:to-amber-600 hover:scale-[1.02] transition-all duration-300 flex items-center justify-center gap-3 shadow-lg hover:shadow-xl"
@@ -1234,6 +1214,7 @@ export const Estimate = () => {
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
         </svg>
       </button>
+    
 
       {/* Send Email Button */}
       <button

@@ -1,0 +1,18 @@
+{
+  "chatbot": {
+    "openChat": "Ouvrir le chat",
+    "title": "Support SwiftFacture",
+    "comingSoon": "Bientôt disponible",
+    "minimize": "Minimiser le chat",
+    "close": "Fermer le chat",
+    "welcome": "Bonjour 👋, je suis SwiftBot. Comment puis-je vous aider aujourd'hui ?",
+    "botDevelopment": "Le bot est encore en développement. Les réponses automatiques seront bientôt disponibles.",
+    "liveSupportTitle": "Portail d'assistance en direct",
+    "liveSupportDesc": "Vous êtes maintenant connecté à un agent d'assistance en direct. Veuillez décrire votre problème en détail pour une assistance plus rapide.",
+    "liveSupportUrgent": "Pour les problèmes urgents, visitez notre <a href='{{supportLink}}' class='text-blue-600 dark:text-blue-400 underline'>Centre d'assistance</a> ou envoyez un email à <a href='mailto:{{supportEmail}}' class='text-blue-600 dark:text-blue-400 underline'>support@swiftfacture.com</a>.",
+    "liveSupportOnline": "Nos agents sont en ligne et prêts à vous aider en direct.",
+    "inputSupport": "Discussion avec le support...",
+  "inputDefault": "Tapez votre message...",
+  "aiReply": "Ceci est une réponse automatique de l'IA. Comment puis-je vous aider davantage ?"
+  }
+}

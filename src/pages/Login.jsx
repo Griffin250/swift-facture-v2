@@ -1,9 +1,10 @@
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation, NavLink } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/components/ui/use-toast';
 import { Eye, EyeOff, Mail, CheckCircle } from 'lucide-react';
+import LanguageSwitcher from '@/components/LanguageSwitcher';
 
 const AuthPage = () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -337,7 +338,7 @@ const AuthPage = () => {
       <div className="bg-gradient-to-r from-green-500 to-emerald-600 text-white px-6 py-4 shadow-lg">
         <div className="max-w-6xl mx-auto flex items-center justify-between">
           <div className="flex items-center space-x-3">
-            <CheckCircle className="w-6 h-6 animate-bounce" />
+            <CheckCircle className="w h-6 animate-bounce" />
             <div>
               <p className="font-semibold text-lg">
                 {t('auth.success.accountCreated', 'Account Created Successfully!')}
@@ -361,20 +362,55 @@ const AuthPage = () => {
       {/* Success Notification Bar */}
       <SuccessNotificationBar />
       
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
-        <div className="max-w-md w-full">
-        {/* Header */}
-        <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">
-            {isLogin ? t('auth.login.title') : t('auth.register.title')}
-          </h1>
-          <p className="text-gray-600">
-            {isLogin ? t('auth.login.subtitle') : t('auth.register.subtitle')}
-          </p>
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/30 to-indigo-50/20 flex flex-col">
+        {/* Top Bar with Logo and Language Switcher */}
+        <div className="flex items-center justify-between px-6 py-4">
+          {/* Left - Logo and Title */}
+          <NavLink 
+            to="/" 
+            className="flex items-center space-x-3 hover:opacity-80 transition-opacity"
+            title={t('navigation.backToHome', 'Back to Home')}
+          >
+            <div className="w-10 h-10 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-lg flex items-center justify-center shadow-lg">
+              <img
+                src="/assets/logo/SwiftFactureLogo.png"
+                alt="SwiftFacture Logo"
+                className="w-6 h-6"
+                onError={(e) => {
+                  e.target.style.display = 'none';
+                  e.target.nextSibling.style.display = 'block';
+                }}
+              />
+              <div className="text-white font-bold text-lg hidden">SF</div>
+            </div>
+            <div>
+              <h1 className="text-xl font-bold text-gray-900">
+                {t('brand.name', 'SwiftFacture')}
+              </h1>
+            </div>
+          </NavLink>
+
+          {/* Right - Language Switcher */}
+          <div className="flex items-center">
+            <LanguageSwitcher className="text-sm" compact={true} />
+          </div>
         </div>
 
+        {/* Main Content */}
+        <div className="flex-1 flex items-center justify-center p-4">
+          <div className="max-w-md w-full">
+            {/* Auth Card Header */}
+            <div className="text-center mb-8">
+              <h2 className="text-2xl font-semibold text-gray-900 mb-2">
+                {isLogin ? t('auth.login.title') : t('auth.register.title')}
+              </h2>
+              <p className="text-gray-500 text-sm">
+                {isLogin ? t('auth.login.subtitle') : t('auth.register.subtitle')}
+              </p>
+            </div>
+
         {/* Auth Card */}
-        <div className="bg-white rounded-2xl shadow-xl p-8">
+        <div className="bg-white rounded-lg shadow-lg border border-gray-200/50 p-8">
           {/* Form */}
           <form onSubmit={handleSubmit} className="space-y-4">
             {!isLogin && (
@@ -422,10 +458,10 @@ const AuthPage = () => {
                 name="email"
                 value={formData.email}
                 onChange={handleInputChange}
-                className={`w-full px-4 py-3 border rounded-xl focus:ring-2 focus:border-transparent transition-all duration-200 ${
+                className={`w-full px-3 py-3 border rounded-md focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all duration-200 placeholder-gray-400 ${
                   fieldErrors.email 
-                    ? 'border-red-300 focus:ring-red-500' 
-                    : 'border-gray-300 focus:ring-blue-500'
+                    ? 'border-red-300 focus:ring-red-500/20 focus:border-red-500' 
+                    : 'border-gray-300 hover:border-gray-400'
                 }`}
                 placeholder={t('auth.form.placeholders.email')}
                 required
@@ -446,10 +482,10 @@ const AuthPage = () => {
                   name="password"
                   value={formData.password}
                   onChange={handleInputChange}
-                  className={`w-full px-4 py-3 pr-12 border rounded-xl focus:ring-2 focus:border-transparent transition-all duration-200 ${
+                  className={`w-full px-3 py-3 pr-12 border rounded-md focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all duration-200 placeholder-gray-400 ${
                     fieldErrors.password 
-                      ? 'border-red-300 focus:ring-red-500' 
-                      : 'border-gray-300 focus:ring-blue-500'
+                      ? 'border-red-300 focus:ring-red-500/20 focus:border-red-500' 
+                      : 'border-gray-300 hover:border-gray-400'
                   }`}
                   placeholder={t('auth.form.placeholders.password')}
                   required
@@ -530,7 +566,7 @@ const AuthPage = () => {
             <button
               type="submit"
               disabled={isSubmitting}
-              className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white py-3 px-4 rounded-xl font-semibold shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200 focus:ring-4 focus:ring-blue-200 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 px-4 rounded-md font-medium transition-colors duration-200 focus:ring-2 focus:ring-blue-500/20 focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-blue-600"
             >
               {isSubmitting ? t('buttons.loading') || 'Loading...' : (isLogin ? t('buttons.signIn') : t('buttons.createAccount'))}
             </button>
@@ -585,18 +621,49 @@ const AuthPage = () => {
             </p>
           </div>
         </div>
-
-        {/* Footer */}
-        <div className="text-center mt-6">
-          <p className="text-xs text-gray-500">
-            {t('auth.footer.agreement')}{' '}
-            <a href="#" className="text-gray-600 hover:text-gray-800">{t('auth.footer.terms')}</a>
-            {' '}and{' '}
-            <a href="#" className="text-gray-600 hover:text-gray-800">{t('auth.footer.privacy')}</a>
-          </p>
-        </div>
       </div>
     </div>
+
+    {/* Footer */}
+    <footer className="mt-auto px-6 py-4 border-t border-gray-200/50">
+      <div className="flex flex-col sm:flex-row items-center justify-between text-xs text-gray-500 space-y-2 sm:space-y-0">
+        {/* Left side - Links */}
+        <div className="flex items-center space-x-4">
+          <button 
+            onClick={() => window.open('/help', '_blank')}
+            className="hover:text-gray-700 transition-colors"
+          >
+            {t('footer.help', 'Help')}
+          </button>
+          <button 
+            onClick={() => window.open('/terms', '_blank')}
+            className="hover:text-gray-700 transition-colors"
+          >
+            {t('footer.terms', 'Terms')}
+          </button>
+          <button 
+            onClick={() => window.open('/privacy', '_blank')}
+            className="hover:text-gray-700 transition-colors"
+          >
+            {t('footer.privacy', 'Privacy')}
+          </button>
+        </div>
+        
+        {/* Right side - Version and problems link */}
+        <div className="flex items-center space-x-4">
+          <span className="text-gray-400">
+            {t('footer.version', 'v2.4.0')}
+          </span>
+          <button 
+            onClick={() => window.open('/support', '_blank')}
+            className="text-blue-600 hover:text-blue-700 transition-colors"
+          >
+            {t('footer.problems', 'Problems logging in?')}
+          </button>
+        </div>
+      </div>
+    </footer>
+  </div>
     </>
   );
 };

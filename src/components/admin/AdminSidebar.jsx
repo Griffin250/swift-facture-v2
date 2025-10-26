@@ -132,7 +132,7 @@ const AdminSidebar = ({ isOpen, isCollapsed, activePage, onPageChange, onClose, 
           <div className="text-xs text-gray-500 dark:text-gray-400 text-center">
             {!isCollapsed ? (
               <>
-                <div>SwiftFacture Admin v1.0.0</div>
+                <div>SwiftFacture Admin v2.4.0</div>
                 <div className="mt-1">
                   <a href="/support" className="hover:text-blue-500">
                     {t('admin.footer.support')}
@@ -141,7 +141,7 @@ const AdminSidebar = ({ isOpen, isCollapsed, activePage, onPageChange, onClose, 
               </>
             ) : (
               <div className="flex justify-center">
-                <span title="SwiftFacture Admin v1.0.0" className="text-lg font-bold">
+                <span title="SwiftFacture Admin v2.4.0" className="text-lg font-bold">
                   SF
                 </span>
               </div>

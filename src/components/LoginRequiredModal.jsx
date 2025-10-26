@@ -60,6 +60,13 @@ const LoginRequiredModal = ({ isOpen, onClose }) => {
           description: t('auth.features.templateDesc'),
           color: 'pink'
         };
+      case '/customizable-invoice':
+        return {
+          name: t('auth.features.customizableInvoice', 'Customizable Invoice'),
+          icon: FileText,
+          description: t('auth.features.customizableInvoiceDesc', 'Create and customize professional French invoices with advanced configuration options.'),
+          color: 'indigo'
+        };
       default:
         return {
           name: t('auth.features.default'),

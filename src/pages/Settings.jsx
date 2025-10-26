@@ -27,15 +27,12 @@ import {
   Database,
   Currency,
   Calendar,
-  Hash,
-  CreditCard
+  Hash
 } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
 
 const Settings = () => {
   const { t, i18n } = useTranslation();
   const { user } = useAuth();
-  const navigate = useNavigate();
   
   // Theme functionality disabled - coming soon
 
@@ -66,7 +63,7 @@ const Settings = () => {
 
   // Load settings from localStorage on mount
   useEffect(() => {
-    const savedSettings = localStorage.getItem('swiftfacture-settings');
+    const savedSettings = localStorage.getItem('billify-settings');
     if (savedSettings) {
       try {
         const parsed = JSON.parse(savedSettings);
@@ -80,7 +77,7 @@ const Settings = () => {
   // Save settings to localStorage
   const saveSettings = useCallback(() => {
     try {
-      localStorage.setItem('swiftfacture-settings', JSON.stringify(settings));
+      localStorage.setItem('billify-settings', JSON.stringify(settings));
       setHasChanges(false);
       toast.success(t('settings.saved'));
     } catch (error) {
@@ -190,7 +187,7 @@ const Settings = () => {
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = `swiftfacture-settings-${new Date().toISOString().split('T')[0]}.json`;
+      a.download = `billify-settings-${new Date().toISOString().split('T')[0]}.json`;
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
@@ -533,49 +530,6 @@ const Settings = () => {
                     onCheckedChange={(checked) => updateSetting('privacy', 'crashReports', checked)}
                   />
                 </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* Account & Billing */}
-          <Card className="card-modern bg-gradient-to-br from-blue-50 to-white border-blue-200">
-            <CardHeader className="pb-4">
-              <CardTitle className="flex items-center gap-2">
-                <CreditCard className="w-5 h-5 text-blue-600" />
-                Account & Billing
-              </CardTitle>
-              <CardDescription>Manage your subscription and billing</CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="space-y-2">
-                <Label className="text-sm font-medium">Subscription Plan</Label>
-                <p className="text-xs text-muted-foreground mb-3">
-                  View your trial status, billing history, and manage your subscription
-                </p>
-                <Button 
-                  onClick={() => navigate('/billing')}
-                  variant="outline" 
-                  className="w-full justify-start border-blue-200 hover:bg-blue-50"
-                >
-                  <CreditCard className="w-4 h-4 mr-2" />
-                  View Billing Dashboard
-                </Button>
-              </div>
-
-              <Separator />
-
-              <div className="space-y-2">
-                <Label className="text-sm font-medium">Upgrade</Label>
-                <p className="text-xs text-muted-foreground mb-3">
-                  Explore premium features and pricing plans
-                </p>
-                <Button 
-                  onClick={() => navigate('/premium')}
-                  className="w-full justify-start bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700"
-                >
-                  <CreditCard className="w-4 h-4 mr-2" />
-                  View Premium Plans
-                </Button>
               </div>
             </CardContent>
           </Card>

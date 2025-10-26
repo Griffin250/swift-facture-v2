@@ -9,6 +9,7 @@ const AdminTopNavigation = ({ onToggleSidebar, onToggleCollapse, sidebarCollapse
   const { t } = useTranslation();
   const { user, signOut } = useAuth();
   const navigate = useNavigate();
+  const [bellAnim, setBellAnim] = useState(false);
   const [showProfileMenu, setShowProfileMenu] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
 
@@ -90,7 +91,15 @@ const AdminTopNavigation = ({ onToggleSidebar, onToggleCollapse, sidebarCollapse
           <LanguageSwitcher compact={true} className="hidden sm:flex" />
           
           {/* Notifications */}
-          <button className="relative p-2 text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-md transition-colors">
+          <button
+            className={`relative p-2 text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-md transition-colors ${bellAnim ? 'animate-bounce' : ''}`}
+            onClick={() => {
+              setBellAnim(true);
+              setTimeout(() => setBellAnim(false), 600);
+              navigate('/admin/notifications');
+            }}
+            title={t('admin.notifications.title', 'Notifications')}
+          >
             <Bell size={20} />
             <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
               3

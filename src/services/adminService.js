@@ -1,5 +1,296 @@
 import { supabase } from '../integrations/supabase/client';
 
+// Admin document service for managing all documents across all users
+export const adminDocumentService = {
+  // Get all documents (invoices, estimates, receipts) across all users with pagination
+  async getAllDocuments(page = 1, limit = 10, filters = {}) {
+    try {
+      console.log('🔧 Admin service: getAllDocuments called', { page, limit, filters });
+      const offset = (page - 1) * limit;
+      const { documentType, userId, status, dateRange } = filters;
+
+      // Base query for invoices - include user profile data
+      let invoiceQuery = supabase
+        .from('invoices')
+        .select(`
+          *,
+          profiles:user_id(*)
+        `)
+        .order('created_at', { ascending: false });
+
+      // Base query for estimates - include user profile data
+      let estimateQuery = supabase
+        .from('estimates')
+        .select(`
+          *,
+          profiles:user_id(*)
+        `)
+        .order('created_at', { ascending: false });
+
+      // Base query for receipts - include user profile data
+      let receiptQuery = supabase
+        .from('receipts')
+        .select(`
+          *,
+          profiles:user_id(*)
+        `)
+        .order('created_at', { ascending: false });
+
+      // French invoices are stored in the regular invoices table with a type field
+      // No separate french_invoices table needed
+
+      // Apply filters
+      if (userId) {
+        invoiceQuery = invoiceQuery.eq('user_id', userId);
+        estimateQuery = estimateQuery.eq('user_id', userId);
+        receiptQuery = receiptQuery.eq('user_id', userId);
+      }
+
+      if (status) {
+        invoiceQuery = invoiceQuery.eq('status', status);
+        estimateQuery = estimateQuery.eq('status', status);
+      }
+
+      if (dateRange?.start) {
+        invoiceQuery = invoiceQuery.gte('created_at', dateRange.start);
+        estimateQuery = estimateQuery.gte('created_at', dateRange.start);
+        receiptQuery = receiptQuery.gte('created_at', dateRange.start);
+      }
+
+      if (dateRange?.end) {
+        invoiceQuery = invoiceQuery.lte('created_at', dateRange.end);
+        estimateQuery = estimateQuery.lte('created_at', dateRange.end);
+        receiptQuery = receiptQuery.lte('created_at', dateRange.end);
+      }
+
+      // Execute queries based on document type filter
+      let documents = [];
+      
+      // First, let's check what columns exist in invoices table
+      console.log('🧪 Testing simple invoice query...');
+      const { data: testInvoices, error: testError } = await supabase
+        .from('invoices')
+        .select('*')
+        .limit(5);
+      
+      console.log('🧪 Test invoices:', testInvoices?.length || 0, testError);
+      if (testInvoices && testInvoices.length > 0) {
+        console.log('🔍 Invoice columns:', Object.keys(testInvoices[0]));
+        console.log('🔍 Sample invoice data:', testInvoices[0]);
+      }
+      
+      if (!documentType || documentType === 'invoice') {
+        console.log('📊 Fetching invoices...');
+        const { data: invoices, error: invoiceError } = await invoiceQuery;
+        if (invoiceError) {
+          console.error('❌ Invoice query error:', invoiceError);
+          throw invoiceError;
+        }
+        console.log('✅ Invoices fetched:', invoices?.length || 0);
+        if (invoices && invoices.length > 0) {
+          console.log('🔍 Sample invoice with profile:', invoices[0]);
+          if (invoices[0].profiles) {
+            console.log('👤 Profile columns available:', Object.keys(invoices[0].profiles));
+          }
+        }
+        
+        documents.push(...(invoices || []).map(doc => ({
+          ...doc,
+          document_type: doc.invoice_type === 'french' ? 'french_invoice' : 'invoice',
+          document_number: doc.invoice_number,
+          customer_name: doc.customer_name || 'N/A'
+        })));
+      }
+
+      if (!documentType || documentType === 'estimate') {
+        try {
+          console.log('📊 Fetching estimates...');
+          const { data: estimates, error: estimateError } = await estimateQuery;
+          if (estimateError) {
+            console.warn('⚠️ Estimates query error, skipping...', estimateError);
+          } else {
+            console.log('✅ Estimates fetched:', estimates?.length || 0);
+            documents.push(...(estimates || []).map(doc => ({
+              ...doc,
+              document_type: 'estimate',
+              document_number: doc.estimate_number,
+              customer_name: doc.customer_name || 'N/A'
+            })));
+          }
+        } catch (error) {
+          console.warn('⚠️ Error fetching estimates, skipping...', error);
+        }
+      }
+
+      if (!documentType || documentType === 'receipt') {
+        try {
+          console.log('📊 Fetching receipts...');
+          const { data: receipts, error: receiptError } = await receiptQuery;
+          if (receiptError) {
+            console.warn('⚠️ Receipts query error, skipping...', receiptError);
+          } else {
+            console.log('✅ Receipts fetched:', receipts?.length || 0);
+            documents.push(...(receipts || []).map(doc => ({
+              ...doc,
+              document_type: 'receipt',
+              document_number: doc.receipt_number,
+              customer_name: doc.customer_name || 'N/A'
+            })));
+          }
+        } catch (error) {
+          console.warn('⚠️ Error fetching receipts, skipping...', error);
+        }
+      }
+
+      // French invoices are stored in the invoices table with an invoice_type field
+      // They will be included in the invoice query above
+
+      console.log('📋 Total documents collected:', documents.length);
+      
+      if (documents.length === 0) {
+        console.warn('⚠️ No documents found! This might indicate a database issue.');
+        return { 
+          documents: [], 
+          error: null, 
+          totalCount: 0,
+          currentPage: page,
+          totalPages: 0,
+          stats: {
+            total: 0,
+            invoices: 0,
+            estimates: 0,
+            receipts: 0,
+            frenchInvoices: 0,
+            totalValue: 0
+          }
+        };
+      }
+      
+      // Sort all documents by created_at
+      documents.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+
+      // Apply pagination
+      const totalCount = documents.length;
+      const paginatedDocuments = documents.slice(offset, offset + limit);
+      
+      console.log('📄 Paginated documents:', paginatedDocuments.length, 'of', totalCount);
+      console.log('📄 First document sample:', paginatedDocuments[0]);
+
+      // Calculate stats
+      const stats = {
+        total: documents.length,
+        invoices: documents.filter(d => d.document_type === 'invoice' || d.document_type === 'french_invoice').length,
+        estimates: documents.filter(d => d.document_type === 'estimate').length,
+        receipts: documents.filter(d => d.document_type === 'receipt').length,
+        totalValue: documents.reduce((sum, doc) => sum + (parseFloat(doc.total) || 0), 0)
+      };
+
+      console.log('📊 Final stats:', stats);
+
+      return { 
+        documents: paginatedDocuments, 
+        error: null, 
+        totalCount,
+        currentPage: page,
+        totalPages: Math.ceil(totalCount / limit),
+        stats
+      };
+    } catch (error) {
+      console.error('Error fetching admin documents:', error);
+      return { 
+        documents: [], 
+        error, 
+        totalCount: 0, 
+        currentPage: 1, 
+        totalPages: 0,
+        stats: {
+          total: 0,
+          invoices: 0,
+          estimates: 0,
+          receipts: 0,
+          totalValue: 0
+        }
+      };
+    }
+  },
+
+  // Get document statistics
+  async getDocumentStats() {
+    try {
+      const [invoiceStats, estimateStats, receiptStats, frenchInvoiceStats] = await Promise.all([
+        supabase.from('invoices').select('status', { count: 'exact' }),
+        supabase.from('estimates').select('status', { count: 'exact' }),
+        supabase.from('receipts').select('id', { count: 'exact' }),
+        supabase.from('french_invoices').select('status', { count: 'exact' })
+      ]);
+
+      const { data: invoices } = await supabase
+        .from('invoices')
+        .select('status, total')
+        .not('status', 'is', null);
+
+      const { data: estimates } = await supabase
+        .from('estimates') 
+        .select('status, total')
+        .not('status', 'is', null);
+
+      const { data: receipts } = await supabase
+        .from('receipts')
+        .select('total');
+
+      const { data: frenchInvoices } = await supabase
+        .from('french_invoices')
+        .select('status, total')
+        .not('status', 'is', null);
+
+      // Calculate totals
+      const invoiceTotal = (invoices || []).reduce((sum, inv) => sum + (parseFloat(inv.total) || 0), 0);
+      const estimateTotal = (estimates || []).reduce((sum, est) => sum + (parseFloat(est.total) || 0), 0);
+      const receiptTotal = (receipts || []).reduce((sum, rec) => sum + (parseFloat(rec.total) || 0), 0);
+      const frenchInvoiceTotal = (frenchInvoices || []).reduce((sum, inv) => sum + (parseFloat(inv.total) || 0), 0);
+
+      // Count by status
+      const invoiceStatusCount = {};
+      const estimateStatusCount = {};
+      
+      (invoices || []).forEach(inv => {
+        invoiceStatusCount[inv.status] = (invoiceStatusCount[inv.status] || 0) + 1;
+      });
+      
+      (estimates || []).forEach(est => {
+        estimateStatusCount[est.status] = (estimateStatusCount[est.status] || 0) + 1;
+      });
+
+      return {
+        data: {
+          invoices: {
+            count: invoiceStats.count || 0,
+            total: invoiceTotal,
+            statusBreakdown: invoiceStatusCount
+          },
+          estimates: {
+            count: estimateStats.count || 0,
+            total: estimateTotal,
+            statusBreakdown: estimateStatusCount
+          },
+          receipts: {
+            count: receiptStats.count || 0,
+            total: receiptTotal
+          },
+          frenchInvoices: {
+            count: frenchInvoiceStats.count || 0,
+            total: frenchInvoiceTotal
+          }
+        },
+        error: null
+      };
+    } catch (error) {
+      console.error('Error fetching document stats:', error);
+      return { data: null, error };
+    }
+  }
+};
+
 // Admin service for managing users and profiles
 export const adminUserService = {
   // Get all users with their profiles
@@ -314,8 +605,8 @@ export const adminCustomerService = {
   }
 };
 
-// Admin service for managing invoices, estimates, and receipts
-export const adminDocumentService = {
+// Admin service for managing invoices, estimates, and receipts (legacy)
+export const adminDocumentServiceLegacy = {
   // Get all documents (invoices, estimates, receipts)
   async getAllDocuments(type = 'all') {
     try {

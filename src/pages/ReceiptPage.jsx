@@ -1,8 +1,18 @@
 import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from 'react-i18next';
-import { Loader2, RefreshCw, FileText, RotateCw } from "lucide-react";
+import { Loader2, RefreshCw, FileText, RotateCw, List, Plus, Save, Send, Eye, Receipt as ReceiptIcon, Calendar } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useAuth } from "@/contexts/AuthContext";
+import { receiptService } from "@/services/receiptService";
+import { useToast } from "@/components/ui/use-toast";
+import { Badge } from "@/components/ui/badge";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import Receipt1 from "../components/templates/Receipt1";
 import Receipt2 from "../components/templates/Receipt2";
 import Receipt3 from "../components/templates/Receipt3";
@@ -98,6 +108,15 @@ const ReceiptPage = () => {
   // Email/print modal state
   const [showEmailModal, setShowEmailModal] = useState(false);
   const [showEmailNotice, setShowEmailNotice] = useState(false);
+  
+  // Receipt management state
+  const [receipts, setReceipts] = useState([]);
+  const [isSaving, setIsSaving] = useState(false);
+  const [savedReceiptId, setSavedReceiptId] = useState(null);
+  const [showDashboard, setShowDashboard] = useState(true);
+  
+  const { user } = useAuth();
+  const { toast } = useToast();
 
   const refreshFooter = () => {
     const randomIndex = Math.floor(Math.random() * footerOptions.length);
@@ -190,6 +209,87 @@ const ReceiptPage = () => {
     setTimeout(() => setShowEmailNotice(false), 2500);
   };
 
+  // Save receipt as draft or sent
+  const handleSaveReceipt = async (status = 'draft') => {
+    if (!user) {
+      toast({
+        title: "Authentication Required",
+        description: "Please log in to save receipts.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setIsSaving(true);
+    try {
+      const receiptData = {
+        receipt_number: invoice.number,
+        date: invoice.date || new Date().toISOString().split('T')[0],
+        template_name: theme.toLowerCase(),
+        subtotal: calculateSubTotal(),
+        tax: calculateTaxAmount(),
+        total: calculateGrandTotal(),
+        payment_method: 'cash', // Default, can be enhanced later
+        notes: notes,
+        status: status,
+        items: items.filter(item => item.name && item.quantity && item.amount).map(item => ({
+          description: item.name,
+          quantity: parseFloat(item.quantity) || 1,
+          unit_price: parseFloat(item.amount) || 0,
+        })),
+      };
+
+      let result;
+      if (savedReceiptId) {
+        result = await receiptService.updateReceipt(savedReceiptId, receiptData);
+      } else {
+        result = await receiptService.createReceipt(receiptData);
+      }
+
+      if (result.error) {
+        throw result.error;
+      }
+
+      setSavedReceiptId(result.data.id);
+      
+      toast({
+        title: "Receipt Saved",
+        description: `Receipt ${status === 'draft' ? 'saved as draft' : 'marked as sent'} successfully.`,
+      });
+
+      // Refresh dashboard data
+      await loadReceipts();
+    } catch (error) {
+      console.error('Error saving receipt:', error);
+      toast({
+        title: "Save Failed",
+        description: "Failed to save receipt. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  // Load receipts for dashboard
+  const loadReceipts = async () => {
+    try {
+      const result = await receiptService.getAllReceipts();
+      if (result.data) {
+        setReceipts(result.data);
+      }
+    } catch (error) {
+      console.error('Error loading receipts:', error);
+    }
+  };
+
+  // Load receipts on component mount
+  useEffect(() => {
+    if (user) {
+      loadReceipts();
+    }
+  }, [user]);
+
   // handleBack removed (not used)
 
   const handleInputChange = (setter) => (e) => {
@@ -265,9 +365,205 @@ const ReceiptPage = () => {
     <div className="min-h-screen bg-gradient-to-br from-background via-background to-accent/5">
 
       <div className="container mx-auto px-4 py-8 relative">
+        {/* Navigation Section */}
+        <div className="mb-8">
+          <div className="flex justify-between items-center mb-6">
+            <h1 className="text-4xl font-bold gradient-text">{t('receiptPage.title')}</h1>
+            <div className="flex gap-3">
+              <Button
+                variant="outline"
+                className="font-semibold border-2 bg-white text-primary border-primary hover:bg-primary hover:text-white transition-all"
+              >
+                <Plus className="mr-2 h-4 w-4" />
+                {t('receiptPage.createReceipt', 'Create Receipt')}
+              </Button>
+              <Button
+                variant="outline"
+                onClick={() => navigate('/receipts')}
+                className="font-semibold border-2 hover:bg-primary hover:text-white hover:border-primary transition-all"
+              >
+                <List className="mr-2 h-4 w-4" />
+                {t('receiptPage.viewAllReceipts', 'View All Receipts')}
+              </Button>
+            </div>
+          </div>
+        </div>
+
+        {/* Compact Dashboard */}
+        {showDashboard && (
+          <div className="mb-8">
+            <div className="flex justify-between items-center mb-4">
+              <h2 className="text-xl font-semibold text-gray-900">Recent Receipts</h2>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setShowDashboard(false)}
+                className="text-gray-500 hover:text-gray-700"
+              >
+                Hide Dashboard
+              </Button>
+            </div>
+            
+            {/* Stats Cards - Compact View */}
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+              <Card className="bg-white/80 backdrop-blur-sm border-gray-200/50">
+                <CardContent className="p-4">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-sm font-medium text-gray-600">Total</p>
+                      <p className="text-xl font-bold text-gray-900">{receipts.length}</p>
+                    </div>
+                    <ReceiptIcon className="h-6 w-6 text-blue-600" />
+                  </div>
+                </CardContent>
+              </Card>
+              
+              <Card className="bg-white/80 backdrop-blur-sm border-gray-200/50">
+                <CardContent className="p-4">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-sm font-medium text-gray-600">Drafts</p>
+                      <p className="text-xl font-bold text-gray-900">
+                        {receipts.filter(r => r.status === 'draft').length}
+                      </p>
+                    </div>
+                    <Eye className="h-6 w-6 text-orange-600" />
+                  </div>
+                </CardContent>
+              </Card>
+              
+              <Card className="bg-white/80 backdrop-blur-sm border-gray-200/50">
+                <CardContent className="p-4">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-sm font-medium text-gray-600">Sent</p>
+                      <p className="text-xl font-bold text-gray-900">
+                        {receipts.filter(r => r.status === 'sent').length}
+                      </p>
+                    </div>
+                    <Send className="h-6 w-6 text-green-600" />
+                  </div>
+                </CardContent>
+              </Card>
+              
+              <Card className="bg-white/80 backdrop-blur-sm border-gray-200/50">
+                <CardContent className="p-4">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-sm font-medium text-gray-600">Today</p>
+                      <p className="text-xl font-bold text-gray-900">
+                        {receipts.filter(r => {
+                          const today = new Date().toDateString();
+                          return new Date(r.created_at).toDateString() === today;
+                        }).length}
+                      </p>
+                    </div>
+                    <Calendar className="h-6 w-6 text-purple-600" />
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+
+            {/* Recent Receipts List - Compact */}
+            <Card className="bg-white/80 backdrop-blur-sm border-gray-200/50">
+              <CardHeader className="pb-3">
+                <CardTitle className="text-lg">Recent Receipts</CardTitle>
+              </CardHeader>
+              <CardContent>
+                {receipts.length === 0 ? (
+                  <p className="text-gray-500 text-center py-4">No receipts yet. Create your first receipt below!</p>
+                ) : (
+                  <div className="space-y-2">
+                    {receipts.slice(0, 3).map((receipt) => (
+                      <div key={receipt.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                        <div className="flex items-center space-x-3">
+                          <ReceiptIcon className="h-4 w-4 text-gray-600" />
+                          <div>
+                            <p className="font-medium text-sm">{receipt.receipt_number}</p>
+                            <p className="text-xs text-gray-500">
+                              {new Date(receipt.date).toLocaleDateString()}
+                            </p>
+                          </div>
+                        </div>
+                        <div className="flex items-center space-x-2">
+                          <Badge variant={receipt.status === 'sent' ? 'default' : 'secondary'}>
+                            {receipt.status}
+                          </Badge>
+                          <span className="text-sm font-medium">
+                            ${receipt.total?.toFixed(2) || '0.00'}
+                          </span>
+                        </div>
+                      </div>
+                    ))}
+                    {receipts.length > 3 && (
+                      <div className="text-center pt-2">
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => navigate('/receipts')}
+                          className="text-blue-600 hover:text-blue-700"
+                        >
+                          View all {receipts.length} receipts →
+                        </Button>
+                      </div>
+                    )}
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          </div>
+        )}
+
+        {!showDashboard && (
+          <div className="mb-6">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setShowDashboard(true)}
+              className="text-gray-600 hover:text-gray-800"
+            >
+              Show Dashboard
+            </Button>
+          </div>
+        )}
+
         <div className="flex justify-between items-center mb-8">
-          <h1 className="text-4xl font-bold gradient-text mb-4">{t('receiptPage.title')}</h1>
+          <div className="text-lg text-muted-foreground">{t('receiptPage.fillForm', 'Fill in the details below to create your receipt')}</div>
           <div className="flex flex-wrap items-center gap-4">
+            <Button
+              onClick={() => handleSaveReceipt('draft')}
+              disabled={isSaving}
+              className="font-semibold bg-blue-600 hover:bg-blue-700 text-white"
+            >
+              {isSaving ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  {t('receiptPage.saving', 'Saving...')}
+                </>
+              ) : (
+                <>
+                  <Save className="mr-2 h-4 w-4" />
+                  {t('receiptPage.saveDraft', 'Save as Draft')}
+                </>
+              )}
+            </Button>
+            <Button
+              onClick={() => handleSaveReceipt('sent')}
+              disabled={isSaving}
+              className="font-semibold bg-green-600 hover:bg-green-700 text-white"
+            >
+              {isSaving ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  {t('receiptPage.saving', 'Saving...')}
+                </>
+              ) : (
+                <>
+                  <Send className="mr-2 h-4 w-4" />
+                  {t('receiptPage.markAsSent', 'Mark as Sent')}
+                </>
+              )}
+            </Button>
             <Button
               variant="accent"
               onClick={handleDownloadPDF}

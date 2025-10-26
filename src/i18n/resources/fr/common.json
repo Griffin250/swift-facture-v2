@@ -2,10 +2,12 @@
   "navigation": {
     "dashboard": "Tableau de bord",
     "about": "À propos",
-    "receipt": "Reçu",
     "invoice": "Facture",
+    "frenchInvoice": "Facture Française",
     "customers": "Clients",
-    "estimate": "Devis"
+    "receipts": "Reçus",
+    "estimate": "Devis",
+    "backToHome": "Retour à l'Accueil"
   },
   "buttons": {
     "premium": "Premium",
@@ -33,7 +35,31 @@
     "continueWithGitHub": "Continuer avec GitHub",
     "createReceipt": "Créer un Reçu",
     "newInvoice": "Nouvelle Facture",
-    "manageCustomers": "Gérer les Clients"
+    "manageCustomers": "Gérer les Clients",
+    "currentPlan": "Plan Actuel",
+    "details": "Détails",
+    "sendReminder": "Envoyer Rappel",
+    "refresh": "Actualiser",
+    "export": "Exporter",
+    "view": "Voir",
+    "activate": "Activer",
+    "deactivate": "Désactiver",
+    "search": "Rechercher",
+    "actions": "Actions",
+    "confirm": "Confirmer",
+    "retry": "Réessayer"
+  },
+  "filters": {
+    "all": "Tous"  
+  },
+  "pagination": {
+    "showing": "Affichage",
+    "to": "à", 
+    "of": "sur",
+    "results": "résultats",
+    "previous": "Précédent",
+    "next": "Suivant",
+    "itemsPerPage": "Éléments par page"
   },
   "common": {
     "loading": "Chargement...",
@@ -51,17 +77,26 @@
     "retry": "Réessayer",
     "noResults": "Aucun résultat trouvé",
     "showing": "Affichage de {{from}} à {{to}} sur {{total}} entrées",
-    "itemsPerPage": "Éléments par page"
+    "itemsPerPage": "Éléments par page",
+    "day": "jour",
+    "days": "jours"
+  },
+  "trial": {
+    "daysLeft": "{{days}} jours restants dans votre essai gratuit",
+    "lastDay": "Dernier jour de votre essai gratuit",
+    "expired": "Votre essai gratuit a expiré. Veuillez mettre à niveau pour continuer à utiliser les fonctionnalités premium."
   },
   "brand": {
     "name": "SwiftFacture",
-    "tagline": "Rapide. Professionnel. Sans effort."
+    "tagline": "Rapide & Professionnel"
   },
   "language": {
     "french": "Français",
     "english": "Anglais"
   },
   "premium": {
+    "pageTitle": "Choisissez votre plan",
+    "pageSubtitle": "Sélectionnez le plan parfait pour vos besoins d'entreprise",
     "title": {
       "yearly": "Économisez de l'argent avec nos plans annuels",
       "monthly": "Obtenez un essai gratuit de 30 jours avec nos plans mensuels"
@@ -75,10 +110,11 @@
       "monthly": "Payer mensuellement et obtenir un essai gratuit"
     },
     "plans": {
-      "free": "GRATUIT",
-      "starter": "DÉBUTANT",
-      "pro": "PRO",
-      "growth": "CROISSANCE"
+      "free": "Gratuit",
+      "starter": "Débutant",
+      "pro": "Professionnel",
+      "enterprise": "Entreprise",
+      "growth": "Croissance"
     },
     "features": {
       "customers": "clients",
@@ -92,7 +128,15 @@
       "timeTracking": "Suivi du temps",
       "recurringInvoices": "Factures récurrentes",
       "paymentSchedules": "Échéanciers de paiement",
-      "multipleTradeNames": "Noms commerciaux multiples"
+      "multipleTradeNames": "Noms commerciaux multiples",
+      "basicTemplates": "Modèles de base",
+      "pdfExport": "Export PDF",
+      "emailSupport": "Support par email",
+      "advancedReporting": "Rapports avancés",
+      "prioritySupport": "Support prioritaire",
+      "apiAccess": "Accès API",
+      "customBranding": "Image de marque personnalisée",
+      "dedicatedSupport": "Support dédié"
     },
     "services": {
       "title": "Services premium",
@@ -138,6 +182,16 @@
       }
     },
     "vatDisclaimer": "*Prix hors TVA. Si votre entreprise est enregistrée pour la TVA dans le domicile de l'entreprise, vous n'êtes pas tenu de payer la TVA sur les services achetés auprès de SwiftFacture. Cependant, si vous n'êtes pas enregistré pour la TVA, vous serez facturé au taux finlandais de TVA (25,5%) sur tous les services achetés auprès de SwiftFacture."
+  },
+  "billing": {
+    "monthly": "Mensuel",
+    "yearly": "Annuel",
+    "discount": "15% de réduction"
+  },
+  "pricing": {
+    "free": "Gratuit",
+    "perMonth": "par mois",
+    "perYear": "par an"
   },
   "about": {
     "title": "SwiftFacture — factures et reçus simples",
@@ -226,7 +280,8 @@
         "lastName": "Dupont",
         "email": "vous@exemple.com",
         "password": "••••••••"
-      }
+      },
+      "passwordHint": "Minimum 6 caractères"
     },
     "divider": "Ou continuez avec",
     "toggle": {
@@ -235,6 +290,11 @@
       "signUp": "S'inscrire",
       "signIn": "Se connecter"
     },
+    "createAccount": "Créez votre compte",
+    "joinToday": "Rejoignez SwiftFacture aujourd'hui et commencez à gérer vos factures professionnellement",
+    "alreadyHaveAccount": "Vous avez déjà un compte ?",
+    "freeAccountIncludes": "Votre compte gratuit inclut :",
+    "upgradeAnytime": "Vous pouvez passer à un plan premium à tout moment pour débloquer toutes les fonctionnalités.",
     "footer": {
       "terms": "Conditions d'utilisation",
       "privacy": "Politique de confidentialité",
@@ -260,6 +320,8 @@
       "estimateDesc": "Créez des devis de projet détaillés et convertissez-les en factures",
       "template": "Personnalisation de modèles",
       "templateDesc": "Accédez aux modèles premium et personnalisez-les avec votre image de marque",
+      "customizableInvoice": "Facture Personnalisable",
+      "customizableInvoiceDesc": "Créez et personnalisez des factures françaises professionnelles avec des options de configuration avancées et un aperçu en direct.",
       "default": "Fonctionnalités premium",
       "defaultDesc": "Accédez à toutes les fonctionnalités et outils premium"
     },
@@ -411,7 +473,8 @@
       "title": "Actions Rapides",
       "createInvoice": "Créer une Facture",
       "generateReceipt": "Générer un Reçu",
-      "manageCustomers": "Gérer les Clients", 
+      "manageCustomers": "Gérer les Clients",
+      "viewReceipts": "Voir les Reçus", 
       "exportReports": "Exporter les Rapports",
       "newInvoice": {
         "title": "Nouvelle Facture",
@@ -619,37 +682,98 @@
     "title": "Clients",
     "subtitle": "Gérer votre base de données clients",
     "addNew": "Ajouter un nouveau client",
-    "form": {
+    "editCustomer": "Modifier le client",
+    "search": "Rechercher des clients...",
+    "types": {
+      "business": "Entreprise",
+      "individual": "Particulier"
+    },
+    "status": {
+      "active": "Actif",
+      "inactive": "Inactif",
+      "pending": "En attente",
+      "blocked": "Bloqué"
+    },
+    "table": {
+      "number": "N°",
       "name": "Nom",
+      "type": "Type",
       "email": "Email",
       "phone": "Téléphone",
       "address": "Adresse",
-      "city": "Ville",
-      "zipCode": "Code postal",
-      "country": "Pays",
-      "taxId": "N° TVA",
-      "notes": "Notes"
+      "status": "Statut",
+      "actions": "Actions",
+      "totalInvoices": "Total factures",
+      "totalAmount": "Montant total"
     },
-    "search": "Rechercher des clients...",
-    "table": {
+    "form": {
+      "customerType": "Type de client",
       "name": "Nom",
+      "companyName": "Nom de l'entreprise",
       "email": "Email",
       "phone": "Téléphone",
-      "totalInvoices": "Total factures",
-      "totalAmount": "Montant total",
-      "actions": "Actions"
+      "mobilePhone": "Téléphone portable",
+      "website": "Site web",
+      "addressSection": "Informations d'adresse",
+      "streetAddress": "Adresse",
+      "city": "Ville",
+      "postalCode": "Code postal",
+      "stateProvince": "État/Province",
+      "country": "Pays",
+      "businessInfo": "Informations entreprise",
+      "vatId": "N° TVA",
+      "taxNumber": "N° fiscal",
+      "registrationNumber": "N° d'enregistrement",
+      "financialSettings": "Paramètres financiers",
+      "defaultCurrency": "Devise par défaut",
+      "paymentTerms": "Conditions de paiement (Jours)",
+      "creditLimit": "Limite de crédit",
+      "status": "Statut",
+      "category": "Catégorie",
+      "categoryPlaceholder": "ex: VIP, Régulier, Grossiste",
+      "tags": "Étiquettes",
+      "tagsPlaceholder": "ex: priorité, gros-volume, international",
+      "tagsHint": "Séparez les étiquettes par des virgules",
+      "notes": "Notes",
+      "internalNotes": "Notes internes",
+      "internalNotesPlaceholder": "Notes à usage interne uniquement",
+      "paymentTermsOptions": {
+        "immediate": "Immédiat (0 jour)",
+        "days7": "7 jours",
+        "days14": "14 jours",
+        "days30": "30 jours",
+        "days60": "60 jours",
+        "days90": "90 jours"
+      }
     },
     "actions": {
       "save": "Enregistrer le client",
+      "update": "Mettre à jour le client",
       "edit": "Modifier",
       "delete": "Supprimer",
       "viewInvoices": "Voir les factures"
     },
     "messages": {
-      "noCustomers": "Aucun client trouvé",
+      "noCustomersYet": "Aucun client pour le moment. Ajoutez votre premier client !",
+      "noCustomersFound": "Aucun client ne correspond à votre recherche.",
       "saved": "Client enregistré avec succès",
+      "updated": "Client mis à jour avec succès",
       "deleted": "Client supprimé avec succès",
       "deleteConfirm": "Êtes-vous sûr de vouloir supprimer ce client ?"
+    },
+    "confirmDelete": "Êtes-vous sûr de vouloir supprimer ce client ?",
+    "confirmBulkDelete": "Êtes-vous sûr de vouloir supprimer {count} clients ? Cette action ne peut pas être annulée.",
+    "customerNumber": "Numéro Client",
+    "createdDate": "Date de Création",
+    "type": {
+      "business": "Entreprise",
+      "individual": "Particulier"
+    },
+    "errors": {
+      "loadFailed": "Échec du chargement des clients",
+      "updateFailed": "Échec de la mise à jour du client",
+      "deleteFailed": "Échec de la suppression du client", 
+      "bulkActionFailed": "Échec de l'action groupée"
     }
   },
   "templates": {
@@ -747,12 +871,27 @@
     "duplicate": "Dupliquer",
     "sendEmail": "Envoyer par Email",
     "delete": "Supprimer",
-    "confirmDelete": "Êtes-vous sûr de vouloir supprimer cette facture ? Cette action ne peut pas être annulée."
+    "confirmDelete": "Êtes-vous sûr de vouloir supprimer cette facture ? Cette action ne peut pas être annulée.",
+    "pagination": {
+      "previous": "Précédent",
+      "next": "Suivant",
+      "showing": "Affichage",
+      "to": "à",
+      "of": "sur",
+      "results": "résultats",
+      "page": "Page"
+    }
   },
   "receiptPage": {
     "title": "Reçus SwiftFacture",
+    "createReceipt": "Créer un Reçu",
+    "viewAllReceipts": "Voir Tous les Reçus",
+    "fillForm": "Remplissez les détails ci-dessous pour créer votre reçu",
+    "saveDraft": "Sauvegarder comme Brouillon",
+    "markAsSent": "Marquer comme Envoyé",
+    "saving": "Sauvegarde...",
     "generatingPDF": "Génération du PDF...",
-    "downloadReceiptPDF": "Télécharger le PDF du reçu",
+    "downloadReceiptPDF": "Télécharger le PDF du reçus",
     "sendViaEmail": "Envoyer par email",
     "printReceipt": "Imprimer le reçu",
     "switchToInvoice": "Basculer vers le générateur de factures",
@@ -792,7 +931,42 @@
     "loadSampleData": "Charger les données d'exemple",
     "createNewInvoice": "Créer une nouvelle facture",
     "sendEmail": "Envoyer par email",
-    "printInvoice": "Imprimer la facture"
+    "printInvoice": "Imprimer la facture",
+    "back": "Retour",
+    "title": "Éditeur de Facture",
+    "loadSample": "Charger Exemple",
+    "save": "Sauvegarder",
+    "download": "Télécharger",
+    "saveSuccess": "Facture sauvegardée avec succès !",
+    "saveError": "Échec de la sauvegarde. Veuillez réessayer.",
+    "invoiceDetails": "Détails de la Facture",
+    "yourCompany": "Votre Entreprise",
+    "companyName": "Nom de l'Entreprise",
+    "companyAddress": "Adresse",
+    "companyPhone": "Téléphone",
+    "invoiceInfo": "Informations de Facture",
+    "invoiceNumber": "Numéro de Facture",
+    "invoiceDate": "Date de Facture",
+    "dueDate": "Date d'Échéance",
+    "notes": "Notes",
+    "notesPlaceholder": "Ajoutez des notes supplémentaires ici...",
+    "livePreview": "Aperçu en Direct",
+    "chooseTemplate": "Choisir un Modèle",
+    "previewMode": "Mode Aperçu",
+    "liveEdit": "Édition en Direct",
+    "editMode": "Mode Édition",
+    "previewOnly": "Aperçu Seulement",
+    "template": "Modèle",
+    "taxAndCurrency": "Taxe et Devise",
+    "taxPercentage": "Pourcentage de Taxe (%)",
+    "currency": "Devise",
+    "subtotal": "Sous-total",
+    "tax": "Taxe",
+    "total": "Total",
+    "fullscreen": "Plein Écran",
+    "fullscreenPreview": "Aperçu Plein Écran",
+    "print": "Imprimer",
+    "close": "Fermer"
   },
   "estimatePage": {
     "title": "Gestionnaire de factures et devis",
@@ -942,8 +1116,9 @@
     "avatarGuidelines": "Formats supportés : JPG, PNG, GIF. Taille max : 5Mo.",
     "firstName": "Prénom",
     "lastName": "Nom",
-    "email": "Email",
+    "email": "Email", 
     "fullName": "Nom Complet",
+    "role": "Rôle",
     "enterFirstName": "Entrez votre prénom",
     "enterLastName": "Entrez votre nom",
     "emailCannotChange": "L'adresse email ne peut pas être modifiée",
@@ -1085,6 +1260,11 @@
       "charts": {
         "revenue": "Tendance des Revenus Mensuels",
         "conversion": "Conversion Essai vers Payant",
+        "userDistribution": "Répartition des Utilisateurs",
+        "monthlyComparison": "Comparaison Mensuelle",
+        "noData": "Aucune donnée disponible",
+        "loading": "Chargement des données graphique...",
+        "error": "Échec du chargement des données graphique",
         "placeholder": "Espace réservé graphique - intégrer avec Chart.js/Recharts"
       },
       "activity": {
@@ -1215,13 +1395,72 @@
       "title": "Abonnements et Facturation",
       "placeholder": "Panneau de gestion des abonnements - Bientôt disponible"
     },
+    "trials": {
+      "title": "Gestion des Essais",
+      "stats": {
+        "activeTrials": "Essais Actifs",
+        "expiringSoon": "Expirent Bientôt",
+        "monthlyConversions": "Conversions Mensuelles",
+        "conversionRate": "Taux de Conversion"
+      },
+      "activeTrials": {
+        "title": "Abonnements d'Essai Actifs"
+      },
+      "table": {
+        "organization": "Organisation",
+        "trialEnd": "Fin d'Essai",
+        "daysLeft": "Jours Restants",
+        "status": "Statut",
+        "actions": "Actions"
+      },
+      "status": {
+        "active": "Actif",
+        "expiring": "Expire Bientôt",
+        "expired": "Expiré"
+      },
+      "quickActions": {
+        "title": "Actions Rapides"
+      },
+      "actions": {
+        "sendReminders": "Envoyer Rappels",
+        "refreshData": "Actualiser Données",
+        "exportData": "Exporter Données"
+      },
+      "details": {
+        "title": "Détails de l'Essai",
+        "organization": "Organisation",
+        "trialEnd": "Date de Fin d'Essai",
+        "daysRemaining": "Jours Restants"
+      },
+      "noActiveTrials": "Aucun essai actif",
+      "noActiveTrialsDesc": "Il n'y a actuellement aucun abonnement d'essai actif."
+    },
     "documents": {
       "title": "Gestion des Documents",
       "placeholder": "Panneau de gestion des documents - Bientôt disponible"
     },
     "clients": {
       "title": "Gestion des Clients",
-      "placeholder": "Panneau de gestion des clients - Bientôt disponible"
+      "searchPlaceholder": "Rechercher par nom, email, entreprise ou numéro client...",
+      "customerDetails": "Détails du Client",
+      "selectedCount": "{count} clients sélectionnés",
+      "bulkActivate": "Activer la Sélection",
+      "bulkDeactivate": "Désactiver la Sélection", 
+      "bulkDelete": "Supprimer la Sélection",
+      "confirmBulkAction": "Confirmer l'Action Groupée",
+      "bulkActionConfirm": {
+        "activate": "Êtes-vous sûr de vouloir activer {count} clients ?",
+        "deactivate": "Êtes-vous sûr de vouloir désactiver {count} clients ?",
+        "delete": "Êtes-vous sûr de vouloir supprimer {count} clients ? Cette action ne peut pas être annulée."
+      },
+      "stats": {
+        "total": "Total Clients",
+        "active": "Actifs",
+        "inactive": "Inactifs", 
+        "business": "Entreprises",
+        "individual": "Particuliers",
+        "recent": "Nouveaux (30 jours)"
+      }
     },
     "support": {
       "title": "Tickets de Support",
@@ -1344,52 +1583,165 @@
     }
   },
   "frenchInvoiceDemo": {
-    "title": "Modèle de Facture Française",
-    "subtitle": "Modèle de facture entièrement personnalisable avec style français professionnel. Contrôlez la visibilité de chaque section et colonne selon vos besoins.",
+    "title": "Éditeur de Facture Française Personnalisable",
+    "subtitle": "Éditeur de facture professionnel à 2 colonnes avec aperçu en temps réel et options de personnalisation complètes.",
     "buttons": {
       "hideSettings": "Masquer les paramètres",
       "showSettings": "Personnaliser la facture",
-      "loadSampleData": "Charger les données d'exemple"
+      "loadSampleData": "Charger les Données d'Exemple",
+      "editMode": "Mode Édition",
+      "previewMode": "Mode Aperçu",
+      "fullscreen": "Plein écran",
+      "exitFullscreen": "Quitter le plein écran",
+      "addItem": "Ajouter un Article",
+      "removeItem": "Supprimer l'Article",
+      "loadSample": "Charger Exemple",
+      "customize": "Personnaliser le Modèle",
+      "customizeShort": "Personnaliser",
+      "save": "Sauvegarder la Facture",
+      "saveShort": "Sauver",
+      "saving": "Sauvegarde...",
+      "send": "Envoyer la Facture",
+      "sendShort": "Envoyer",
+      "sending": "Envoi...",
+      "downloadPdf": "Télécharger PDF",
+      "downloadPdfShort": "PDF",
+      "downloading": "Téléchargement...",
+      "print": "Imprimer la Facture",
+      "printShort": "Imprimer",
+      "applyCustomization": "Appliquer les Paramètres",
+      "saveCustomization": "Sauvegarder les Paramètres"
     },
     "sections": {
-      "customizationOptions": "Options de personnalisation",
-      "visibleSections": "Sections visibles",
-      "tableColumns": "Colonnes du tableau",
-      "formatOptions": "Format et devise",
-      "quickPresets": "Modèles rapides",
-      "preview": "Aperçu de la facture"
+      "customizationOptions": "Options de Personnalisation",
+      "visibleSections": "Sections Visibles",
+      "tableColumns": "Colonnes du Tableau",
+      "formatOptions": "Format et Devise",
+      "quickPresets": "Modèles Rapides",
+      "preview": "Aperçu en Temps Réel",
+      "basicInfo": "Informations de Base",
+      "senderInfo": "Informations de l'Expéditeur",
+      "receiverInfo": "Informations du Destinataire",
+      "items": "Articles de la Facture",
+      "itemDetails": "Détails de l'Article",
+      "paymentDetails": "Détails de Paiement",
+      "additionalOptions": "Options Supplémentaires",
+      "summary": "Résumé de la Facture",
+      "seller": "Vendeur",
+      "customer": "Client"
     },
     "fields": {
-      "invoiceNumber": "Numéro de facture",
-      "dueDate": "Date d'échéance",
-      "operationType": "Type d'opération",
-      "orderNumber": "Numéro de commande",
-      "senderInfo": "Informations vendeur",
-      "receiverInfo": "Informations client",
-      "totalsSection": "Section totaux",
-      "paymentInfo": "Informations de paiement",
-      "footer": "Pied de page",
+      "invoiceNumber": "Numéro de Facture",
+      "dueDate": "Date d'Échéance",
+      "operationType": "Type d'Opération",
+      "orderNumber": "Numéro de Commande",
+      "senderInfo": "Informations Vendeur",
+      "receiverInfo": "Informations Client",
+      "totalsSection": "Section Totaux",
+      "paymentInfo": "Informations de Paiement",
+      "footer": "Pied de Page",
       "notes": "Notes",
-      "terms": "Conditions",
+      "terms": "Conditions Générales",
+      "sellerTitle": "Afficher le Titre Vendeur",
+      "customerTitle": "Afficher le Titre Client",
       "date": "Date",
       "quantity": "Quantité",
       "unit": "Unité",
-      "vat": "TVA",
+      "vat": "Taux de TVA",
       "currency": "Devise",
-      "locale": "Locale"
+      "locale": "Langue",
+      "companyName": "Nom de l'Entreprise",
+      "customerName": "Nom du Client",
+      "email": "Adresse Email",
+      "phone": "Numéro de Téléphone",
+      "address": "Adresse",
+      "city": "Ville",
+      "postalCode": "Code Postal",
+      "description": "Description",
+      "unitPrice": "Prix Unitaire",
+      "amount": "Montant",
+      "siret": "Numéro SIRET",
+      "tva": "Numéro de TVA",
+      "bankName": "Nom de la Banque",
+      "iban": "IBAN",
+      "bic": "BIC/SWIFT"
     },
     "currencies": {
       "euro": "Euro (€)",
-      "dollar": "Dollar ($)"
+      "dollar": "Dollar ($)",
+      "pound": "Livre (£)",
+      "yen": "Yen (¥)"
     },
     "locales": {
       "french": "Français (France)",
-      "english": "English (US)"
+      "english": "Anglais (États-Unis)"
     },
     "presets": {
-      "complete": "Facture complète",
-      "simplified": "Facture simplifiée",
-      "quote": "Devis"
+      "complete": "Facture Complète",
+      "simplified": "Facture Simplifiée",
+      "quote": "Format Devis",
+      "minimal": "Mise en Page Minimale",
+      "detailed": "Format Détaillé"
+    },
+    "placeholders": {
+      "companyName": "Saisissez le nom de votre entreprise",
+      "customerName": "Saisissez le nom du client",
+      "email": "email@exemple.com",
+      "phone": "+33 1 23 45 67 89",
+      "address": "123 Rue Principale",
+      "city": "Ville",
+      "postalCode": "12345",
+      "description": "Description du produit ou service",
+      "notes": "Notes ou commentaires supplémentaires",
+      "terms": "Conditions de paiement et modalités",
+      "bankName": "Nom de la banque",
+      "iban": "IBAN du compte bancaire",
+      "bic": "Code BIC/SWIFT"
+    },
+    "tooltips": {
+      "livePreview": "Les modifications apparaissent instantanément dans l'aperçu",
+      "fullscreen": "Voir la facture en mode plein écran",
+      "addItem": "Ajouter une nouvelle ligne d'article à la facture",
+      "removeItem": "Supprimer cet article de la facture",
+      "loadSample": "Charger des données d'exemple pour voir le modèle en action",
+      "showHide": "Basculer la visibilité de cette section",
+      "quickPresets": "Appliquer des options de formatage prédéfinies",
+      "customize": "Ouvrir le panneau de personnalisation pour modifier les paramètres du modèle",
+      "save": "Sauvegarder la facture actuelle dans votre compte",
+      "send": "Envoyer la facture par email au client",
+      "downloadPdf": "Télécharger la facture en fichier PDF",
+      "print": "Imprimer la facture directement depuis votre navigateur"
+    },
+    "messages": {
+      "sampleDataLoaded": "Données d'exemple chargées avec succès",
+      "itemAdded": "Nouvel article ajouté à la facture",
+      "itemRemoved": "Article supprimé de la facture",
+      "loginRequired": "Veuillez vous connecter pour utiliser cette fonctionnalité",
+      "previewMode": "Vous êtes en mode aperçu",
+      "editMode": "Vous êtes en mode édition",
+      "invoiceSaved": "Facture sauvegardée avec succès",
+      "invoiceSent": "Facture envoyée avec succès",
+      "pdfDownloaded": "PDF téléchargé avec succès",
+      "customizationApplied": "Paramètres de personnalisation appliqués",
+      "customizationSaved": "Paramètres de personnalisation sauvegardés",
+      "saveError": "Erreur lors de la sauvegarde. Veuillez réessayer.",
+      "sendError": "Erreur lors de l'envoi. Veuillez réessayer.",
+      "pdfError": "Erreur lors de la génération du PDF. Veuillez réessayer.",
+      "saveFailed": "Échec de la sauvegarde des paramètres. Veuillez réessayer.",
+      "requiredFields": "Veuillez remplir le numéro de facture et le nom du client avant de sauvegarder."
+    },
+    "customization": {
+      "title": "Personnaliser le Modèle de Facture",
+      "sections": {
+        "visibility": "Visibilité des Sections",
+        "columns": "Colonnes du Tableau",
+        "formatting": "Options de Format",
+        "presets": "Modèles Rapides",
+        "mainSections": "Sections Principales de la Facture",
+        "additionalFields": "Champs Supplémentaires",
+        "seller": "Informations du Vendeur",
+        "customer": "Informations du Client"
+      }
     }
   },
   "frenchInvoiceCTA": {
@@ -1402,6 +1754,143 @@
       "professional": "Style Professionnel",
       "multilingual": "Multilingue",
       "pdfExport": "Export PDF"
+    }
+  },
+  "footer": {
+    "help": "Aide",
+    "terms": "Conditions",
+    "privacy": "Confidentialité",
+    "version": "v2.4.0",
+    "problems": "Problèmes de connexion ?"
+  },
+  "frenchInvoice": {
+    "title": "Facture Française Professionnelle",
+    "shortTitle": "Facture FR",
+    "formTitle": "Créez votre facture",
+    "formDescription": "Remplissez le formulaire ci-dessous pour générer une facture professionnelle",
+    "editMode": "Édition",
+    "previewMode": "Aperçu",
+    "exportPDF": "Exporter PDF",
+    "loadSampleData": "Charger données exemple",
+    "save": "Enregistrer",
+    "saving": "Enregistrement...",
+    "print": "Imprimer",
+    "pdf": "PDF",
+    "company": {
+      "title": "Informations de l'entreprise",
+      "name": "Nom de l'entreprise",
+      "address": "Adresse",
+      "city": "Ville",
+      "phone": "Téléphone",
+      "email": "Email",
+      "website": "Site web", 
+      "siret": "SIRET",
+      "logo": "Logo de l'entreprise",
+      "uploadLogo": "Télécharger le logo",
+      "removeLogo": "Supprimer le logo"
+    },
+    "client": {
+      "title": "Informations client",
+      "name": "Nom du client",
+      "address": "Adresse",
+      "city": "Ville",
+      "phone": "Téléphone",
+      "contact": "Contact",
+      "clientLabel": "Client"
+    },
+    "invoice": {
+      "title": "Détails de la facture",
+      "number": "Numéro de facture",
+      "date": "Date de facture",
+      "dueDate": "Date d'échéance",
+      "operationType": "Type d'opération",
+      "generate": "Générer",
+      "invoiceTitle": "FACTURE",
+      "calendarTooltip": "Cliquez pour ouvrir le calendrier ou tapez au format JJ/MM/AAAA",
+      "openCalendar": "Ouvrir le calendrier"
+    },
+    "items": {
+      "title": "Articles et services",
+      "description": "Description",
+      "quantity": "Quantité",
+      "unitPrice": "Prix unitaire (€)",
+      "vatRate": "TVA (%)",
+      "addItem": "Ajouter un article",
+      "removeItem": "Supprimer cet article",
+      "unit": "Unité",
+      "date": "Date",
+      "qty": "Qté",
+      "amount": "Montant"
+    },
+    "payment": {
+      "title": "Informations de paiement",
+      "bank": "Banque",
+      "iban": "IBAN",
+      "bic": "BIC (optionnel)",
+      "methods": "Moyens de paiement:",
+      "showPaymentInfo": "Afficher les informations de paiement sur la facture",
+      "showPaymentInfoHelp": "Décochez cette option si vous ne souhaitez pas afficher les coordonnées bancaires sur la facture"
+    },
+    "footer": {
+      "title": "Paramètres du pied de page",
+      "showFooter": "Afficher le pied de page",
+      "companyName": "Nom de l'entreprise (pied de page)",
+      "address": "Adresse (pied de page)",
+      "customMessage": "Message personnalisé"
+    },
+    "totals": {
+      "subtotalHT": "Total HT",
+      "vatAmount": "TVA 20,00%",
+      "totalTTC": "Total TTC"
+    },
+    "validation": {
+      "required": "Ce champ est requis",
+      "invalidIban": "IBAN invalide",
+      "invalidEmail": "Email invalide"
+    },
+    "messages": {
+      "saveSuccess": "Facture enregistrée avec succès !",
+      "saveError": "Erreur lors de l'enregistrement",
+      "printReady": "Prêt pour l'impression",
+      "pdfGenerated": "PDF généré avec succès"
+    },
+    "operationTypes": {
+      "goodsDelivery": "Livraison de marchandises",
+      "serviceProvision": "Prestation de services", 
+      "sale": "Vente",
+      "rental": "Location"
+    },
+    "vatRates": {
+      "0": "0%",
+      "5.5": "5,5%", 
+      "10": "10%",
+      "20": "20%"
+    },
+    "placeholders": {
+      "companyName": "SWIFTFACTURE LTD",
+      "companyAddress": "123 Avenue des Entrepreneurs",
+      "companyCity": "75008 PARIS",
+      "companyPhone": "01 23 45 67 89",
+      "companyEmail": "contact@swiftfacture.com",
+      "companyWebsite": "www.swiftfacture.com",
+      "clientName": "IT PERFECT LTD",
+      "clientAddress": "456 Rue de l'Innovation",
+      "clientCity": "69000 LYON",
+      "clientPhone": "04 72 00 00 00",
+      "invoiceNumber": "SF-2024-001",
+      "invoiceDate": "13/10/2025",
+      "dueDate": "12/11/2025",
+      "itemDescription": "Développement solution de facturation personnalisée",
+      "quantity": "1",
+      "bank": "CRÉDIT AGRICOLE ÎLE-DE-FRANCE",
+      "iban": "FR14 2004 1010 0505 0001 3M02 606",
+      "bic": "AGRIFRPP",
+      "footerMessage": "Merci pour votre confiance. En cas de questions, n'hésitez pas à nous contacter.",
+      "unit": "pce"
+    },
+    "actions": {
+      "preview": "Aperçu",
+      "save": "Enregistrer"
     }
   }
 }

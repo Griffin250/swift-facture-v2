@@ -1,5 +1,5 @@
+import { Download, Eye, EyeOff, Mail, Save } from 'lucide-react';
 import { useRef, useState } from 'react';
-import { Download, Eye, EyeOff, Mail, Printer, Save } from 'lucide-react';
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 import { useTranslation } from 'react-i18next';
@@ -72,6 +72,8 @@ const FrenchInvoiceTemplate = ({
   showFooter = true,
   showNotes = true,
   showTerms = true,
+  showSellerTitle = true,
+  showCustomerTitle = true,
   
   // Table column visibility
   hideColumns = [], // Array of column names to hide: ['Date', 'Unit', 'VAT', 'Qty']
@@ -172,10 +174,7 @@ const FrenchInvoiceTemplate = ({
     window.location.href = mailtoLink;
   };
 
-  // Print function
-  const printInvoice = () => {
-    window.print();
-  };
+
 
   // Save function
   const saveInvoice = () => {
@@ -249,13 +248,6 @@ const FrenchInvoiceTemplate = ({
               {t('invoiceTemplate.sendEmail')}
             </button>
             <button
-              onClick={printInvoice}
-              className="flex items-center gap-2 px-3 py-2 bg-orange-600 text-white rounded-md hover:bg-orange-700 transition-colors"
-            >
-              <Printer size={16} />
-              {t('invoiceTemplate.print')}
-            </button>
-            <button
               onClick={saveInvoice}
               className="save-invoice-btn flex items-center gap-2 px-3 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
             >
@@ -315,15 +307,18 @@ const FrenchInvoiceTemplate = ({
         </div>
 
         {/* Sender and Receiver Section */}
-        <div className="border-b border-gray-200 p-8">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+  <div className="border-b border-gray-200 p-4 pt-2 pb-2">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
             {/* Sender Info */}
             {showSenderInfo && (
               <div>
-                <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-3">
-                  {t('invoiceTemplate.sender')}
-                </h3>
-                <div className="bg-gray-50 p-4 rounded-md">
+                {/* Seller title removed from preview, only shown if showSellerTitle is true (customization panel) */}
+                {showSellerTitle && (
+                  <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-1">
+                    {t('invoiceTemplate.sender')}
+                  </h3>
+                )}
+                <div className="bg-gray-50 p-2 rounded-md">
                   <p className="font-semibold text-gray-900">{invoiceData.sender.name}</p>
                   <p className="text-gray-700">{invoiceData.sender.address}</p>
                   <p className="text-gray-700">
@@ -352,10 +347,13 @@ const FrenchInvoiceTemplate = ({
             {/* Receiver Info */}
             {showReceiverInfo && (
               <div>
-                <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-3">
-                  {t('invoiceTemplate.receiver')}
-                </h3>
-                <div className="bg-blue-50 p-4 rounded-md">
+                {/* Client title removed from preview, only shown if showCustomerTitle is true (customization panel) */}
+                {showCustomerTitle && (
+                  <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-1">
+                    {t('invoiceTemplate.receiver')}
+                  </h3>
+                )}
+                <div className="bg-blue-50 p-2 rounded-md">
                   <p className="font-semibold text-gray-900">{invoiceData.receiver.name}</p>
                   <p className="text-gray-700">{invoiceData.receiver.address}</p>
                   <p className="text-gray-700">

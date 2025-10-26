@@ -1,6 +1,10 @@
 import { Link } from "react-router-dom";
 import SwiftFactureLogo from "../../public/assets/logo/SwiftFactureLogo.png";
+import FooterInstallButton from "./FooterInstallButton";
+
 const Footer = () => {
+  // Always show install button in footer
+
   return (
     <footer className="bg-gradient-to-r from-gray-900 to-black border-t border-gray-700">
       <div className="container mx-auto px-4 py-6">
@@ -14,7 +18,7 @@ const Footer = () => {
             />
             <div className="font-bold text-white text-xl">SwiftFacture</div>
             <span className="text-gray-400 text-sm font-bold">
-              — Fast. Professional. Effortless.
+              — Fast & Professional
             </span>
 
             {/* Social Icons */}
@@ -34,10 +38,12 @@ const Footer = () => {
               </a>
             </div>
           </div>
-          <p className="text-gray-500 text-sm text-center m-auto font-bold">
-            {" "}
-            Version: v2.2.1
-          </p>
+          <div className="flex items-center gap-2">
+            <p className="text-gray-500 text-sm text-center font-bold">
+              Version: v2.4.0
+            </p>
+            <FooterInstallButton />
+          </div>
           {/* Navigation Links */}
           <div className="flex space-x-6 text-sm">
             <Link

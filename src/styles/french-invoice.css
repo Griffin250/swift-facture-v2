@@ -1,0 +1,1220 @@
+/* French Invoice Template Styles */
+
+:root {
+  /* Color Palette based on PALETTES EXPRESS design */
+  --primary-blue: #1f4e79;
+  --secondary-teal: #4a90a4;
+  --accent-orange: #f59e0b;
+  --accent-red: #dc2626;
+  
+  /* Text Colors */
+  --text-primary: #1f2937;
+  --text-secondary: #6b7280;
+  --text-light: #9ca3af;
+  
+  /* Background Colors */
+  --bg-white: #ffffff;
+  --bg-light: #f9fafb;
+  --bg-table: #f3f4f6;
+  --bg-header: #1f4e79;
+  
+  /* Border Colors */
+  --border-light: #e5e7eb;
+  --border-medium: #d1d5db;
+  --border-dark: #374151;
+  --border-table: #000000;
+}
+
+/* Main Invoice Container */
+.french-invoice {
+  width: 210mm;
+  max-width: 210mm;
+  min-height: 297mm;
+  margin: 0 auto;
+  padding: 20mm 12mm 12mm 12mm; /* Increased top padding from 12mm to 20mm */
+  background: var(--bg-white);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-size: 12px;
+  line-height: 1.3;
+  color: var(--text-primary);
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  /* Ensure A4 aspect ratio and centering */
+  aspect-ratio: 210/297;
+}
+
+/* Typography */
+.french-invoice h1 {
+  font-size: 24px;
+  font-weight: bold;
+  margin: 0;
+  color: var(--primary-blue);
+}
+
+.french-invoice h2 {
+  font-size: 18px;
+  font-weight: 600;
+  margin: 0 0 8px 0;
+  color: var(--text-primary);
+}
+
+.french-invoice h3 {
+  font-size: 14px;
+  font-weight: 600;
+  margin: 0 0 6px 0;
+  color: var(--text-primary);
+}
+
+.french-invoice p {
+  margin: 0 0 4px 0;
+  line-height: 1.3;
+}
+
+/* Header Section */
+.invoice-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 12mm; /* Increased from 8mm to 12mm */
+  padding-bottom: 4mm;  /* Increased from 2mm to 4mm */
+  margin-top: 4mm;      /* Added top margin for better spacing */
+}
+
+.company-logo {
+  max-width: 80mm;
+  max-height: 25mm;
+  object-fit: contain;
+}
+
+.invoice-title {
+  text-align: right;
+  color: var(--primary-blue);
+}
+
+.invoice-number {
+  font-size: 28px;
+  font-weight: bold;
+  color: var(--primary-blue);
+  margin: 0;
+}
+
+.invoice-meta {
+  font-size: 12px;
+  color: var(--text-primary);
+  margin-top: 4px;
+  font-weight: 500;
+}
+
+/* Company Information Section */
+.company-info {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10mm;
+  margin-bottom: 12mm; /* Increased from 8mm to 12mm */
+  margin-top: 2mm;     /* Added top margin */
+}
+
+.company-block {
+  background: var(--bg-light);
+  padding: 6mm;
+  border-radius: 4px;
+  border-left: 4px solid var(--primary-blue);
+}
+
+.company-block h3 {
+  color: var(--primary-blue);
+  font-size: 12px;
+  font-weight: bold;
+  margin-bottom: 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.company-name {
+  font-weight: bold;
+  font-size: 12px;
+  color: var(--text-primary);
+  margin-bottom: 4px;
+}
+
+.company-details {
+  font-size: 11px;
+  line-height: 1.4;
+  color: var(--text-primary);
+  font-weight: 400;
+}
+
+/* Invoice Details Table */
+.invoice-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 8mm;  /* Increased from 5mm to 8mm */
+  margin-top: 4mm;     /* Added top margin */
+  font-size: 11px;
+}
+
+.invoice-table th {
+  background: var(--primary-blue);
+  color: white;
+  padding: 6px 8px;
+  text-align: left;
+  font-weight: 600;
+  font-size: 10px;
+  border: none;
+  border-bottom: 2px solid var(--primary-blue);
+}
+
+.invoice-table th.text-center {
+  text-align: center;
+}
+
+.invoice-table th.text-right {
+  text-align: right;
+}
+
+.invoice-table td {
+  padding: 6px 8px;
+  border: none;
+  border-bottom: 1px solid var(--border-light);
+  vertical-align: top;
+}
+
+.invoice-table td.text-center {
+  text-align: center;
+}
+
+.invoice-table td.text-right {
+  text-align: right;
+  font-weight: 500;
+}
+
+.invoice-table tbody tr:nth-child(even) {
+  background: var(--bg-table);
+}
+
+.invoice-table tbody tr:hover {
+  background: #e0f2fe;
+}
+
+/* Add bottom border to last item row to separate from totals */
+.invoice-table tbody tr:last-child td {
+  border-bottom: 2px solid var(--primary-blue);
+}
+
+/* Totals Section */
+.totals-section {
+  margin-left: auto;
+  width: 60mm;
+  margin-bottom: 5mm;
+  font-size: 12px;
+}
+
+.totals-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.totals-table td {
+  padding: 4px 8px;
+  border-bottom: 1px solid var(--border-light);
+  font-size: 11px;
+}
+
+.totals-table .label {
+  text-align: left;
+  font-weight: 500;
+  color: var(--text-primary);
+}
+.totals-table .amount {
+  text-align: right;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.totals-table .total-row {
+  background: none;
+  color: var(--text-primary);
+  font-weight: bold;
+  border-bottom: 2px solid var(--primary-blue);
+  font-size: 14px;
+}
+
+.total-amount {
+  font-size: 14px;
+  color: var(--text-primary);
+  font-weight: bold;
+}
+
+/* Payment Information */
+.payment-info {
+  background: var(--bg-light);
+  padding: 4mm;
+  border-radius: 4px;
+  border-left: 4px solid var(--accent-orange);
+  margin-bottom: 5mm;
+}
+
+.payment-info h3 {
+  color: var(--accent-orange);
+  font-size: 12px;
+  margin-bottom: 4px;
+}
+
+.payment-details {
+  font-size: 11px;
+  color: var(--text-primary);
+  line-height: 1.4;
+}
+
+.payment-line {
+  margin-bottom: 4mm;
+}
+
+.payment-line:last-child {
+  margin-bottom: 0;
+}
+
+.iban-display {
+  font-family: 'Courier New', monospace;
+  background: white;
+  padding: 3px 6px;
+  border-radius: 2px;
+  border: 1px solid var(--border-medium);
+  margin-top: 2px;
+  font-weight: bold;
+  font-size: 11px;
+  color: var(--text-primary);
+}
+
+/* Main Content Container */
+.invoice-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4mm;
+}
+
+/* Footer */
+.invoice-footer {
+  border-top: 1px solid var(--border-medium);
+  padding-top: 4mm;
+  text-align: center;
+  font-size: 11px;
+  color: var(--text-primary);
+  margin-top: auto;
+  flex-shrink: 0;
+}
+
+.footer-message {
+  margin-top: 3mm;
+  font-style: italic;
+  font-size: 10px;
+  color: var(--text-primary);
+  line-height: 1.3;
+}
+
+/* Print Optimizations */
+@media print {
+  .french-invoice {
+    width: 210mm !important;
+    max-height: 297mm !important;
+    margin: 0 !important;
+    padding: 12mm !important;
+    font-size: 10px !important;
+    line-height: 1.2 !important;
+    color: black !important;
+    background: white !important;
+    box-shadow: none !important;
+    border: none !important;
+    
+    /* Prevent page breaks */
+    page-break-inside: avoid;
+    break-inside: avoid;
+    overflow: hidden !important;
+  }
+  
+  /* Content container optimization */
+  .invoice-content {
+    gap: 2mm !important;
+    flex-shrink: 1 !important;
+    overflow: hidden !important;
+  }
+  
+  /* Hide non-printable elements */
+  .no-print {
+    display: none !important;
+  }
+  
+  /* Ensure table fits on page */
+  .invoice-table {
+    font-size: 11px !important;
+  }
+  
+  .invoice-table th,
+  .invoice-table td {
+    padding: 3px 5px !important;
+    color: black !important;
+    border: none !important;
+  }
+  
+  .invoice-table th {
+    border-bottom: 2px solid black !important;
+  }
+  
+  .invoice-table td {
+    border-bottom: 1px solid #ccc !important;
+  }
+  
+  /* Add bottom border to last item row in print */
+  .invoice-table tbody tr:last-child td {
+    border-bottom: 2px solid black !important;
+  }
+  
+  /* Ensure totals section fits */
+  .totals-section {
+    font-size: 12px !important;
+  }
+  
+  .totals-table td {
+    color: black !important;
+  }
+  
+  .totals-table .total-row {
+    background: none !important;
+    color: black !important;
+    font-size: 12.5px !important;
+  }
+  
+  .total-amount {
+    color: black !important;
+    font-size: 12.5px !important;
+  }
+  
+  /* Footer visibility */
+  .invoice-footer {
+    font-size: 11px !important;
+    color: black !important;
+  }
+  
+  .footer-message {
+    font-size: 10px !important;
+    color: black !important;
+  }
+  
+  /* Company logo optimization */
+  .company-logo {
+    max-height: 20mm !important;
+  }
+  
+  /* Footer at bottom */
+  .invoice-footer {
+    margin-top: auto !important;
+    padding-top: 2mm !important;
+    font-size: 10px !important;
+    border-top: 0.5px solid #000 !important;
+  }
+}
+
+/* Screen-only styles */
+@media screen {
+  .french-invoice {
+    border: 1px solid var(--border-light);
+    border-radius: 8px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    margin: 20px auto;
+  }
+}
+
+/* Responsive Design */
+@media screen and (max-width: 768px) {
+  .french-invoice {
+    width: 100%;
+    max-width: 100%;
+    padding: 10mm;
+    font-size: 10px;
+  }
+  
+  .company-info {
+    grid-template-columns: 1fr;
+    gap: 8mm;
+  }
+  
+  .invoice-header {
+    flex-direction: column;
+    gap: 10mm;
+  }
+  
+  .invoice-title {
+    text-align: left;
+  }
+  
+  .totals-section {
+    width: 100%;
+  }
+}
+
+/* Utility Classes */
+.text-bold {
+  font-weight: bold;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.text-right {
+  text-align: right;
+}
+
+.text-primary {
+  color: var(--primary-blue);
+}
+
+.text-secondary {
+  color: var(--text-secondary);
+}
+
+.mb-small {
+  margin-bottom: 2mm;
+}
+
+.mb-medium {
+  margin-bottom: 4mm;
+}
+
+.mb-large {
+  margin-bottom: 8mm;
+}
+
+/* Animation for better UX */
+.french-invoice {
+  transition: all 0.3s ease;
+}
+
+.invoice-table tbody tr {
+  transition: background-color 0.2s ease;
+}
+
+/* Focus states for accessibility */
+.french-invoice input:focus,
+.french-invoice select:focus,
+.french-invoice textarea:focus {
+  outline: 2px solid var(--primary-blue);
+  outline-offset: 2px;
+}
+
+/* Form Styles */
+.french-invoice-form {
+  max-width: 100%;
+  width: 100%;
+  margin: 0;
+  padding: 16px;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.form-container {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
+
+.form-section {
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 20px;
+  background: #fafafa;
+}
+
+.section-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0 0 20px 0;
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--primary-blue);
+  border-bottom: 2px solid var(--primary-blue);
+  padding-bottom: 10px;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 15px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.form-group label {
+  font-weight: 500;
+  color: #374151;
+  font-size: 14px;
+}
+
+.form-group input,
+.form-group select {
+  padding: 10px 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  font-size: 14px;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+  outline: none;
+  border-color: var(--primary-blue);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.form-group input.error {
+  border-color: #dc2626;
+}
+
+.error-message {
+  color: #dc2626;
+  font-size: 12px;
+  margin-top: 2px;
+}
+
+.input-with-button {
+  display: flex;
+  gap: 10px;
+  align-items: stretch;
+}
+
+.input-with-button input {
+  flex: 1;
+}
+
+/* Footer Settings Form Styles */
+.form-group label input[type="checkbox"] {
+  margin-right: 8px;
+  margin-bottom: 0;
+}
+
+.form-group label {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.form-group-full {
+  grid-column: 1 / -1;
+}
+
+.form-group textarea {
+  padding: 10px 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  font-size: 14px;
+  font-family: inherit;
+  resize: vertical;
+  min-height: 80px;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.form-group textarea:focus {
+  outline: none;
+  border-color: var(--primary-blue);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+/* Help text styling */
+.form-help-text {
+  font-size: 12px;
+  color: var(--text-secondary);
+  margin-top: 4px;
+  font-style: italic;
+}
+
+/* Date input styling */
+.form-group input[pattern] {
+  font-family: 'Courier New', monospace;
+  letter-spacing: 0.5px;
+}
+
+.form-group input[pattern]:invalid {
+  border-color: #fbbf24;
+  background-color: #fefce8;
+}
+
+.form-group input[pattern]:invalid:focus {
+  border-color: #f59e0b;
+  box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.1);
+}
+
+/* Date input container with calendar */
+.date-input-container {
+  position: relative;
+  display: flex;
+  align-items: stretch;
+}
+
+.date-input-container input {
+  flex: 1;
+  font-family: 'Courier New', monospace;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  padding-right: 40px; /* Make room for calendar button */
+}
+
+.date-input-container input:focus {
+  outline: none;
+  border-color: var(--primary-blue);
+  box-shadow: 0 0 0 3px rgba(31, 78, 121, 0.1);
+}
+
+.date-input-container input:hover {
+  border-color: var(--primary-blue);
+}
+
+.calendar-btn {
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  color: var(--text-secondary);
+  cursor: pointer;
+  padding: 6px;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 28px;
+  height: 28px;
+  z-index: 10;
+}
+
+.calendar-btn:hover {
+  color: var(--primary-blue);
+  background-color: rgba(31, 78, 121, 0.1);
+  transform: translateY(-50%) scale(1.1);
+}
+
+.calendar-btn:active {
+  transform: translateY(-50%) scale(0.95);
+  background-color: rgba(31, 78, 121, 0.2);
+}
+
+.generate-button {
+  padding: 10px 16px;
+  background: var(--accent-orange);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  white-space: nowrap;
+}
+
+.generate-button:hover {
+  background: #ea580c;
+}
+
+/* Logo Upload Styles */
+.logo-upload {
+  grid-column: 1 / -1;
+}
+
+.logo-upload-area {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.logo-input {
+  display: none;
+}
+
+.logo-upload-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 20px;
+  background: var(--bg-light);
+  color: #374151;
+  border: 2px dashed #d1d5db;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-weight: 500;
+  width: fit-content;
+}
+
+.logo-upload-button:hover {
+  border-color: var(--primary-blue);
+  color: var(--primary-blue);
+}
+
+.logo-preview {
+  position: relative;
+  width: fit-content;
+  display: inline-block;
+}
+
+.logo-preview-img {
+  max-width: 200px;
+  max-height: 100px;
+  border: 1px solid #e5e7eb;
+  border-radius: 4px;
+  object-fit: contain;
+}
+
+.logo-remove-btn {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  background: #dc2626;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 12px;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.logo-remove-btn:hover {
+  background: #b91c1c;
+  transform: scale(1.1);
+}
+
+/* Items Section */
+.items-container {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.item-row {
+  display: flex;
+  gap: 15px;
+  align-items: end;
+  padding: 15px;
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+}
+
+.item-fields {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 3fr 0.8fr 1fr 1fr;
+  gap: 15px;
+}
+
+.remove-item-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  background: #dc2626;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.remove-item-button:hover {
+  background: #b91c1c;
+}
+
+.add-item-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 15px;
+  background: var(--primary-blue);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  font-weight: 500;
+}
+
+.add-item-button:hover {
+  background: #2563eb;
+}
+
+/* Form Actions */
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 15px;
+  padding-top: 20px;
+  border-top: 1px solid #e5e7eb;
+}
+
+.preview-button,
+.save-button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 24px;
+  border: none;
+  border-radius: 6px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.preview-button {
+  background: var(--bg-light);
+  color: #374151;
+}
+
+.preview-button:hover {
+  background: #e5e7eb;
+}
+
+.save-button {
+  background: #10b981;
+  color: white;
+}
+
+.save-button:hover {
+  background: #059669;
+}
+
+/* Page Layout Styles */
+.french-invoice-page {
+  min-height: 100vh;
+  background: #f8fafc;
+}
+
+.page-header {
+  background: white;
+  border-bottom: 1px solid #e2e8f0;
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+.page-title {
+  font-size: 24px;
+  font-weight: 600;
+  color: var(--primary-blue);
+  margin: 0 0 20px 0;
+}
+
+.header-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.view-toggle {
+  display: flex;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.toggle-button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  background: white;
+  color: #64748b;
+  border: none;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.toggle-button:hover {
+  background: #f1f5f9;
+}
+
+.toggle-button.active {
+  background: var(--primary-blue);
+  color: white;
+}
+
+.action-buttons {
+  display: flex;
+  gap: 12px;
+}
+
+.action-button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  border: none;
+  border-radius: 6px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.action-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.print-button {
+  background: #6b7280;
+  color: white;
+}
+
+.print-button:hover:not(:disabled) {
+  background: #4b5563;
+}
+
+.pdf-button {
+  background: #dc2626;
+  color: white;
+}
+
+.pdf-button:hover:not(:disabled) {
+  background: #b91c1c;
+}
+
+.save-message {
+  margin-top: 15px;
+  padding: 12px 16px;
+  border-radius: 6px;
+  font-weight: 500;
+}
+
+.save-message.success {
+  background: #dcfce7;
+  color: #166534;
+  border: 1px solid #bbf7d0;
+}
+
+.save-message.error {
+  background: #fef2f2;
+  color: #dc2626;
+  border: 1px solid #fecaca;
+}
+
+.page-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+/* Responsive Design for Page Layout */
+@media (max-width: 768px) {
+  .page-header {
+    padding: 15px;
+  }
+
+  .page-title {
+    font-size: 20px;
+  }
+
+  .header-actions {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 15px;
+  }
+
+  .view-toggle {
+    justify-self: stretch;
+  }
+
+  .toggle-button {
+    flex: 1;
+    justify-content: center;
+  }
+
+  .action-buttons {
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .action-button {
+    flex: 1;
+    justify-content: center;
+    min-width: 120px;
+  }
+
+  .page-content {
+    padding: 0 15px;
+  }
+}
+
+/* Enhanced Layout for Full Width Usage */
+@media (min-width: 1024px) {
+  .form-section {
+    padding: 16px;
+  }
+  
+  .form-container {
+    gap: 20px;
+  }
+  
+  .french-invoice {
+    max-width: 100%;
+    padding: 10mm;
+  }
+  
+  /* Optimize grid layout for better space usage */
+  .form-grid {
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 12px;
+  }
+  
+  /* Better logo sizing for larger screens */
+  .company-logo {
+    max-width: 120mm;
+    max-height: 30mm;
+  }
+  
+  /* Compact section spacing */
+  .section-title {
+    margin-bottom: 15px;
+    font-size: 16px;
+  }
+}
+
+/* Collapsible Section Styles */
+.section-title.cursor-pointer {
+  user-select: none;
+  transition: background-color 0.2s ease;
+  padding: 8px 12px;
+  border-radius: 6px;
+  margin: -8px -12px 16px -12px;
+}
+
+.section-title.cursor-pointer:hover {
+  background-color: #f3f4f6;
+}
+
+.items-container.max-h-96 {
+  scrollbar-width: thin;
+  scrollbar-color: var(--accent-orange) rgba(31, 78, 121, 0.1);
+}
+
+.items-container.max-h-96::-webkit-scrollbar {
+  width: 6px;
+}
+
+.items-container.max-h-96::-webkit-scrollbar-track {
+  background: rgba(31, 78, 121, 0.1);
+  border-radius: 3px;
+}
+
+.items-container.max-h-96::-webkit-scrollbar-thumb {
+  background: linear-gradient(135deg, var(--accent-orange), var(--primary-blue));
+  border-radius: 3px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.items-container.max-h-96::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(135deg, #e68900, #1a4a73);
+  box-shadow: 0 0 4px rgba(245, 158, 11, 0.3);
+}
+
+/* Responsive adjustments for form sections */
+@media (max-width: 1024px) {
+  .form-section {
+    margin-bottom: 20px;
+  }
+  
+  .items-container.max-h-96 {
+    max-height: 300px;
+  }
+}
+
+@media (max-width: 768px) {
+  .form-section {
+    margin-bottom: 16px;
+  }
+  
+  .section-title {
+    font-size: 14px;
+  }
+  
+  .items-container.max-h-96 {
+    max-height: 250px;
+  }
+}
+
+/* Custom Scrollbar Styling - Orange and Blue Theme */
+/* Webkit browsers (Chrome, Safari, Edge) */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(31, 78, 121, 0.1); /* Light blue background */
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(135deg, var(--accent-orange), var(--primary-blue));
+  border-radius: 4px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(135deg, #e68900, #1a4a73);
+  box-shadow: 0 0 6px rgba(245, 158, 11, 0.3);
+}
+
+::-webkit-scrollbar-corner {
+  background: rgba(31, 78, 121, 0.1);
+}
+
+/* Firefox scrollbar styling */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--accent-orange) rgba(31, 78, 121, 0.1);
+}
+
+/* Specific scrollable areas */
+.overflow-y-auto::-webkit-scrollbar {
+  width: 6px;
+}
+
+.overflow-y-auto::-webkit-scrollbar-thumb {
+  background: var(--accent-orange);
+  border-radius: 3px;
+}
+
+.overflow-y-auto::-webkit-scrollbar-thumb:hover {
+  background: #e68900;
+}
+
+.overflow-x-auto::-webkit-scrollbar {
+  height: 6px;
+}
+
+.overflow-x-auto::-webkit-scrollbar-thumb {
+  background: var(--primary-blue);
+  border-radius: 3px;
+}
+
+.overflow-x-auto::-webkit-scrollbar-thumb:hover {
+  background: #1a4a73;
+}

@@ -3,11 +3,11 @@
   "short_name": "SwiftFacture",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#000000",
-  "theme_color": "#1D4ED8",
+  "background_color": "#ffffff",
+  "theme_color": "#1E40AF",
   "icons": [
     {
-      "src": "/apple-touch-icon.png",
+      "src": "/logo/SwiftFactureLogo.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any maskable"

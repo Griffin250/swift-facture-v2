@@ -25,9 +25,10 @@ const Header = () => {
     { label: getTranslation('navigation.dashboard', 'Tableau de bord'), to: "/" },
     { label: getTranslation('navigation.about', 'À propos'), to: "/about" },
     { label: getTranslation('navigation.invoice', 'Facture'), to: "/invoice" },
+    { label: getTranslation('navigation.frenchInvoice', 'Facture Française'), to: "/french-invoice" },
     { label: getTranslation('navigation.estimate', 'Devis'), to: "/estimate" },
-    { label: getTranslation('navigation.receipt', 'Reçu'), to: "/receipt" },
     { label: getTranslation('navigation.customers', 'Clients'), to: "/customers" },
+    { label: getTranslation('navigation.receipts', 'Reçus'), to: "/receipts" },
   ];
 
 

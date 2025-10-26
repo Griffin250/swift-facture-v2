@@ -47,6 +47,10 @@ const AdminDashboardPanel = () => {
   const [recentActivity, setRecentActivity] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [activityPage, setActivityPage] = useState(1);
+  const activitiesPerPage = 5;
+  const totalPages = Math.ceil(recentActivity.length / activitiesPerPage);
+  const paginatedActivities = recentActivity.slice((activityPage - 1) * activitiesPerPage, activityPage * activitiesPerPage);
 
   useEffect(() => {
     const fetchDashboardData = async () => {
@@ -465,8 +469,8 @@ const AdminDashboardPanel = () => {
           </h3>
         </div>
         <div className="divide-y divide-gray-200 dark:divide-gray-700">
-          {recentActivity.length > 0 ? (
-            recentActivity.map((activity, index) => (
+          {paginatedActivities.length > 0 ? (
+            paginatedActivities.map((activity, index) => (
               <div key={index} className="p-6 flex items-center space-x-4">
                 <div className="flex-shrink-0">
                   {getActivityIcon(activity.type)}
@@ -492,6 +496,28 @@ const AdminDashboardPanel = () => {
             </div>
           )}
         </div>
+        {/* Pagination Controls */}
+        {totalPages > 1 && (
+          <div className="flex justify-center items-center py-4 space-x-2">
+            <button
+              className="px-3 py-1 rounded bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 disabled:opacity-50"
+              onClick={() => setActivityPage((p) => Math.max(1, p - 1))}
+              disabled={activityPage === 1}
+            >
+              Previous
+            </button>
+            <span className="px-2 text-sm font-medium text-gray-700 dark:text-gray-300">
+              Page {activityPage} of {totalPages}
+            </span>
+            <button
+              className="px-3 py-1 rounded bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 disabled:opacity-50"
+              onClick={() => setActivityPage((p) => Math.min(totalPages, p + 1))}
+              disabled={activityPage === totalPages}
+            >
+              Next
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );

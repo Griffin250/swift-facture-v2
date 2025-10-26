@@ -5,13 +5,17 @@ import LanguageDetector from 'i18next-browser-languagedetector';
 // Import translation files
 import frCommon from './resources/fr/common.json';
 import enCommon from './resources/en/common.json';
+import frChatbot from './resources/fr/chatbot.json';
+import enChatbot from './resources/en/chatbot.json';
 
 const resources = {
   fr: {
     common: frCommon,
+    chatbot: frChatbot.chatbot
   },
   en: {
     common: enCommon,
+    chatbot: enChatbot.chatbot
   }
 };
 
@@ -21,19 +25,16 @@ i18n
   .init({
     resources,
     fallbackLng: 'fr', // French as default
+    ns: ['common', 'chatbot'],
     defaultNS: 'common',
-    
     interpolation: {
       escapeValue: false, // React already does escaping
     },
-    
     detection: {
       order: ['localStorage', 'navigator'],
       caches: ['localStorage'],
     },
-
-    // Debug mode - can be disabled in production
-    debug: import.meta.env.DEV,
+    debug: false, // Disabled to reduce console noise
   });
 
 export default i18n;

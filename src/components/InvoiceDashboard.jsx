@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { 
@@ -10,14 +10,22 @@ import {
   Mail, 
   Copy, 
   FileCheck,
-  ChevronDown
+  ChevronDown,
+  ChevronLeft,
+  ChevronRight
 } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { formatCurrency } from "../utils/formatCurrency";
+import { invoiceService } from "../services/invoiceService";
+import { estimateService } from "../services/estimateService";
+import { frenchInvoiceService } from "../services/frenchInvoiceService";
+import { userSettingsService } from "../services/userSettingsService";
+import { useAuth } from "../contexts/AuthContext";
 
 const InvoiceDashboard = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const { user } = useAuth();
   const [invoices, setInvoices] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('All');
@@ -25,21 +33,166 @@ const InvoiceDashboard = () => {
   const [sortBy, setSortBy] = useState('date');
   const [sortOrder, setSortOrder] = useState('desc');
   const [showFilters, setShowFilters] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  
+  // Pagination state
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage] = useState(8);
 
-  // Fetch invoices from localStorage
-  const fetchInvoices = () => {
+  // Fetch invoices from database
+  const fetchInvoices = useCallback(async () => {
+    if (!user) return;
+    setLoading(true);
+    setError(null);
     try {
-      const savedInvoices = JSON.parse(localStorage.getItem('savedInvoices') || '[]');
-      setInvoices(savedInvoices);
+      // Fetch invoices and estimates
+      const [regularInvoicesData, frenchInvoicesData, estimatesResult] = await Promise.all([
+        invoiceService.getAllInvoices(),
+        frenchInvoiceService.getAllFrenchInvoices(),
+        estimateService.getAllEstimates()
+      ]);
+
+      // Transform regular invoices
+      const transformedRegularInvoices = regularInvoicesData
+        .filter(inv => inv.template_name !== 'french_invoice')
+        .map(inv => ({
+          id: inv.id,
+          type: 'regular',
+          invoice: {
+            number: inv.invoice_number,
+            date: inv.date,
+            paymentDate: inv.due_date,
+          },
+          billTo: {
+            name: inv.customer?.name || 'N/A',
+            address: inv.customer?.address || '',
+            phone: inv.customer?.phone || '',
+          },
+          shipTo: {
+            name: inv.customer?.name || 'N/A',
+            address: inv.customer?.address || '',
+            phone: inv.customer?.phone || '',
+          },
+          yourCompany: {
+            name: 'Your Company',
+            address: '',
+            phone: '',
+          },
+          items: inv.invoice_items || [],
+          taxPercentage: 0,
+          taxAmount: inv.tax,
+          subTotal: inv.subtotal,
+          grandTotal: inv.total,
+          notes: inv.notes,
+          selectedCurrency: inv.currency || 'EUR',
+          status: inv.status,
+          savedAt: inv.created_at,
+          template: 'Regular Invoice'
+        }));
+
+      // Transform French invoices
+      const transformedFrenchInvoices = frenchInvoicesData.map(inv => {
+        let frenchData = {};
+        try {
+          const parsedNotes = JSON.parse(inv.notes || '{}');
+          frenchData = parsedNotes.type === 'french_invoice' ? parsedNotes : {};
+        } catch (e) {
+          console.warn('Could not parse French invoice data:', e);
+        }
+        return {
+          id: inv.id,
+          type: 'french',
+          invoice: {
+            number: inv.invoice_number,
+            date: inv.date,
+            paymentDate: inv.due_date,
+          },
+          billTo: {
+            name: frenchData.client?.name || 'N/A',
+            address: frenchData.client?.address || '',
+            phone: frenchData.client?.phone || '',
+          },
+          shipTo: {
+            name: frenchData.client?.name || 'N/A',
+            address: frenchData.client?.address || '',
+            phone: frenchData.client?.phone || '',
+          },
+          yourCompany: {
+            name: frenchData.company?.name || 'Your Company',
+            address: frenchData.company?.address || '',
+            phone: frenchData.company?.phone || '',
+          },
+          items: inv.invoice_items || [],
+          taxPercentage: 0,
+          taxAmount: inv.tax,
+          subTotal: inv.subtotal,
+          grandTotal: inv.total,
+          notes: frenchData.userNotes || '',
+          selectedCurrency: 'EUR',
+          status: inv.status,
+          savedAt: inv.created_at,
+          template: 'French Invoice'
+        };
+      });
+
+      // Transform estimates
+      const transformedEstimates = (estimatesResult.data || []).map(est => ({
+        id: est.id,
+        type: 'estimate',
+        invoice: {
+          number: est.estimate_number,
+          date: est.date,
+          paymentDate: est.valid_until,
+        },
+        billTo: {
+          name: est.customers?.name || 'N/A',
+          address: est.customers?.address || '',
+          phone: est.customers?.phone || '',
+        },
+        shipTo: {
+          name: est.customers?.name || 'N/A',
+          address: est.customers?.address || '',
+          phone: est.customers?.phone || '',
+        },
+        yourCompany: {
+          name: 'Your Company',
+          address: '',
+          phone: '',
+        },
+        items: est.estimate_items || est.items || [],
+        taxPercentage: 0,
+        taxAmount: est.tax,
+        subTotal: est.subtotal,
+        grandTotal: est.total,
+        notes: est.notes,
+        selectedCurrency: est.currency || 'EUR',
+        status: est.status,
+        savedAt: est.created_at,
+        template: 'Estimate'
+      }));
+
+      // Combine all invoices and estimates
+      const allInvoices = [
+        ...transformedRegularInvoices,
+        ...transformedFrenchInvoices,
+        ...transformedEstimates
+      ];
+      setInvoices(allInvoices);
+  // Estimates are now included in invoices list
     } catch (error) {
-      console.error('Error fetching invoices:', error);
+      console.error('Error fetching invoices/estimates:', error);
+      setError('Failed to load invoices/estimates');
       setInvoices([]);
+  // Estimates are now included in invoices list
+    } finally {
+      setLoading(false);
     }
-  };
+  }, [user]);
 
   useEffect(() => {
     fetchInvoices();
-  }, []);
+  }, [fetchInvoices]);
 
   // Filter and sort invoices
   const filteredInvoices = invoices
@@ -86,10 +239,21 @@ const InvoiceDashboard = () => {
       }
     });
 
+  // Pagination logic
+  const totalPages = Math.ceil(filteredInvoices.length / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const paginatedInvoices = filteredInvoices.slice(startIndex, endIndex);
+
+  // Reset to page 1 when filter changes
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchTerm, statusFilter, currencyFilter]);
+
   // Actions
   const editInvoice = (invoice) => {
-    // Navigate to main form with pre-filled data
-    navigate('/', { state: { invoiceData: invoice } });
+    // Navigate to invoice form with pre-filled data
+    navigate('/invoice', { state: { invoiceData: invoice } });
   };
 
   const previewInvoice = (invoice) => {
@@ -102,40 +266,74 @@ const InvoiceDashboard = () => {
     });
   };
 
-  const duplicateInvoice = (invoice) => {
-    const duplicatedInvoice = {
-      ...invoice,
-      invoice: {
-        ...invoice.invoice,
-        number: `${invoice.invoice?.number || 'INV'}-COPY-${Date.now()}`,
-        date: new Date().toISOString().split('T')[0]
-      },
-      savedAt: new Date().toISOString()
-    };
-    
-    const savedInvoices = JSON.parse(localStorage.getItem('savedInvoices') || '[]');
-    savedInvoices.push(duplicatedInvoice);
-    localStorage.setItem('savedInvoices', JSON.stringify(savedInvoices));
-    fetchInvoices();
-  };
-
-  const deleteInvoice = (invoiceNumber) => {
-    if (window.confirm(t('invoiceDashboard.confirmDelete'))) {
-      const savedInvoices = JSON.parse(localStorage.getItem('savedInvoices') || '[]');
-      const filteredInvoices = savedInvoices.filter(inv => inv.invoice?.number !== invoiceNumber);
-      localStorage.setItem('savedInvoices', JSON.stringify(filteredInvoices));
-      fetchInvoices();
+  const duplicateInvoice = async (invoice) => {
+    try {
+      // Generate new invoice number for the duplicate
+      const newInvoiceNumber = await userSettingsService.generateInvoiceNumber();
+      
+      const duplicateData = {
+        invoice_number: newInvoiceNumber,
+        invoice_date: new Date().toISOString().split('T')[0],
+        due_date: invoice.invoice?.paymentDate,
+        subtotal: invoice.subTotal,
+        tax_rate: invoice.taxPercentage,
+        tax_amount: invoice.taxAmount,
+        total_amount: invoice.grandTotal,
+        currency: invoice.selectedCurrency,
+        notes: invoice.notes,
+        
+        // Company information
+        company_name: invoice.yourCompany?.name,
+        company_address: invoice.yourCompany?.address,
+        company_phone: invoice.yourCompany?.phone,
+        
+        // Bill to information
+        bill_to_name: invoice.billTo?.name,
+        bill_to_address: invoice.billTo?.address,
+        bill_to_phone: invoice.billTo?.phone,
+        
+        // Ship to information
+        ship_to_name: invoice.shipTo?.name,
+        ship_to_address: invoice.shipTo?.address,
+        ship_to_phone: invoice.shipTo?.phone,
+        
+        // Items
+        items: invoice.items?.map(item => ({
+          name: item.name,
+          description: item.description,
+          quantity: parseFloat(item.quantity) || 0,
+          unit_price: parseFloat(item.amount) || parseFloat(item.unit_price) || 0,
+          total: parseFloat(item.total) || 0
+        })) || []
+      };
+      
+      await invoiceService.createInvoice(duplicateData);
+      await fetchInvoices(); // Refresh the list
+    } catch (error) {
+      console.error('Error duplicating invoice:', error);
+      alert('Failed to duplicate invoice. Please try again.');
     }
   };
 
-  const changeStatus = (invoiceNumber, newStatus) => {
-    const savedInvoices = JSON.parse(localStorage.getItem('savedInvoices') || '[]');
-    const invoiceIndex = savedInvoices.findIndex(inv => inv.invoice?.number === invoiceNumber);
-    
-    if (invoiceIndex !== -1) {
-      savedInvoices[invoiceIndex].status = newStatus;
-      localStorage.setItem('savedInvoices', JSON.stringify(savedInvoices));
-      fetchInvoices();
+  const deleteInvoice = async (invoiceId) => {
+    if (window.confirm(t('invoiceDashboard.confirmDelete'))) {
+      try {
+        await invoiceService.deleteInvoice(invoiceId);
+        await fetchInvoices(); // Refresh the list
+      } catch (error) {
+        console.error('Error deleting invoice:', error);
+        alert('Failed to delete invoice. Please try again.');
+      }
+    }
+  };
+
+  const changeStatus = async (invoiceId, newStatus) => {
+    try {
+      await invoiceService.updateInvoiceStatus(invoiceId, newStatus);
+      await fetchInvoices(); // Refresh the list
+    } catch (error) {
+      console.error('Error updating invoice status:', error);
+      alert('Failed to update invoice status. Please try again.');
     }
   };
 
@@ -159,6 +357,38 @@ const InvoiceDashboard = () => {
 
 
 
+  // Show loading state
+  if (loading) {
+    return (
+      <div className="bg-white rounded-2xl shadow-xl border border-gray-100 p-6 mb-8">
+        <div className="flex items-center justify-center py-8">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+          <span className="ml-3 text-gray-600">Loading invoices...</span>
+        </div>
+      </div>
+    );
+  }
+
+  // Show error state
+  if (error) {
+    return (
+      <div className="bg-white rounded-2xl shadow-xl border border-gray-100 p-6 mb-8">
+        <div className="flex items-center justify-center py-8">
+          <div className="text-red-600 text-center">
+            <p className="text-lg font-semibold mb-2">Error Loading Invoices</p>
+            <p className="text-sm">{error}</p>
+            <Button 
+              onClick={fetchInvoices} 
+              className="mt-4 bg-blue-600 hover:bg-blue-700 text-white"
+            >
+              Try Again
+            </Button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="bg-white rounded-2xl shadow-xl border border-gray-100 p-6 mb-8">
       {/* Header */}
@@ -173,16 +403,13 @@ const InvoiceDashboard = () => {
         </div>
         <div className="flex items-center gap-4 mt-4 md:mt-0">
           <span className="text-sm text-gray-500">
-            {filteredInvoices.length} {t('invoiceDashboard.invoices')}
+            {filteredInvoices.length > 0 
+              ? `${startIndex + 1}-${Math.min(endIndex, filteredInvoices.length)} ${t('invoiceDashboard.pagination.of')} ${filteredInvoices.length} ${t('invoiceDashboard.invoices')}`
+              : `0 ${t('invoiceDashboard.invoices')}`
+            }
           </span>
           <Button
-            onClick={() => {
-              // Scroll to invoice form
-              const invoiceForm = document.querySelector('.invoice-form-section');
-              if (invoiceForm) {
-                invoiceForm.scrollIntoView({ behavior: 'smooth', block: 'start' });
-              }
-            }}
+            onClick={() => navigate('/invoice')}
             className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition-colors"
           >
             {t('invoiceDashboard.createNewInvoice')}
@@ -294,13 +521,7 @@ const InvoiceDashboard = () => {
               {t('invoiceDashboard.noInvoicesDescription')}
             </p>
             <Button
-              onClick={() => {
-                // Scroll to invoice form
-                const invoiceForm = document.querySelector('.invoice-form-section');
-                if (invoiceForm) {
-                  invoiceForm.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                }
-              }}
+              onClick={() => navigate('/invoice')}
               className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg transition-colors"
             >
               {t('invoiceDashboard.createFirstInvoice')}
@@ -320,6 +541,9 @@ const InvoiceDashboard = () => {
                   {t('invoiceDashboard.customer')}
                 </th>
                 <th className="text-left py-3 px-4 font-semibold text-gray-700">
+                  {t('invoiceDashboard.type', 'Type')}
+                </th>
+                <th className="text-left py-3 px-4 font-semibold text-gray-700">
                   {t('invoiceDashboard.amount')}
                 </th>
                 <th className="text-left py-3 px-4 font-semibold text-gray-700">
@@ -331,8 +555,8 @@ const InvoiceDashboard = () => {
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-100">
-              {filteredInvoices.map((invoice) => (
-                <tr key={invoice.invoice?.number || Math.random()} className="hover:bg-gray-50 transition-colors">
+              {paginatedInvoices.map((invoice) => (
+                <tr key={invoice.id || invoice.invoice?.number || Math.random()} className="hover:bg-gray-50 transition-colors">
                   <td className="py-4 px-4 font-mono font-semibold text-blue-700">
                     {invoice.invoice?.number || 'N/A'}
                   </td>
@@ -342,13 +566,22 @@ const InvoiceDashboard = () => {
                   <td className="py-4 px-4 font-semibold text-gray-900">
                     {invoice.billTo?.name || 'N/A'}
                   </td>
+                  <td className="py-4 px-4">
+                    <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
+                      invoice.template === 'French Invoice' 
+                        ? 'bg-blue-100 text-blue-800' 
+                        : 'bg-gray-100 text-gray-800'
+                    }`}>
+                      {invoice.template || 'Regular Invoice'}
+                    </span>
+                  </td>
                   <td className="py-4 px-4 font-bold text-blue-700">
                     {formatCurrency(invoice.grandTotal || 0, invoice.selectedCurrency || 'USD')}
                   </td>
                   <td className="py-4 px-4">
                     <select
                       value={invoice.status || 'draft'}
-                      onChange={(e) => changeStatus(invoice.invoice?.number, e.target.value)}
+                      onChange={(e) => changeStatus(invoice.id, e.target.value)}
                       className={`inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium border-0 cursor-pointer ${getStatusColor(invoice.status || 'draft')}`}
                     >
                       <option value="draft">{t('invoiceDashboard.draft')}</option>
@@ -389,7 +622,7 @@ const InvoiceDashboard = () => {
                         <Mail className="w-4 h-4" />
                       </button>
                       <button
-                        onClick={() => deleteInvoice(invoice.invoice?.number)}
+                        onClick={() => deleteInvoice(invoice.id)}
                         className="text-red-600 hover:text-red-800 p-2 rounded hover:bg-red-50 transition-colors"
                         title={t('invoiceDashboard.delete')}
                       >
@@ -403,6 +636,90 @@ const InvoiceDashboard = () => {
           </table>
         )}
       </div>
+
+      {/* Pagination Controls */}
+      {filteredInvoices.length > itemsPerPage && (
+        <div className="flex items-center justify-between px-4 py-3 bg-white border-t border-gray-200 sm:px-6">
+          <div className="flex justify-between sm:hidden">
+            <button
+              onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
+              disabled={currentPage === 1}
+              className="relative inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {t('invoiceDashboard.pagination.previous')}
+            </button>
+            <button
+              onClick={() => setCurrentPage(Math.min(totalPages, currentPage + 1))}
+              disabled={currentPage === totalPages}
+              className="relative inline-flex items-center px-4 py-2 ml-3 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {t('invoiceDashboard.pagination.next')}
+            </button>
+          </div>
+          <div className="hidden sm:flex sm:flex-1 sm:items-center sm:justify-between">
+            <div>
+              <p className="text-sm text-gray-700">
+                {t('invoiceDashboard.pagination.showing')} <span className="font-medium">{startIndex + 1}</span> {t('invoiceDashboard.pagination.to')}{' '}
+                <span className="font-medium">{Math.min(endIndex, filteredInvoices.length)}</span> {t('invoiceDashboard.pagination.of')}{' '}
+                <span className="font-medium">{filteredInvoices.length}</span> {t('invoiceDashboard.pagination.results')}
+              </p>
+            </div>
+            <div>
+              <nav className="relative z-0 inline-flex -space-x-px rounded-md shadow-sm" aria-label={t('invoiceDashboard.pagination.page')}>
+                <button
+                  onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
+                  disabled={currentPage === 1}
+                  className="relative inline-flex items-center px-2 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-l-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  <ChevronLeft className="w-5 h-5" aria-hidden="true" />
+                </button>
+                
+                {/* Page Numbers */}
+                {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => {
+                  // Show first page, last page, current page, and pages around current page
+                  if (
+                    page === 1 ||
+                    page === totalPages ||
+                    (page >= currentPage - 1 && page <= currentPage + 1)
+                  ) {
+                    return (
+                      <button
+                        key={page}
+                        onClick={() => setCurrentPage(page)}
+                        className={`relative inline-flex items-center px-4 py-2 text-sm font-medium ${
+                          page === currentPage
+                            ? 'z-10 bg-blue-50 border-blue-500 text-blue-600'
+                            : 'bg-white border-gray-300 text-gray-500 hover:bg-gray-50'
+                        } border`}
+                      >
+                        {page}
+                      </button>
+                    );
+                  } else if (
+                    page === currentPage - 2 ||
+                    page === currentPage + 2
+                  ) {
+                    return (
+                      <span key={page} className="relative inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300">
+                        ...
+                      </span>
+                    );
+                  }
+                  return null;
+                })}
+                
+                <button
+                  onClick={() => setCurrentPage(Math.min(totalPages, currentPage + 1))}
+                  disabled={currentPage === totalPages}
+                  className="relative inline-flex items-center px-2 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-r-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  <ChevronRight className="w-5 h-5" aria-hidden="true" />
+                </button>
+              </nav>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
