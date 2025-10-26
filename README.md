@@ -1,8 +1,8 @@
 # SwiftFacture
 
-**Fast & Professional**
+**Fast & Professional Invoice Management with Premium Subscriptions**
 
-SwiftFacture is a modern invoice and receipt generator built with React. Create professional invoices, estimates, and receipts in seconds with beautiful templates, multi-language support, and client-side PDF generation.
+SwiftFacture is a modern invoice and receipt generator with complete Stripe subscription integration, 30-day free trials, and comprehensive admin dashboard. Built with React, featuring real-time analytics and professional payment processing.
 
 ![SwiftFacture](public/assets/logo/SwiftFactureLogo.png)
 

@@ -72,79 +72,74 @@ const Premium = () => {
   const planData = getPlanData(t);
 
   useEffect(() => {
-    if (isLoading) {
-      // Set a timeout to prevent infinite loading
-      const timeout = setTimeout(() => {
-        if (isLoading) {
-          console.warn('Premium page loading timeout, forcing completion');
-          setIsLoading(false);
+    const loadData = async () => {
+      try {
+        setIsLoading(true);
+        
+        // Load plans from database using subscription service
+        const SubscriptionService = (await import('@/services/subscriptionService')).default;
+        const plansResult = await SubscriptionService.getPlans();
+        
+        if (plansResult.success && plansResult.plans.length > 0) {
+          setPlans(plansResult.plans);
+        } else {
+          // Use fallback data if database fails
+          setPlans(planData);
         }
-      }, 5000);
 
-      const loadData = async () => {
-        try {
-          // Load plans from database - with fallback
-          try {
-            const { default: TrialService } = await import('@/services/trialService');
-            const plansResult = await TrialService.getPlans();
-            if (plansResult.success && plansResult.plans.length > 0) {
-              setPlans(plansResult.plans);
-              if (plansResult.needsMigration) {
-                setNeedsMigration(true);
-              }
-            } else {
-              // Use fallback data
-              setPlans([]);
-              if (plansResult.needsMigration) {
-                setNeedsMigration(true);
-              }
-            }
-          } catch (planError) {
-            console.warn('Could not load plans from database, using fallback:', planError);
-            setPlans([]);
-            setNeedsMigration(true);
+        // Check user subscription status if logged in
+        if (user) {
+          const subscriptionResult = await SubscriptionService.checkSubscription();
+          if (subscriptionResult.success && subscriptionResult.subscribed) {
+            setUserAccess({
+              hasAccess: true,
+              plan: { id: subscriptionResult.plan_id },
+              subscription: subscriptionResult
+            });
           }
-
-          // Check user access if logged in
-          if (user) {
-            try {
-              const { default: TrialService } = await import('@/services/trialService');
-              const accessResult = await TrialService.checkAccess(user.id);
-              setUserAccess(accessResult);
-              if (accessResult.needsMigration) {
-                setNeedsMigration(true);
-              }
-            } catch (accessError) {
-              console.warn('Could not check user access, using fallback:', accessError);
-              setUserAccess(null);
-            }
-          }
-        } catch (error) {
-          console.error('Error loading premium data:', error);
-        } finally {
-          clearTimeout(timeout);
-          setIsLoading(false);
         }
-      };
+      } catch (error) {
+        console.error('Error loading premium data:', error);
+        setPlans(planData); // Fallback to static data
+      } finally {
+        setIsLoading(false);
+      }
+    };
 
-      loadData();
-      return () => clearTimeout(timeout);
+    loadData();
+  }, [user]);
+
+  const handleSelectPlan = async (plan) => {
+    if (plan.id === "free") {
+      // Show registration dialog for free plan
+      if (!user) {
+        setSelectedPlan(plan);
+        setIsDialogOpen(true);
+      }
+      return;
     }
-  }, [user, isLoading]);
 
-  const handleSelectPlan = (plan) => {
-    if (plan.id === "free" || plan.id === "trial-30") {
-      // Always show registration dialog for free plans - don't redirect anywhere
+    if (!user) {
+      // Show registration dialog for non-logged in users
       setSelectedPlan(plan);
       setIsDialogOpen(true);
-    } else if (user) {
-      // Show upgrade dialog for paid plans
-      setSelectedPlan(plan);
-      setIsDialogOpen(true);
-    } else {
-      // Show registration dialog
-      setSelectedPlan(plan);
-      setIsDialogOpen(true);
+      return;
+    }
+
+    // For logged-in users, initiate Stripe checkout
+    try {
+      const SubscriptionService = (await import('@/services/subscriptionService')).default;
+      const result = await SubscriptionService.createCheckout(plan.stripe_price_id, plan.id);
+      
+      if (result.success && result.url) {
+        // Open Stripe checkout in new tab
+        window.open(result.url, '_blank');
+      } else {
+        alert(t('errors.checkoutFailed', 'Failed to create checkout session. Please try again.'));
+      }
+    } catch (error) {
+      console.error('Error creating checkout:', error);
+      alert(t('errors.checkoutFailed', 'Failed to create checkout session. Please try again.'));
     }
   };
 

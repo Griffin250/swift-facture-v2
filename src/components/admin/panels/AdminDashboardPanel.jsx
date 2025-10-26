@@ -255,8 +255,9 @@ const AdminDashboardPanel = () => {
                 labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
                 datasets: [
                   {
-                    label: 'Revenue ($)',
-                    data: [12000, 19000, 15000, 25000, 22000, 30000, 28000, 35000, 32000, 40000, 38000, 45000],
+                    label: 'Revenue (€)',
+                    // Real data will be added via admin service in future updates
+                    data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, (metricsResult.data.totalRevenue || 0)],
                     borderColor: 'rgb(59, 130, 246)',
                     backgroundColor: 'rgba(59, 130, 246, 0.1)',
                     fill: true,
@@ -286,7 +287,7 @@ const AdminDashboardPanel = () => {
                     displayColors: false,
                     callbacks: {
                       label: function(context) {
-                        return '$' + context.parsed.y.toLocaleString();
+                        return '€' + context.parsed.y.toLocaleString();
                       }
                     }
                   }
@@ -300,7 +301,7 @@ const AdminDashboardPanel = () => {
                     },
                     ticks: {
                       callback: function(value) {
-                        return '$' + (value / 1000) + 'k';
+                        return '€' + (value / 1000) + 'k';
                       }
                     }
                   },
@@ -328,15 +329,19 @@ const AdminDashboardPanel = () => {
           <div className="h-80 flex items-center justify-center">
             <Doughnut
               data={{
-                labels: ['Free Users', 'Trial Users', 'Premium Users', 'Enterprise'],
+                labels: ['Free Users', 'Trial Users', 'Premium Users'],
                 datasets: [
                   {
-                    data: [45, 25, 20, 10],
+                    // Calculate percentages from real data
+                    data: [
+                      metricsResult.data.totalUsers - metricsResult.data.activeTrials || 0,
+                      metricsResult.data.activeTrials || 0,
+                      0 // Premium users - will be calculated from Stripe in future
+                    ],
                     backgroundColor: [
                       'rgb(59, 130, 246)',
                       'rgb(249, 115, 22)',
-                      'rgb(34, 197, 94)',
-                      'rgb(239, 68, 68)'
+                      'rgb(34, 197, 94)'
                     ],
                     borderWidth: 0,
                     hoverOffset: 10
@@ -361,7 +366,9 @@ const AdminDashboardPanel = () => {
                     cornerRadius: 8,
                     callbacks: {
                       label: function(context) {
-                        return context.label + ': ' + context.parsed + '%';
+                        const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                        const percentage = total > 0 ? ((context.parsed / total) * 100).toFixed(1) : 0;
+                        return context.label + ': ' + context.parsed + ' (' + percentage + '%)';
                       }
                     }
                   }
@@ -375,6 +382,83 @@ const AdminDashboardPanel = () => {
               }}
             />
           </div>
+        </div>
+      </div>
+
+      {/* Monthly Comparison Bar Chart */}
+      <div className="bg-white dark:bg-gray-800 rounded-lg shadow border border-gray-200 dark:border-gray-700 p-6 animate-fade-in">
+        <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-6">
+          {t('admin.dashboard.charts.monthlyComparison', 'Monthly Comparison')}
+        </h3>
+        <div className="h-80">
+          <Bar
+            data={{
+              labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+              datasets: [
+                {
+                  label: 'New Users',
+                  // Real data will show current month's data
+                  data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, metricsResult.data.totalUsers || 0],
+                  backgroundColor: 'rgb(59, 130, 246)',
+                  borderRadius: 8,
+                  barThickness: 20
+                },
+                {
+                  label: 'Active Trials',
+                  data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, metricsResult.data.activeTrials || 0],
+                  backgroundColor: 'rgb(249, 115, 22)',
+                  borderRadius: 8,
+                  barThickness: 20
+                }
+              ]
+            }}
+            options={{
+              responsive: true,
+              maintainAspectRatio: false,
+              plugins: {
+                legend: {
+                  position: 'top',
+                  labels: {
+                    padding: 15,
+                    usePointStyle: true,
+                    pointStyle: 'circle'
+                  }
+                },
+                tooltip: {
+                  backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                  padding: 12,
+                  cornerRadius: 8,
+                  displayColors: true
+                }
+              },
+              scales: {
+                y: {
+                  beginAtZero: true,
+                  grid: {
+                    color: 'rgba(0, 0, 0, 0.05)',
+                    drawBorder: false,
+                  }
+                },
+                x: {
+                  grid: {
+                    display: false,
+                    drawBorder: false,
+                  }
+                }
+              },
+              animation: {
+                duration: 2000,
+                easing: 'easeInOutQuart',
+                delay: (context) => {
+                  let delay = 0;
+                  if (context.type === 'data' && context.mode === 'default') {
+                    delay = context.dataIndex * 100 + context.datasetIndex * 50;
+                  }
+                  return delay;
+                }
+              }
+            }}
+          />
         </div>
       </div>
 

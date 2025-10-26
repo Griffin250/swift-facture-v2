@@ -52,42 +52,32 @@ export type Database = {
       }
       billing_events: {
         Row: {
-          created_at: string | null
-          event_data: Json | null
           event_type: string
           id: string
-          organization_id: string
-          subscription_id: string | null
+          metadata: Json | null
+          org_id: string
+          timestamp: string | null
         }
         Insert: {
-          created_at?: string | null
-          event_data?: Json | null
           event_type: string
           id?: string
-          organization_id: string
-          subscription_id?: string | null
+          metadata?: Json | null
+          org_id: string
+          timestamp?: string | null
         }
         Update: {
-          created_at?: string | null
-          event_data?: Json | null
           event_type?: string
           id?: string
-          organization_id?: string
-          subscription_id?: string | null
+          metadata?: Json | null
+          org_id?: string
+          timestamp?: string | null
         }
         Relationships: [
           {
-            foreignKeyName: "billing_events_organization_id_fkey"
-            columns: ["organization_id"]
+            foreignKeyName: "billing_events_org_id_fkey"
+            columns: ["org_id"]
             isOneToOne: false
             referencedRelation: "organizations"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "billing_events_subscription_id_fkey"
-            columns: ["subscription_id"]
-            isOneToOne: false
-            referencedRelation: "billing_subscriptions"
             referencedColumns: ["id"]
           },
         ]
@@ -95,59 +85,46 @@ export type Database = {
       billing_subscriptions: {
         Row: {
           created_at: string | null
-          current_period_end: string | null
-          current_period_start: string | null
           id: string
-          organization_id: string
+          org_id: string
           plan_id: string
-          status: string | null
-          stripe_customer_id: string | null
-          stripe_subscription_id: string | null
+          status: string
+          subscription_end: string | null
+          subscription_start: string | null
           trial_end: string | null
           trial_start: string | null
           updated_at: string | null
         }
         Insert: {
           created_at?: string | null
-          current_period_end?: string | null
-          current_period_start?: string | null
           id?: string
-          organization_id: string
+          org_id: string
           plan_id: string
-          status?: string | null
-          stripe_customer_id?: string | null
-          stripe_subscription_id?: string | null
+          status?: string
+          subscription_end?: string | null
+          subscription_start?: string | null
           trial_end?: string | null
           trial_start?: string | null
           updated_at?: string | null
         }
         Update: {
           created_at?: string | null
-          current_period_end?: string | null
-          current_period_start?: string | null
           id?: string
-          organization_id?: string
+          org_id?: string
           plan_id?: string
-          status?: string | null
-          stripe_customer_id?: string | null
-          stripe_subscription_id?: string | null
+          status?: string
+          subscription_end?: string | null
+          subscription_start?: string | null
           trial_end?: string | null
           trial_start?: string | null
           updated_at?: string | null
         }
         Relationships: [
           {
-            foreignKeyName: "billing_subscriptions_organization_id_fkey"
-            columns: ["organization_id"]
+            foreignKeyName: "billing_subscriptions_org_id_fkey"
+            columns: ["org_id"]
             isOneToOne: true
             referencedRelation: "organizations"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "billing_subscriptions_plan_id_fkey"
-            columns: ["plan_id"]
-            isOneToOne: false
-            referencedRelation: "plans"
             referencedColumns: ["id"]
           },
         ]
@@ -156,74 +133,41 @@ export type Database = {
         Row: {
           address: string | null
           city: string | null
-          company_name: string | null
           country: string | null
           created_at: string | null
-          currency: string | null
-          customer_number: number | null
-          customer_type: string | null
           email: string | null
           id: string
-          mobile_phone: string | null
           name: string
-          notes: string | null
           phone: string | null
           postal_code: string | null
-          state_province: string | null
-          status: string | null
-          street_address: string | null
           updated_at: string | null
           user_id: string
-          vat_id: string | null
-          website: string | null
         }
         Insert: {
           address?: string | null
           city?: string | null
-          company_name?: string | null
           country?: string | null
           created_at?: string | null
-          currency?: string | null
-          customer_number?: number | null
-          customer_type?: string | null
           email?: string | null
           id?: string
-          mobile_phone?: string | null
           name: string
-          notes?: string | null
           phone?: string | null
           postal_code?: string | null
-          state_province?: string | null
-          status?: string | null
-          street_address?: string | null
           updated_at?: string | null
           user_id: string
-          vat_id?: string | null
-          website?: string | null
         }
         Update: {
           address?: string | null
           city?: string | null
-          company_name?: string | null
           country?: string | null
           created_at?: string | null
-          currency?: string | null
-          customer_number?: number | null
-          customer_type?: string | null
           email?: string | null
           id?: string
-          mobile_phone?: string | null
           name?: string
-          notes?: string | null
           phone?: string | null
           postal_code?: string | null
-          state_province?: string | null
-          status?: string | null
-          street_address?: string | null
           updated_at?: string | null
           user_id?: string
-          vat_id?: string | null
-          website?: string | null
         }
         Relationships: [
           {
@@ -234,36 +178,6 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
-      }
-      email_logs: {
-        Row: {
-          created_at: string
-          email_type: string
-          id: string
-          metadata: Json | null
-          organization_name: string | null
-          recipient_email: string
-          sent_at: string
-        }
-        Insert: {
-          created_at?: string
-          email_type: string
-          id?: string
-          metadata?: Json | null
-          organization_name?: string | null
-          recipient_email: string
-          sent_at?: string
-        }
-        Update: {
-          created_at?: string
-          email_type?: string
-          id?: string
-          metadata?: Json | null
-          organization_name?: string | null
-          recipient_email?: string
-          sent_at?: string
-        }
-        Relationships: []
       }
       estimate_items: {
         Row: {
@@ -490,33 +404,6 @@ export type Database = {
           },
         ]
       }
-      messages: {
-        Row: {
-          country: string | null
-          id: number
-          is_authenticated: boolean | null
-          text: string
-          timestamp: string
-          username: string
-        }
-        Insert: {
-          country?: string | null
-          id?: number
-          is_authenticated?: boolean | null
-          text: string
-          timestamp?: string
-          username: string
-        }
-        Update: {
-          country?: string | null
-          id?: number
-          is_authenticated?: boolean | null
-          text?: string
-          timestamp?: string
-          username?: string
-        }
-        Relationships: []
-      }
       notifications: {
         Row: {
           created_at: string | null
@@ -552,30 +439,30 @@ export type Database = {
       }
       org_members: {
         Row: {
-          created_at: string | null
           id: string
-          organization_id: string
-          role: string | null
+          joined_at: string | null
+          org_id: string
+          role: string
           user_id: string
         }
         Insert: {
-          created_at?: string | null
           id?: string
-          organization_id: string
-          role?: string | null
+          joined_at?: string | null
+          org_id: string
+          role?: string
           user_id: string
         }
         Update: {
-          created_at?: string | null
           id?: string
-          organization_id?: string
-          role?: string | null
+          joined_at?: string | null
+          org_id?: string
+          role?: string
           user_id?: string
         }
         Relationships: [
           {
-            foreignKeyName: "org_members_organization_id_fkey"
-            columns: ["organization_id"]
+            foreignKeyName: "org_members_org_id_fkey"
+            columns: ["org_id"]
             isOneToOne: false
             referencedRelation: "organizations"
             referencedColumns: ["id"]
@@ -588,7 +475,6 @@ export type Database = {
           id: string
           name: string
           owner_id: string
-          slug: string
           updated_at: string | null
         }
         Insert: {
@@ -596,7 +482,6 @@ export type Database = {
           id?: string
           name: string
           owner_id: string
-          slug: string
           updated_at?: string | null
         }
         Update: {
@@ -604,7 +489,6 @@ export type Database = {
           id?: string
           name?: string
           owner_id?: string
-          slug?: string
           updated_at?: string | null
         }
         Relationships: []
@@ -674,49 +558,63 @@ export type Database = {
           created_at: string | null
           description_en: string | null
           description_fr: string | null
-          features: Json | null
+          display_order: number
+          features: Json
           id: string
-          is_active: boolean | null
+          is_active: boolean
+          max_customers: number | null
+          max_invoices_per_month: number | null
+          max_premium_deliveries: number | null
           name_en: string
           name_fr: string
-          price_monthly: number | null
+          price_monthly: number
           price_yearly: number | null
-          trial_days: number | null
+          stripe_price_id: string | null
+          stripe_product_id: string | null
           updated_at: string | null
         }
         Insert: {
           created_at?: string | null
           description_en?: string | null
           description_fr?: string | null
-          features?: Json | null
+          display_order?: number
+          features?: Json
           id: string
-          is_active?: boolean | null
+          is_active?: boolean
+          max_customers?: number | null
+          max_invoices_per_month?: number | null
+          max_premium_deliveries?: number | null
           name_en: string
           name_fr: string
-          price_monthly?: number | null
+          price_monthly?: number
           price_yearly?: number | null
-          trial_days?: number | null
+          stripe_price_id?: string | null
+          stripe_product_id?: string | null
           updated_at?: string | null
         }
         Update: {
           created_at?: string | null
           description_en?: string | null
           description_fr?: string | null
-          features?: Json | null
+          display_order?: number
+          features?: Json
           id?: string
-          is_active?: boolean | null
+          is_active?: boolean
+          max_customers?: number | null
+          max_invoices_per_month?: number | null
+          max_premium_deliveries?: number | null
           name_en?: string
           name_fr?: string
-          price_monthly?: number | null
+          price_monthly?: number
           price_yearly?: number | null
-          trial_days?: number | null
+          stripe_price_id?: string | null
+          stripe_product_id?: string | null
           updated_at?: string | null
         }
         Relationships: []
       }
       profiles: {
         Row: {
-          avatar_url: string | null
           company_name: string | null
           created_at: string | null
           email: string
@@ -726,7 +624,6 @@ export type Database = {
           updated_at: string | null
         }
         Insert: {
-          avatar_url?: string | null
           company_name?: string | null
           created_at?: string | null
           email: string
@@ -736,7 +633,6 @@ export type Database = {
           updated_at?: string | null
         }
         Update: {
-          avatar_url?: string | null
           company_name?: string | null
           created_at?: string | null
           email?: string
@@ -806,7 +702,6 @@ export type Database = {
           notes: string | null
           payment_method: string | null
           receipt_number: string
-          status: string | null
           subtotal: number | null
           tax: number | null
           template_name: string | null
@@ -822,7 +717,6 @@ export type Database = {
           notes?: string | null
           payment_method?: string | null
           receipt_number: string
-          status?: string | null
           subtotal?: number | null
           tax?: number | null
           template_name?: string | null
@@ -838,7 +732,6 @@ export type Database = {
           notes?: string | null
           payment_method?: string | null
           receipt_number?: string
-          status?: string | null
           subtotal?: number | null
           tax?: number | null
           template_name?: string | null
@@ -852,48 +745,6 @@ export type Database = {
             columns: ["customer_id"]
             isOneToOne: false
             referencedRelation: "customers"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      support_chats: {
-        Row: {
-          id: string
-          message: string
-          org_id: string | null
-          sender_type: string
-          timestamp: string
-          user_id: string | null
-        }
-        Insert: {
-          id?: string
-          message: string
-          org_id?: string | null
-          sender_type: string
-          timestamp?: string
-          user_id?: string | null
-        }
-        Update: {
-          id?: string
-          message?: string
-          org_id?: string | null
-          sender_type?: string
-          timestamp?: string
-          user_id?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "support_chats_org_id_fkey"
-            columns: ["org_id"]
-            isOneToOne: false
-            referencedRelation: "organizations"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "support_chats_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "profiles"
             referencedColumns: ["id"]
           },
         ]
@@ -979,6 +830,7 @@ export type Database = {
         Args: { _user_id: string }
         Returns: Database["public"]["Enums"]["app_role"]
       }
+      has_active_subscription: { Args: { user_uuid: string }; Returns: boolean }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
@@ -988,7 +840,7 @@ export type Database = {
       }
     }
     Enums: {
-      app_role: "user" | "admin" | "super_admin" | "support"
+      app_role: "user" | "admin" | "super_admin"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -1116,7 +968,7 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
-      app_role: ["user", "admin", "super_admin", "support"],
+      app_role: ["user", "admin", "super_admin"],
     },
   },
 } as const
