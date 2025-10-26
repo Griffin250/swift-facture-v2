@@ -1,8 +1,9 @@
 import { StrictMode, Suspense, useState, useEffect } from "react";
 import ReactDOM from "react-dom/client";
+import { I18nextProvider } from 'react-i18next';
 import App from "./App.jsx";
 import "./index.css";
-import "./i18n"; // Initialize i18n
+import i18n from "./i18n"; // Import i18n instance
 
 const LoadingFallback = () => {
   const [showTimeout, setShowTimeout] = useState(false);
@@ -33,9 +34,11 @@ const LoadingFallback = () => {
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <StrictMode>
-    <Suspense fallback={<LoadingFallback />}>
-      <App />
-    </Suspense>
+    <I18nextProvider i18n={i18n}>
+      <Suspense fallback={<LoadingFallback />}>
+        <App />
+      </Suspense>
+    </I18nextProvider>
   </StrictMode>
 );
 
