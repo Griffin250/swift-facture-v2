@@ -51,6 +51,22 @@ serve(async (req) => {
     if (customers.data.length > 0) {
       customerId = customers.data[0].id;
       logStep("Found existing customer", { customerId });
+      
+      // Check for existing subscriptions and their currency
+      const existingSubs = await stripe.subscriptions.list({ customer: customerId, limit: 1 });
+      if (existingSubs.data.length > 0) {
+        const existingCurrency = existingSubs.data[0].currency;
+        logStep("Found existing subscription", { currency: existingCurrency });
+        
+        // Get the currency of the new price
+        const priceDetails = await stripe.prices.retrieve(price_id);
+        const newCurrency = priceDetails.currency;
+        
+        if (existingCurrency !== newCurrency) {
+          logStep("Currency mismatch detected", { existingCurrency, newCurrency });
+          throw new Error(`You already have an active subscription in ${existingCurrency.toUpperCase()}. Please cancel your current subscription first or contact support to change currencies.`);
+        }
+      }
     } else {
       logStep("No existing customer found, will create during checkout");
     }
