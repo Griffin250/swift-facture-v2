@@ -83,7 +83,14 @@ serve(async (req) => {
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : String(error);
     logStep("ERROR in create-checkout", { message: errorMessage });
-    return new Response(JSON.stringify({ error: errorMessage }), {
+    
+    // Provide user-friendly error for currency mismatch
+    let userMessage = errorMessage;
+    if (errorMessage.includes('cannot combine currencies')) {
+      userMessage = 'Currency mismatch: Your Stripe account has a different currency. Please contact support or use a price in your account currency (USD).';
+    }
+    
+    return new Response(JSON.stringify({ error: userMessage }), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
       status: 500,
     });
