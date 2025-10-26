@@ -109,11 +109,14 @@ const Premium = () => {
     loadData();
   }, [user]);
 
-  const handleSelectPlan = async (plan) => {
-    if (plan.id === "free") {
+  const handleSelectPlan = async (planData) => {
+    // Find the original plan data with stripe_price_id
+    const fullPlan = plans.find(p => p.id === planData.id) || planData;
+    
+    if (fullPlan.id === "free") {
       // Show registration dialog for free plan
       if (!user) {
-        setSelectedPlan(plan);
+        setSelectedPlan(fullPlan);
         setIsDialogOpen(true);
       }
       return;
@@ -121,7 +124,7 @@ const Premium = () => {
 
     if (!user) {
       // Show registration dialog for non-logged in users
-      setSelectedPlan(plan);
+      setSelectedPlan(fullPlan);
       setIsDialogOpen(true);
       return;
     }
@@ -129,7 +132,14 @@ const Premium = () => {
     // For logged-in users, initiate Stripe checkout
     try {
       const SubscriptionService = (await import('@/services/subscriptionService')).default;
-      const result = await SubscriptionService.createCheckout(plan.stripe_price_id, plan.id);
+      const priceId = fullPlan.stripe_price_id;
+      
+      if (!priceId) {
+        alert(t('errors.missingPriceId', 'This plan is not yet configured. Please contact support.'));
+        return;
+      }
+      
+      const result = await SubscriptionService.createCheckout(priceId, fullPlan.id);
       
       if (result.success && result.url) {
         // Open Stripe checkout in new tab
