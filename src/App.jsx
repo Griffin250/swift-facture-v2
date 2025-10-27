@@ -31,6 +31,7 @@ import AdminRoute from "./components/admin/AdminRoute";
 import EmailVerification from "./pages/EmailVerification";
 import FrenchInvoiceDemo from "./pages/FrenchInvoiceDemo";
 import Account from "./pages/Account";
+import Billing from "./pages/Billing";
 
 const queryClient = new QueryClient();
 
@@ -53,6 +54,7 @@ const AppContent = () => {
         <Route path="/receipts" element={<ProtectedRoute><Receipts /></ProtectedRoute>} />
         <Route path="/premium" element={<Premium />} />
         <Route path="/account" element={<Account />} />
+        <Route path="/billing" element={<ProtectedRoute><Billing /></ProtectedRoute>} />
         <Route path="/customers" element={<ProtectedRoute><Customers /></ProtectedRoute>} />
         <Route path="/estimate" element={<ProtectedRoute><Estimate /></ProtectedRoute>} />
         <Route path="/login" element={<Login />} />

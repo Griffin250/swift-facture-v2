@@ -77,25 +77,44 @@ const Premium = () => {
         setIsLoading(true);
         
         // Load plans from database using subscription service
-        const SubscriptionService = (await import('@/services/subscriptionService')).default;
+        const { SubscriptionService } = await import('@/services/subscriptionService');
         const plansResult = await SubscriptionService.getPlans();
         
         if (plansResult.success && plansResult.plans.length > 0) {
-          setPlans(plansResult.plans);
+          // Filter out trial plan from public display
+          const publicPlans = plansResult.plans.filter(p => p.id !== 'trial-30');
+          setPlans(publicPlans);
+          
+          // Check if we're using fallback data
+          if (plansResult.fallback) {
+            console.warn('Using fallback plan data due to database issues');
+          }
         } else {
           // Use fallback data if database fails
+          console.warn('Database plans unavailable, using hardcoded fallback');
           setPlans(planData);
         }
 
         // Check user subscription status if logged in
         if (user) {
-          const subscriptionResult = await SubscriptionService.checkSubscription();
-          if (subscriptionResult.success && subscriptionResult.subscribed) {
-            setUserAccess({
-              hasAccess: true,
-              plan: { id: subscriptionResult.plan_id },
-              subscription: subscriptionResult
-            });
+          try {
+            const subscriptionResult = await SubscriptionService.checkSubscription();
+            if (subscriptionResult.success && subscriptionResult.subscribed) {
+              setUserAccess({
+                hasAccess: true,
+                plan: { id: subscriptionResult.plan_id },
+                subscription: subscriptionResult
+              });
+            } else {
+              // Check trial access through auth context
+              const { userAccess: authAccess } = useAuth();
+              if (authAccess?.hasAccess) {
+                setUserAccess(authAccess);
+              }
+            }
+          } catch (subError) {
+            console.error('Error checking subscription status:', subError);
+            // Don't fail the entire page load for subscription check errors
           }
         }
       } catch (error) {
@@ -131,7 +150,7 @@ const Premium = () => {
 
     // For logged-in users, initiate Stripe checkout
     try {
-      const SubscriptionService = (await import('@/services/subscriptionService')).default;
+      const { SubscriptionService } = await import('@/services/subscriptionService');
       const priceId = fullPlan.stripe_price_id;
       
       if (!priceId) {

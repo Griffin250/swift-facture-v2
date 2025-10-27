@@ -1,7 +1,7 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { User, Settings, LogOut, ChevronDown, Shield } from 'lucide-react';
+import { User, Settings, LogOut, ChevronDown, Shield, Crown, CreditCard } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useRole } from '@/hooks/useRole';
 import { useToast } from '@/components/ui/use-toast';
@@ -13,6 +13,8 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Badge } from '@/components/ui/badge';
+import { SubscriptionService } from '@/services/subscriptionService';
 
 const UserProfile = () => {
   const { user, signOut } = useAuth();
@@ -21,8 +23,46 @@ const UserProfile = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const [loading, setLoading] = useState(false);
+  const [subscriptionStatus, setSubscriptionStatus] = useState(null);
+  const [subscriptionLoading, setSubscriptionLoading] = useState(true);
 
   if (!user) return null;
+
+  // Load subscription status
+  useEffect(() => {
+    const loadSubscriptionStatus = async () => {
+      if (!user) return;
+      
+      try {
+        setSubscriptionLoading(true);
+        const result = await SubscriptionService.checkSubscription();
+        
+        if (result.success) {
+          setSubscriptionStatus(result);
+        } else {
+          // Default to free if check fails
+          setSubscriptionStatus({
+            success: true,
+            subscribed: false,
+            plan: 'free',
+            status: 'free'
+          });
+        }
+      } catch (error) {
+        console.error('Error loading subscription status:', error);
+        setSubscriptionStatus({
+          success: true,
+          subscribed: false,
+          plan: 'free',
+          status: 'free'
+        });
+      } finally {
+        setSubscriptionLoading(false);
+      }
+    };
+
+    loadSubscriptionStatus();
+  }, [user]);
 
   // Get user display name from metadata or email
   const getUserDisplayName = () => {
@@ -49,6 +89,59 @@ const UserProfile = () => {
     }
     return displayName.substring(0, 2).toUpperCase();
   };
+
+  // Get subscription display info
+  const getSubscriptionInfo = () => {
+    if (subscriptionLoading) {
+      return {
+        label: t('subscription.loading', 'Loading...'),
+        color: 'secondary',
+        icon: CreditCard
+      };
+    }
+
+    if (!subscriptionStatus?.subscribed) {
+      return {
+        label: t('subscription.free', 'Free Plan'),
+        color: 'secondary',
+        icon: User
+      };
+    }
+
+    const plan = subscriptionStatus.plan || 'unknown';
+    const status = subscriptionStatus.status;
+
+    // Handle different plan types
+    switch (plan.toLowerCase()) {
+      case 'starter':
+        return {
+          label: t('subscription.starter', 'Starter Plan'),
+          color: 'default',
+          icon: Crown
+        };
+      case 'professional':
+      case 'pro':
+        return {
+          label: t('subscription.professional', 'Professional Plan'),
+          color: 'default',
+          icon: Crown
+        };
+      case 'enterprise':
+        return {
+          label: t('subscription.enterprise', 'Enterprise Plan'),
+          color: 'default',
+          icon: Crown
+        };
+      default:
+        return {
+          label: t('subscription.active', 'Active Subscription'),
+          color: 'default',
+          icon: Crown
+        };
+    }
+  };
+
+  const subscriptionInfo = getSubscriptionInfo();
 
   const handleSignOut = async () => {
     setLoading(true);
@@ -97,7 +190,7 @@ const UserProfile = () => {
         </button>
       </DropdownMenuTrigger>
       
-      <DropdownMenuContent align="end" className="w-56">
+      <DropdownMenuContent align="end" className="w-64">
         <div className="px-3 py-2 border-b">
           <p className="text-sm font-medium text-gray-900">
             {getUserDisplayName()}
@@ -105,6 +198,12 @@ const UserProfile = () => {
           <p className="text-xs text-gray-500 truncate">
             {user.email}
           </p>
+          <div className="flex items-center gap-2 mt-2">
+            <subscriptionInfo.icon className="h-3 w-3" />
+            <Badge variant={subscriptionInfo.color} className="text-xs px-2 py-0.5">
+              {subscriptionInfo.label}
+            </Badge>
+          </div>
         </div>
         
         <DropdownMenuItem
@@ -121,6 +220,14 @@ const UserProfile = () => {
         >
           <User className="h-4 w-4" />
           <span>{t('profile.viewProfile', 'View Profile')}</span>
+        </DropdownMenuItem>
+        
+        <DropdownMenuItem
+          onClick={() => handleNavigation('/billing')}
+          className="cursor-pointer flex items-center gap-2 py-2"
+        >
+          <CreditCard className="h-4 w-4" />
+          <span>{t('profile.subscription', 'Manage Subscription')}</span>
         </DropdownMenuItem>
         
         <DropdownMenuItem

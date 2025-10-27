@@ -37,12 +37,17 @@ serve(async (req) => {
     logStep("User authenticated", { userId: user.id, email: user.email });
 
     // Get request body
-    const { price_id, plan_id } = await req.json();
+    const requestBody = await req.json();
+    const { price_id, plan_id } = requestBody;
     if (!price_id) throw new Error("price_id is required");
-    logStep("Checkout request", { price_id, plan_id });
+    logStep("Checkout request", { price_id, plan_id, fullBody: requestBody });
 
-    const stripe = new Stripe(Deno.env.get("STRIPE_SECRET_KEY") || "", { 
-      apiVersion: "2025-08-27.basil" 
+    const stripeKey = Deno.env.get("STRIPE_SECRET_KEY");
+    if (!stripeKey) throw new Error("STRIPE_SECRET_KEY environment variable not set");
+    logStep("Stripe key found", { keyLength: stripeKey.length, keyPrefix: stripeKey.substring(0, 7) });
+    
+    const stripe = new Stripe(stripeKey, { 
+      apiVersion: "2024-10-28.acacia" 
     });
 
     // Check for existing Stripe customer

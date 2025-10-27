@@ -47,6 +47,7 @@ const AdminDashboardPanel = () => {
   const [recentActivity, setRecentActivity] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [rawMetrics, setRawMetrics] = useState(null);
   const [activityPage, setActivityPage] = useState(1);
   const activitiesPerPage = 5;
   const totalPages = Math.ceil(recentActivity.length / activitiesPerPage);
@@ -108,6 +109,7 @@ const AdminDashboardPanel = () => {
         ];
 
         setMetrics(formattedMetrics);
+        setRawMetrics(metricsResult.data);
         setRecentActivity(activityResult.data || []);
       } catch (err) {
         console.error('Error fetching dashboard data:', err);
@@ -257,7 +259,7 @@ const AdminDashboardPanel = () => {
                   {
                     label: 'Revenue (€)',
                     // Real data will be added via admin service in future updates
-                    data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, (metricsResult.data.totalRevenue || 0)],
+                    data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, (rawMetrics?.totalRevenue || 0)],
                     borderColor: 'rgb(59, 130, 246)',
                     backgroundColor: 'rgba(59, 130, 246, 0.1)',
                     fill: true,
@@ -334,8 +336,8 @@ const AdminDashboardPanel = () => {
                   {
                     // Calculate percentages from real data
                     data: [
-                      metricsResult.data.totalUsers - metricsResult.data.activeTrials || 0,
-                      metricsResult.data.activeTrials || 0,
+                      (rawMetrics?.totalUsers || 0) - (rawMetrics?.activeTrials || 0),
+                      rawMetrics?.activeTrials || 0,
                       0 // Premium users - will be calculated from Stripe in future
                     ],
                     backgroundColor: [
@@ -398,14 +400,14 @@ const AdminDashboardPanel = () => {
                 {
                   label: 'New Users',
                   // Real data will show current month's data
-                  data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, metricsResult.data.totalUsers || 0],
+                  data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, rawMetrics?.totalUsers || 0],
                   backgroundColor: 'rgb(59, 130, 246)',
                   borderRadius: 8,
                   barThickness: 20
                 },
                 {
                   label: 'Active Trials',
-                  data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, metricsResult.data.activeTrials || 0],
+                  data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, rawMetrics?.activeTrials || 0],
                   backgroundColor: 'rgb(249, 115, 22)',
                   borderRadius: 8,
                   barThickness: 20

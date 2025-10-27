@@ -11,6 +11,8 @@ node_modules
 dist
 dist-ssr
 *.local
+.env
+.env.*.local
 
 # Editor directories and files
 .vscode/*
@@ -23,5 +25,29 @@ dist-ssr
 *.sln
 *.sw?
 .aider*
-.env
-.env.local
+
+# Test files
+test-*
+*.test.*
+*.spec.*
+
+# Temporary files
+*.tmp
+*.temp
+*.bak
+*.old
+
+# GPT Engineer
+.gpt_engineer/
+
+# Security - Credentials and sensitive files
+*.key
+*.pem
+.env*
+!.env.example
+.secrets
+credentials.json
+config/production.json
+*secret*
+*credential*
+*private*

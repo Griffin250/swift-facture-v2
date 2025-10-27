@@ -6,6 +6,16 @@ SwiftFacture is a modern invoice and receipt generator with complete Stripe subs
 
 ![SwiftFacture](public/assets/logo/SwiftFactureLogo.png)
 
+## 📁 Project Structure
+
+- `src/` - Main application source code
+- `public/` - Static assets and favicon
+- `docs/` - Complete documentation (setup, implementation, migration guides)
+- `supabase/` - Database migrations and edge functions
+- `.env` - Environment configuration (Supabase + Stripe)
+
+📖 **Documentation**: All setup guides, implementation notes, and migration procedures are organized in the `/docs` folder.
+
 ## ✨ Features
 ### 💬 **Chat System & Live Support**
 - **User/Admin Chat Separation**: Users see only their own messages; admins can select users and view their chats

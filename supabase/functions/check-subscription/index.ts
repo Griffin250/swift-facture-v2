@@ -88,9 +88,9 @@ serve(async (req) => {
       
       // Map product IDs to plan IDs
       const productToPlanMap: Record<string, string> = {
-        'prod_TJ1FKRu0auL1vc': 'starter',
-        'prod_TJ1G4VS7ciOI3T': 'professional',
-        'prod_TJ1G5mWJ9P8lXH': 'enterprise'
+        'prod_TJ335JbTq1eIeC': 'starter',
+        'prod_TJ35UueOk9C6Iz': 'professional',
+        'prod_TJ36iP5VIL2ZVu': 'enterprise'
       };
       
       planId = productToPlanMap[productId] || null;
