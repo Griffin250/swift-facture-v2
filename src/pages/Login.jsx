@@ -597,6 +597,8 @@ const AuthPage = () => {
               {t('buttons.continueWithGoogle')}
             </button>
 
+            {/* GitHub Login - Commented out for future implementation */}
+            {/*
             <button 
               type="button"
               onClick={handleGitHubSignIn}
@@ -606,6 +608,7 @@ const AuthPage = () => {
               </svg>
               {t('buttons.continueWithGitHub')}
             </button>
+            */}
           </div>
 
           {/* Toggle between Login/Signup */}
