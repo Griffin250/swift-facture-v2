@@ -11,3 +11,9 @@ verify_jwt = true
 
 [functions.stripe-webhook]
 verify_jwt = false
+
+[functions.export-original-data]
+verify_jwt = true
+
+[functions.import-original-data]
+verify_jwt = true
