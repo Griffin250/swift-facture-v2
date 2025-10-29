@@ -28,25 +28,25 @@ The Google login button has been enabled in your Login.jsx file.
 3. Choose **Web application**
 4. Set **Authorized redirect URIs**:
    ```
-   https://rlbhtujnuopelxxgssni.supabase.co/auth/v1/callback
+
    http://localhost:5173/auth/callback (for development)
    https://your-production-domain.com/auth/callback (for production)
    ```
 5. Save and copy:
-   - **Client ID** (looks like: `123456789-abc123.apps.googleusercontent.com`)
-   - **Client Secret** (looks like: `GOCSPX-abcd1234...`)
+   - **Client ID** (looks like: `<YOUR_CLIENT_ID>.apps.googleusercontent.com`)
+   - **Client Secret** (looks like: `GOCSPX-<REDACTED>`)
 
 ## 🔐 Step 3: Configure Supabase Dashboard
 
 ### 3.1 Enable Google Provider
 1. Go to [Supabase Dashboard](https://supabase.com/dashboard)
-2. Select your project: `rlbhtujnuopelxxgssni`
+2. Select your project: `<YOUR_PROJECT_ID>`
 3. Navigate to **Authentication > Providers**
 4. Find **Google** and toggle **Enable sign in with Google**
 5. Enter your credentials:
-   - **Client ID**: `[paste from Google Cloud Console]`
-   - **Client Secret**: `[paste from Google Cloud Console]`
-6. Set **Redirect URL**: `https://rlbhtujnuopelxxgssni.supabase.co/auth/v1/callback`
+   - **Client ID**: `<YOUR_GOOGLE_CLIENT_ID>`
+   - **Client Secret**: `<YOUR_GOOGLE_CLIENT_SECRET>`
+
 
 ### 3.2 Configure Additional Settings
 - **Scopes**: `email profile`
@@ -54,17 +54,6 @@ The Google login button has been enabled in your Login.jsx file.
 
 ## 📝 Step 4: Update Environment Variables
 
-Add these to your `.env` file:
-
-```env
-# Google OAuth (optional - for frontend display)
-VITE_GOOGLE_CLIENT_ID="your-google-client-id.apps.googleusercontent.com"
-
-# Your existing Supabase config (already correct)
-VITE_SUPABASE_PROJECT_ID="rlbhtujnuopelxxgssni"
-VITE_SUPABASE_URL="https://rlbhtujnuopelxxgssni.supabase.co"
-VITE_SUPABASE_PUBLISHABLE_KEY="your-anon-key"
-```
 
 ## 🎯 Step 5: Update Login Redirect URL
 
@@ -112,7 +101,7 @@ const handleGoogleSignIn = async () => {
 
 1. **"redirect_uri_mismatch" error**
    - Check Google Cloud Console redirect URIs match Supabase exactly
-   - Ensure URLs are exactly: `https://rlbhtujnuopelxxgssni.supabase.co/auth/v1/callback`
+
 
 2. **OAuth consent screen not configured**
    - Complete Step 2.2 above
@@ -140,6 +129,20 @@ Before going live:
 2. Move OAuth consent screen to "In production" status
 3. Update environment variables for production
 4. Test complete flow on production environment
+
+## 🔒 Security Best Practices
+
+**Important**: Never commit real credentials to version control!
+
+1. **Environment Variables**: Store sensitive values in environment variables:
+   ```bash
+   GOOGLE_CLIENT_ID=<YOUR_ACTUAL_CLIENT_ID>
+   GOOGLE_CLIENT_SECRET=<YOUR_ACTUAL_CLIENT_SECRET>
+   ```
+
+2. **Local Development**: Use `.env.local` files (add to `.gitignore`)
+
+3. **Production**: Set environment variables in your hosting platform (Vercel, Netlify, etc.)
 
 ---
 

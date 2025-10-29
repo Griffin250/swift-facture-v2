@@ -1,6 +1,16 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.39.3";
 
+/**
+ * Data Export Function for Database Migration
+ * 
+ * Required Environment Variables:
+ * - ORIGINAL_SUPABASE_URL: URL of the source Supabase database
+ * - ORIGINAL_SUPABASE_SERVICE_ROLE_KEY: Service role key for the source database
+ * 
+ * Set these in your Supabase project dashboard under Settings > Edge Functions
+ */
+
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
@@ -14,11 +24,15 @@ serve(async (req) => {
   try {
     console.log('Starting data export from original database...');
     
-    // Connect to original database
-    const originalDb = createClient(
-      'https://rlbhtujnuopelxxgssni.supabase.co',
-      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJsYmh0dWpudW9wZWx4eGdzc25pIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc1OTYxNTg3NSwiZXhwIjoyMDc1MTkxODc1fQ.6FSlqV4P3pIWrcu13npOcbyNtcsPZQ6ONfaOnj-LqD0'
-    );
+    // Connect to original database using environment variables
+    const originalDbUrl = Deno.env.get('ORIGINAL_SUPABASE_URL');
+    const originalDbKey = Deno.env.get('ORIGINAL_SUPABASE_SERVICE_ROLE_KEY');
+    
+    if (!originalDbUrl || !originalDbKey) {
+      throw new Error('Missing required environment variables: ORIGINAL_SUPABASE_URL, ORIGINAL_SUPABASE_SERVICE_ROLE_KEY');
+    }
+    
+    const originalDb = createClient(originalDbUrl, originalDbKey);
 
     console.log('Connected to original database');
 
