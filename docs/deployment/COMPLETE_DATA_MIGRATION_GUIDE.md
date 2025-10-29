@@ -1995,15 +1995,15 @@ SELECT
 2. **Revert Environment Variables**
    ```env
    # Revert to Lovable Cloud
-   VITE_SUPABASE_URL=https://kvvqkzwrkselznrnqcbi.supabase.co
+   VITE_SUPABASE_URL=https://<YOUR_NEW_PROJECT_ID>.supabase.co
    VITE_SUPABASE_PUBLISHABLE_KEY=[LOVABLE_CLOUD_KEY]
-   VITE_SUPABASE_PROJECT_ID=kvvqkzwrkselznrnqcbi
+   VITE_SUPABASE_PROJECT_ID=<YOUR_NEW_PROJECT_ID>
    ```
 
 3. **Revert Config File**
    ```toml
    # supabase/config.toml
-   project_id = "kvvqkzwrkselznrnqcbi"
+   project_id = "<YOUR_NEW_PROJECT_ID>"
    ```
 
 4. **Redeploy Application**
