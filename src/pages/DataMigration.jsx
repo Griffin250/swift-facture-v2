@@ -116,7 +116,7 @@ const DataMigration = () => {
               Step 1: Export Data
             </CardTitle>
             <CardDescription>
-              Export all data from your original Supabase database (rlbhtujnuopelxxgssni)
+              Export all data from your original Supabase database
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
@@ -170,7 +170,7 @@ const DataMigration = () => {
               Step 2: Import Data
             </CardTitle>
             <CardDescription>
-              Import the exported data into Lovable Cloud database (kvvqkzwrkselznrnqcbi)
+              Import the exported data into Lovable Cloud database
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">

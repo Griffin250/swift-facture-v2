@@ -3,15 +3,15 @@
 ## ❗ **ROOT CAUSE FOUND:**
 
 ### **The Problem:**
-- Your **actual database** is at: `kvvqkzwrkselznrnqcbi.supabase.co`
+- Your **actual database** is at: `<YOUR_CURRENT_PROJECT_ID>.supabase.co`
 - We've been **deploying functions** to: `<OLD_PROJECT_ID>.supabase.co`
 - **Your data is SAFE** - it's just in the correct project!
 
 ### **Evidence:**
 ```env
 # Your ACTUAL project (from .env file):
-VITE_SUPABASE_PROJECT_ID="kvvqkzwrkselznrnqcbi"
-VITE_SUPABASE_URL="https://kvvqkzwrkselznrnqcbi.supabase.co"
+VITE_SUPABASE_PROJECT_ID="<YOUR_CURRENT_PROJECT_ID>"
+VITE_SUPABASE_URL="https://<YOUR_CURRENT_PROJECT_ID>.supabase.co"
 
 # Wrong project we've been using:
 <OLD_PROJECT_ID>.supabase.co
@@ -24,7 +24,7 @@ VITE_SUPABASE_URL="https://kvvqkzwrkselznrnqcbi.supabase.co"
 ### **Step 1: Update Supabase Project Configuration**
 ```bash
 # Go to your correct project dashboard:
-https://supabase.com/dashboard/project/kvvqkzwrkselznrnqcbi
+https://supabase.com/dashboard/project/<YOUR_CURRENT_PROJECT_ID>
 
 # Check Tables tab - your data should be there!
 ```
@@ -32,7 +32,7 @@ https://supabase.com/dashboard/project/kvvqkzwrkselznrnqcbi
 ### **Step 2: Re-deploy Edge Functions to Correct Project**
 ```bash
 # Link to correct project
-npx supabase link --project-ref kvvqkzwrkselznrnqcbi
+npx supabase link --project-ref <YOUR_CURRENT_PROJECT_ID>
 
 # Deploy all functions to YOUR project
 npx supabase functions deploy stripe-webhook
@@ -53,7 +53,7 @@ npx supabase secrets set STRIPE_WEBHOOK_SECRET=YOUR_STRIPE_WEBHOOK_SECRET
 # Update in Stripe Dashboard:
 # 1. Go to https://dashboard.stripe.com/webhooks
 # 2. Find existing webhook
-# 3. Update endpoint URL to use kvvqkzwrkselznrnqcbi
+# 3. Update endpoint URL to use <YOUR_CURRENT_PROJECT_ID>
 ```
 
 ---
@@ -69,7 +69,7 @@ npx supabase secrets set STRIPE_WEBHOOK_SECRET=YOUR_STRIPE_WEBHOOK_SECRET
 ### **Quick Verification:**
 1. **Check Your Real Database:**
    ```
-   https://supabase.com/dashboard/project/kvvqkzwrkselznrnqcbi/editor
+   https://supabase.com/dashboard/project/<YOUR_CURRENT_PROJECT_ID>/editor
    ```
 
 2. **Count Your Data:**
@@ -87,18 +87,18 @@ npx supabase secrets set STRIPE_WEBHOOK_SECRET=YOUR_STRIPE_WEBHOOK_SECRET
 
 ### **Action 1: Re-link Supabase CLI**
 ```bash
-npx supabase link --project-ref kvvqkzwrkselznrnqcbi
+npx supabase link --project-ref <YOUR_CURRENT_PROJECT_ID>
 ```
 
 ### **Action 2: Deploy Functions to Correct Project** 
 ```bash
-npx supabase functions deploy --project-ref kvvqkzwrkselznrnqcbi
+npx supabase functions deploy --project-ref <YOUR_CURRENT_PROJECT_ID>
 ```
 
 ### **Action 3: Update Database Schema (If Needed)**
 ```bash
 # Run migrations on YOUR project
-npx supabase db push --project-ref kvvqkzwrkselznrnqcbi
+npx supabase db push --project-ref <YOUR_CURRENT_PROJECT_ID>
 ```
 
 ### **Action 4: Verify Function URLs**
@@ -114,10 +114,10 @@ https://<YOUR_PROJECT_ID>.supabase.co/functions/v1/stripe-webhook
 
 ## ✅ **RECOVERY STEPS SUMMARY:**
 
-1. **Link CLI to correct project**: `npx supabase link --project-ref kvvqkzwrkselznrnqcbi`
+1. **Link CLI to correct project**: `npx supabase link --project-ref <YOUR_CURRENT_PROJECT_ID>`
 2. **Deploy all functions**: `npx supabase functions deploy`
 3. **Set environment secrets**: `npx supabase secrets set ...`
-4. **Update Stripe webhook URL**: Use kvvqkzwrkselznrnqcbi in dashboard
+4. **Update Stripe webhook URL**: Use <YOUR_CURRENT_PROJECT_ID> in dashboard
 5. **Test subscription flow**: Should work perfectly
 
 ---

@@ -1,4 +1,4 @@
-project_id = "rlbhtujnuopelxxgssni"
+project_id = "<YOUR_PROJECT_ID>"
 
 [functions.create-checkout]
 verify_jwt = true

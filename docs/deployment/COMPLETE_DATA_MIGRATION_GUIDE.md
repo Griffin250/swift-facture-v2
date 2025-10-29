@@ -244,9 +244,9 @@ Update your `.env` file:
 
 ```env
 # OLD VALUES (Lovable Cloud - COMMENT OUT)
-# VITE_SUPABASE_URL=https://kvvqkzwrkselznrnqcbi.supabase.co
+# VITE_SUPABASE_URL=https://<YOUR_NEW_PROJECT_ID>.supabase.co
 # VITE_SUPABASE_PUBLISHABLE_KEY=<YOUR_PUBLISHABLE_KEY>
-# VITE_SUPABASE_PROJECT_ID=kvvqkzwrkselznrnqcbi
+# VITE_SUPABASE_PROJECT_ID=<YOUR_NEW_PROJECT_ID>
 
 # NEW VALUES (Your Original Database)
 VITE_SUPABASE_URL=https://<YOUR_PROJECT_ID>.supabase.co
