@@ -51,3 +51,7 @@ config/production.json
 *secret*
 *credential*
 *private*
+
+# Supabase CLI temporary files (contain project credentials)
+supabase/.temp/
+.temp/
