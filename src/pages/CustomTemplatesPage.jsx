@@ -31,7 +31,7 @@ import { userSettingsService } from "../services/userSettingsService";
 import { customerService } from "../services/customerService";
 
 
-const TemplatePage = () => {
+const CustomTemplatesPage = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const { t } = useTranslation();
@@ -381,15 +381,19 @@ const TemplatePage = () => {
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50">
       {/* Header Toolbar */}
       
-      <div className="sticky top-0 z-50 bg-white/95 backdrop-blur-sm border-b border-gray-200 shadow-sm">
+      <div className="sticky top-0 z-40 bg-white/95 backdrop-blur-sm border-b border-gray-200 shadow-sm">
         <div className="max-w-7xl mx-auto px-4 py-3">
           <div className="flex items-center justify-between">
             {/* Left side */}
             <div className="flex items-center gap-4">
-              <Button variant="ghost" onClick={handleBack} className="gap-2">
+
+              {/*... Hide return button on all screens  ....
+               <Button variant="ghost" onClick={handleBack} className="gap-2">
                 <ArrowLeft className="h-4 w-4" />
                 {t('templatePage.back', 'Back')}
               </Button>
+            */}
+             
               <div className="h-6 w-px bg-gray-300" />
               <h1 className="text-xl font-semibold text-gray-900">
                 {t('templatePage.title', 'Invoice Editor')}
@@ -794,7 +798,9 @@ const TemplatePage = () => {
           </div>
         </div>
       )}
-           {/* Customizable Invoice CTA */}
+          
+          
+       {/* Customizable Invoice CTA */}
             <div className="p-4 border-b bg-gradient-to-r from-blue-50 to-indigo-50">
               <FrenchInvoiceCTA />
             </div>
@@ -802,4 +808,4 @@ const TemplatePage = () => {
   );
 };
 
-export default TemplatePage;
+export default CustomTemplatesPage;

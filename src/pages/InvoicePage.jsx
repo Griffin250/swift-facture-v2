@@ -11,7 +11,7 @@ import { customerService } from '../services/customerService';
 import '../styles/french-invoice.css';
 import FrenchInvoiceCTA from '@/components/FrenchInvoiceCTA';
 
-const FrenchInvoicePage = () => {
+const InvoicePage = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const printRef = useRef();
@@ -281,14 +281,14 @@ const FrenchInvoicePage = () => {
       // Show success message with action
       toast.success(t('frenchInvoice.messages.saveSuccess'), {
         action: {
-          label: t('navigation.invoice', 'View Invoices'),
-          onClick: () => navigate('/invoice')
+          label: t('navigation.templates', 'View Templates'),
+          onClick: () => navigate('/templates')
         }
       });
       
-      // Auto-navigate to invoice dashboard after successful save
+      // Auto-navigate to templates dashboard after successful save
       setTimeout(() => {
-        navigate('/invoice');
+        navigate('/templates');
       }, 2000);
       
     } catch (error) {
@@ -301,14 +301,15 @@ const FrenchInvoicePage = () => {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <FrenchInvoiceCTA />
+        <InvoiceDashboard />
       {/* Header Toolbar */}
-      <div className="sticky top-0 z-50 bg-white border-b border-gray-200 shadow-sm">
+      <div className="sticky top-0 z-40 bg-white border-b border-gray-200 shadow-sm">
         <div className="max-w-full mx-auto px-2 py-3">
           <div className="flex items-center justify-between">
             {/* Left side */}
             <div className="flex items-center gap-2 md:gap-4">
-              {/* Hide return button on small screens */}
+              
+              {/* Hide return button on all screens
               <button
                 onClick={() => navigate('/')}
                 className="hidden md:flex items-center gap-2 px-3 py-2 text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors"
@@ -316,6 +317,8 @@ const FrenchInvoicePage = () => {
                 <ArrowLeft size={16} />
                 {t('common.back', 'Retour')}
               </button>
+               */}
+               
               <div className="hidden md:block h-6 w-px bg-gray-300" />
               {/* Hide title on small screens */}
               <h1 className="hidden md:block text-xl font-semibold text-gray-900">
@@ -323,7 +326,7 @@ const FrenchInvoicePage = () => {
               </h1>
               {/* Show compact title on small screens */}
               <h1 className="md:hidden text-lg font-semibold text-gray-900 truncate">
-                {t('frenchInvoice.shortTitle', 'Facture FR')}
+                {t('frenchInvoice.shortTitle', 'Invoice')}
               </h1>
             </div>
 
@@ -367,14 +370,14 @@ const FrenchInvoicePage = () => {
                   {isSaving ? t('frenchInvoice.saving') : t('frenchInvoice.save')}
                 </button>
                 
-                {/* View invoices */}
+                {/* View templates */}
                 <button
-                  onClick={() => navigate('/invoice')}
+                  onClick={() => navigate('/templates')}
                   className="flex items-center gap-2 px-3 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors whitespace-nowrap"
                 >
                   <FileText size={16} />
                   <span className="hidden lg:inline">
-                    {t('navigation.invoice', 'View Invoices')}
+                    {t('navigation.templates', 'Templates')}
                   </span>
                 </button>
 
@@ -434,13 +437,13 @@ const FrenchInvoicePage = () => {
                         
                         <button
                           onClick={() => {
-                            navigate('/invoice');
+                            navigate('/templates');
                             setShowActionsDropdown(false);
                           }}
                           className="w-full px-4 py-2 text-left text-gray-700 hover:bg-blue-50 flex items-center gap-2"
                         >
                           <FileText size={16} />
-                          {t('navigation.invoice', 'Voir factures')}
+                          {t('navigation.templates', 'Templates')}
                         </button>
                         
                         <button
@@ -527,16 +530,18 @@ const FrenchInvoicePage = () => {
           </div>
         </div>
       </div>
+       <FrenchInvoiceCTA />
     </div>
   );
 };
 
 import ProtectedRoute from '../components/ProtectedRoute';
+import InvoiceDashboard from '@/components/InvoiceDashboard';
 
-const ProtectedFrenchInvoicePage = () => (
+const ProtectedInvoicePage = () => (
   <ProtectedRoute>
-    <FrenchInvoicePage />
+    <InvoicePage />
   </ProtectedRoute>
 );
 
-export default ProtectedFrenchInvoicePage;
+export default ProtectedInvoicePage;

@@ -90,11 +90,21 @@ const Billing = () => {
         const trialResult = await TrialService.checkAccess(user.id);
         setTrialData(trialResult);
 
-        // Load usage data (mock for now - you can connect to real usage API)
+        // Load usage data with proper null safety
+        const isSubscribed = subResult?.success && subResult?.subscribed;
         setUsage({
-          invoices: { used: 12, limit: subscriptionData?.subscribed ? 999 : 15 },
-          customers: { used: 3, limit: subscriptionData?.subscribed ? 999 : 5 },
-          deliveries: { used: 8, limit: subscriptionData?.subscribed ? 36 : 0 }
+          invoices: { 
+            used: 12, 
+            limit: isSubscribed ? 999 : (subResult?.plan?.limits?.invoices || 15)
+          },
+          customers: { 
+            used: 3, 
+            limit: isSubscribed ? 999 : (subResult?.plan?.limits?.customers || 5)
+          },
+          deliveries: { 
+            used: 8, 
+            limit: isSubscribed ? 36 : (subResult?.plan?.limits?.deliveries || 0)
+          }
         });
 
         // Load payment history (mock data)
@@ -113,7 +123,15 @@ const Billing = () => {
 
       } catch (error) {
         console.error('Error loading billing data:', error);
-        toast.error(t('errors.loadingFailed', 'Failed to load billing data'));
+        toast.error(t('errors.loadingFailed', 'Failed to load billing data. Please refresh the page.'));
+        
+        // Set safe defaults on error
+        setSubscriptionData({ success: false, subscribed: false });
+        setUsage({
+          invoices: { used: 0, limit: 15 },
+          customers: { used: 0, limit: 5 },
+          deliveries: { used: 0, limit: 0 }
+        });
       } finally {
         setLoading(false);
       }

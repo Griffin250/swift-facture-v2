@@ -24,8 +24,9 @@ const Header = () => {
   const navItems = [
     { label: getTranslation('navigation.dashboard', 'Tableau de bord'), to: "/" },
     { label: getTranslation('navigation.about', 'À propos'), to: "/about" },
-    { label: getTranslation('navigation.invoice', 'Facture'), to: "/invoice" },
-    { label: getTranslation('navigation.frenchInvoice', 'Facture Française'), to: "/french-invoice" },
+    { label: getTranslation('navigation.invoice', 'Invoice'), to: "/invoice" },
+    //{ label: getTranslation('navigation.templates', 'Templates'), to: "/templates" },
+    //{ label: getTranslation('navigation.customTemplates', 'Custom Templates'), to: "/custom-templates" },
     { label: getTranslation('navigation.estimate', 'Devis'), to: "/estimate" },
     { label: getTranslation('navigation.customers', 'Clients'), to: "/customers" },
     { label: getTranslation('navigation.receipts', 'Reçus'), to: "/receipts" },

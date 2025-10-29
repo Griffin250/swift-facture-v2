@@ -1,7 +1,9 @@
 
 import Dashboard from "./pages/Dashboard.jsx";
-import Invoice from "./pages/Invoice.jsx";
-import FrenchInvoicePage from "./pages/FrenchInvoicePage.jsx";
+import InvoicePage from "./pages/InvoicePage.jsx";
+import TemplatesPage from "./pages/TemplatesPage.jsx";
+import CustomTemplatesPage from "./pages/CustomTemplatesPage.jsx";
+import ProtectedRoute from "./components/ProtectedRoute.jsx";
 
 /**
  * Central place for defining the navigation items. Used for navigation components and routing.
@@ -15,11 +17,16 @@ export const navItems = [
   {
     title: "Invoice",
     to: "/invoice", 
-    page: <Invoice />,
+    page: <ProtectedRoute><InvoicePage /></ProtectedRoute>,
   },
   {
-    title: "Facture Française",
-    to: "/french-invoice",
-    page: <FrenchInvoicePage />,
+    title: "Templates",
+    to: "/templates",
+    page: <ProtectedRoute><TemplatesPage /></ProtectedRoute>,
+  },
+  {
+    title: "Custom Templates",
+    to: "/custom-templates",
+    page: <ProtectedRoute><CustomTemplatesPage /></ProtectedRoute>,
   },
 ];

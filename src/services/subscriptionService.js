@@ -44,19 +44,20 @@ export class SubscriptionService {
         console.error('Error creating checkout:', error);
         return {
           success: false,
-          error: error.message
+          error: error.message || 'Unknown error from Edge Function'
         };
       }
-
+      
       return {
         success: true,
         ...data
       };
     } catch (error) {
-      console.error('Error creating checkout:', error);
+      console.error('Exception in createCheckout:', error);
+      
       return {
         success: false,
-        error: error.message
+        error: error.message || 'Network or unexpected error'
       };
     }
   }

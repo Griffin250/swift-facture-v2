@@ -5,6 +5,8 @@ import App from "./App.jsx";
 import "./index.css";
 import i18n from "./i18n"; // Import i18n instance
 
+
+
 const LoadingFallback = () => {
   const [showTimeout, setShowTimeout] = useState(false);
 

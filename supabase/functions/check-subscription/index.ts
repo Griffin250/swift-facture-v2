@@ -7,9 +7,9 @@ const corsHeaders = {
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 };
 
-const logStep = (step: string, details?: any) => {
-  const detailsStr = details ? ` - ${JSON.stringify(details)}` : '';
-  console.log(`[CHECK-SUBSCRIPTION] ${step}${detailsStr}`);
+// Only log errors in production
+const logError = (message: string, details?: any) => {
+  console.error(`[CHECK-SUBSCRIPTION] ${message}`, details || '');
 };
 
 serve(async (req) => {
@@ -23,8 +23,6 @@ serve(async (req) => {
   );
 
   try {
-    logStep("Function started");
-
     const authHeader = req.headers.get("Authorization");
     if (!authHeader) throw new Error("No authorization header provided");
 
@@ -34,17 +32,16 @@ serve(async (req) => {
     
     const user = userData.user;
     if (!user?.email) throw new Error("User not authenticated or email not available");
-    logStep("User authenticated", { userId: user.id, email: user.email });
 
-    const stripe = new Stripe(Deno.env.get("STRIPE_SECRET_KEY") || "", { 
-      apiVersion: "2025-08-27.basil" 
+    const stripeKey = Deno.env.get("STRIPE_SECRET_KEY");
+    const stripe = new Stripe(stripeKey || "", { 
+      apiVersion: "2025-09-30.clover" 
     });
 
     // Check for Stripe customer
     const customers = await stripe.customers.list({ email: user.email, limit: 1 });
     
     if (customers.data.length === 0) {
-      logStep("No customer found, user has no subscription");
       return new Response(JSON.stringify({ 
         subscribed: false,
         plan_id: null,
@@ -57,7 +54,6 @@ serve(async (req) => {
     }
 
     const customerId = customers.data[0].id;
-    logStep("Found Stripe customer", { customerId });
 
     // Get active subscriptions
     const subscriptions = await stripe.subscriptions.list({
@@ -75,33 +71,27 @@ serve(async (req) => {
       const subscription = subscriptions.data[0];
       
       // Safely handle the subscription end date
-      if (subscription.current_period_end) {
+      const subData = subscription as any; // Type assertion to handle Stripe API differences
+      if (subData.current_period_end) {
         try {
-          subscriptionEnd = new Date(subscription.current_period_end * 1000).toISOString();
+          subscriptionEnd = new Date(subData.current_period_end * 1000).toISOString();
         } catch (error) {
-          logStep("Error converting subscription end date", { error: String(error) });
+          console.error("Error converting subscription end date:", error);
           subscriptionEnd = null;
         }
       }
       
-      productId = subscription.items.data[0].price.product as string;
+      productId = (subscription.items.data[0].price.product as any) || null;
       
       // Map product IDs to plan IDs
       const productToPlanMap: Record<string, string> = {
         'prod_TJ335JbTq1eIeC': 'starter',
         'prod_TJ35UueOk9C6Iz': 'professional',
-        'prod_TJ36iP5VIL2ZVu': 'enterprise'
+        'prod_TJ36iP5VIL2ZVu': 'enterprise',
+        'prod_TJ1FKRu0auL1vc': 'starter' // Additional starter product
       };
       
       planId = productToPlanMap[productId] || null;
-      logStep("Active subscription found", { 
-        subscriptionId: subscription.id, 
-        productId,
-        planId,
-        endDate: subscriptionEnd 
-      });
-    } else {
-      logStep("No active subscription found");
     }
 
     return new Response(JSON.stringify({
@@ -115,7 +105,7 @@ serve(async (req) => {
     });
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : String(error);
-    logStep("ERROR in check-subscription", { message: errorMessage });
+    logError("ERROR in check-subscription", errorMessage);
     return new Response(JSON.stringify({ error: errorMessage }), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
       status: 500,

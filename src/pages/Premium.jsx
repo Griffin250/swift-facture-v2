@@ -22,6 +22,7 @@ const getPlanData = (t) => [
     id: "starter",
     name: t('premium.plans.starter', 'Starter'),
     monthly: 19.99,
+    stripe_price_id: 'price_1SMQxBRogxYobEmxfmD1JSHO',
     features: [
       `30 ${t('premium.features.customers', 'customers')}`,
       t('premium.features.unlimitedInvoicesEstimates', 'Unlimited invoices/estimates'),
@@ -34,6 +35,7 @@ const getPlanData = (t) => [
     id: "pro",
     name: t('premium.plans.pro', 'Professional'),
     monthly: 39.99,
+    stripe_price_id: 'price_1SMQytRogxYobEmxhMpXZUZe',
     features: [
       t('premium.features.unlimitedCustomers', 'Unlimited customers'),
       t('premium.features.unlimitedInvoicesEstimates', 'Unlimited invoices/estimates'),
@@ -47,6 +49,7 @@ const getPlanData = (t) => [
     id: "enterprise",
     name: t('premium.plans.enterprise', 'Enterprise'),
     monthly: 79.99,
+    stripe_price_id: 'price_1SMR02RogxYobEmxopfcFYAa',
     features: [
       t('premium.features.unlimitedCustomers', 'Unlimited customers'),
       t('premium.features.unlimitedInvoicesEstimates', 'Unlimited invoices/estimates'),
@@ -67,7 +70,7 @@ const Premium = () => {
   const [userAccess, setUserAccess] = useState(null);
   const [plans, setPlans] = useState([]);
   const [needsMigration, setNeedsMigration] = useState(false);
-  const { user } = useAuth();
+  const { user, userAccess: authAccess } = useAuth(); // Get both user and userAccess from useAuth
   
   const planData = getPlanData(t);
 
@@ -84,14 +87,8 @@ const Premium = () => {
           // Filter out trial plan from public display
           const publicPlans = plansResult.plans.filter(p => p.id !== 'trial-30');
           setPlans(publicPlans);
-          
-          // Check if we're using fallback data
-          if (plansResult.fallback) {
-            console.warn('Using fallback plan data due to database issues');
-          }
         } else {
           // Use fallback data if database fails
-          console.warn('Database plans unavailable, using hardcoded fallback');
           setPlans(planData);
         }
 
@@ -99,6 +96,7 @@ const Premium = () => {
         if (user) {
           try {
             const subscriptionResult = await SubscriptionService.checkSubscription();
+            
             if (subscriptionResult.success && subscriptionResult.subscribed) {
               setUserAccess({
                 hasAccess: true,
@@ -107,7 +105,6 @@ const Premium = () => {
               });
             } else {
               // Check trial access through auth context
-              const { userAccess: authAccess } = useAuth();
               if (authAccess?.hasAccess) {
                 setUserAccess(authAccess);
               }
@@ -148,9 +145,28 @@ const Premium = () => {
       return;
     }
 
-    // For logged-in users, initiate Stripe checkout
+    // Check if user already has a subscription
+    if (userAccess?.subscription?.subscribed) {
+      try {
+        const { SubscriptionService } = await import('@/services/subscriptionService');
+        const portalResult = await SubscriptionService.openCustomerPortal();
+        
+        if (portalResult.success && portalResult.url) {
+          window.open(portalResult.url, '_blank');
+        } else {
+          alert(t('errors.customerPortalFailed', 'Unable to open subscription management. Please try again.'));
+        }
+      } catch (portalError) {
+        console.error('Error opening customer portal:', portalError);
+        alert(t('errors.customerPortalError', 'There was an error opening subscription management. Please try again.'));
+      }
+      return;
+    }
+
+    // For users without existing subscription, initiate Stripe checkout
     try {
       const { SubscriptionService } = await import('@/services/subscriptionService');
+      
       const priceId = fullPlan.stripe_price_id;
       
       if (!priceId) {
@@ -161,14 +177,13 @@ const Premium = () => {
       const result = await SubscriptionService.createCheckout(priceId, fullPlan.id);
       
       if (result.success && result.url) {
-        // Open Stripe checkout in new tab
         window.open(result.url, '_blank');
       } else {
-        alert(t('errors.checkoutFailed', 'Failed to create checkout session. Please try again.'));
+        alert(t('errors.checkoutFailed', `Failed to create checkout session: ${result.error || 'Unknown error'}`));
       }
     } catch (error) {
-      console.error('Error creating checkout:', error);
-      alert(t('errors.checkoutFailed', 'Failed to create checkout session. Please try again.'));
+      console.error('Error in checkout flow:', error);
+      alert(t('errors.checkoutFailed', `Failed to create checkout session: ${error.message}`));
     }
   };
 

@@ -44,11 +44,19 @@ export const AuthProvider = ({ children }) => {
         return null;
       }
 
-      // Dynamically import TrialService to avoid initialization issues
-      const { default: TrialService } = await import('@/services/trialService');
-      const accessResult = await TrialService.checkAccess(targetUserId);
-      setUserAccess(accessResult);
-      return accessResult;
+      // Only check existing access, don't create anything automatically
+      try {
+        const { default: TrialService } = await import('@/services/trialService');
+        const accessResult = await TrialService.checkExistingAccess(targetUserId);
+        setUserAccess(accessResult);
+        return accessResult;
+      } catch (importError) {
+        console.warn('TrialService not available:', importError.message);
+        // Fallback - no access by default, user must choose
+        const fallbackAccess = { hasAccess: false, isTrialActive: false };
+        setUserAccess(fallbackAccess);
+        return fallbackAccess;
+      }
     } catch (error) {
       console.error('Error checking access:', error);
       setUserAccess(null);
@@ -88,19 +96,11 @@ export const AuthProvider = ({ children }) => {
       async (event, session) => {
         setUser(session?.user ?? null);
         
-        // Check access when user signs in - with error handling and timeout
-        if (session?.user && event === 'SIGNED_IN') {
-          // Use setTimeout to prevent blocking the auth state change
-          setTimeout(async () => {
-            try {
-              const { default: TrialService } = await import('@/services/trialService');
-              const accessResult = await TrialService.checkAccess(session.user.id);
-              setUserAccess(accessResult);
-            } catch (accessError) {
-              console.warn('Trial service not available yet:', accessError);
-              setUserAccess(null);
-            }
-          }, 100);
+        // Don't auto-assign anything on sign-in
+        // Users should explicitly choose their plan
+        if (session?.user) {
+          // Just set basic access without auto-creating trials
+          setUserAccess({ hasAccess: false, isTrialActive: false });
         } else {
           setUserAccess(null);
         }

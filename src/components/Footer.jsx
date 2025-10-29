@@ -4,6 +4,8 @@ import FooterInstallButton from "./FooterInstallButton";
 
 const Footer = () => {
   // Always show install button in footer
+  const scrollToTop = () => {window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
 
   return (
     <footer className="bg-gradient-to-r from-gray-900 to-black border-t border-gray-700">
@@ -46,30 +48,42 @@ const Footer = () => {
           </div>
           {/* Navigation Links */}
           <div className="flex space-x-6 text-sm">
-            <Link
+            <Link onClick={scrollToTop}
               to="/about"
               className="text-gray-400 hover:text-white transition-colors"
             >
               About
             </Link>
-            <Link
-              to="/template"
+            <Link onClick={scrollToTop}
+              to="/templates"
               className="text-gray-400 hover:text-white transition-colors"
             >
               Templates
             </Link>
-            <Link
-              to="/receipt"
+             <Link onClick={scrollToTop}
+              to="/custom-templates"
               className="text-gray-400 hover:text-white transition-colors"
             >
-              Receipt
+              C-Templates
             </Link>
-            <a
-              href="#"
+            <Link onClick={scrollToTop}
+              to="/receipts"
+              className="text-gray-400 hover:text-white transition-colors"
+            >
+              Receipts
+            </Link>
+            <Link onClick={scrollToTop}
+              to="/privacy"
               className="text-gray-400 hover:text-white transition-colors"
             >
               Privacy
-            </a>
+            </Link>
+            <Link onClick={scrollToTop}
+              to="/terms"
+              className="text-gray-400 hover:text-white transition-colors"
+            >
+              Terms
+            </Link>
           </div>
         </div>
 

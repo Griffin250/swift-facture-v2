@@ -86,7 +86,84 @@ export class TrialService {
   }
 
   /**
-   * Check if user has access to features
+   * Check existing access only - don't create or auto-grant anything
+   */
+  static async checkExistingAccess(userId) {
+    try {
+      // Only check what already exists, don't grant access on errors
+      const { data: orgMember, error } = await supabase
+        .from('org_members')
+        .select(`
+          organization_id,
+          role,
+          organizations (
+            id,
+            name,
+            billing_subscriptions (
+              id,
+              plan_id,
+              status,
+              trial_start,
+              trial_end,
+              current_period_start,
+              current_period_end,
+              plans (
+                id,
+                name_en,
+                features
+              )
+            )
+          )
+        `)
+        .eq('user_id', userId)
+        .single();
+
+      if (error || !orgMember) {
+        // No existing access found - user needs to choose a plan
+        return {
+          hasAccess: false,
+          isTrialActive: false,
+          reason: 'no_subscription',
+          message: 'Please select a plan to continue'
+        };
+      }
+
+      const subscription = orgMember.organizations.billing_subscriptions[0];
+      if (!subscription) {
+        return {
+          hasAccess: false,
+          isTrialActive: false,
+          reason: 'no_subscription',
+          message: 'Please select a plan to continue'
+        };
+      }
+
+      const now = new Date();
+      const isActive = subscription.status === 'active' || subscription.status === 'trialing';
+      const trialEnd = subscription.trial_end ? new Date(subscription.trial_end) : null;
+      const isTrialActive = trialEnd && now <= trialEnd;
+
+      return {
+        hasAccess: isActive,
+        isTrialActive,
+        organization: orgMember.organizations,
+        subscription,
+        trialEnd
+      };
+
+    } catch (error) {
+      console.error('Error checking existing access:', error);
+      return {
+        hasAccess: false,
+        isTrialActive: false,
+        reason: 'error',
+        message: 'Please try again'
+      };
+    }
+  }
+
+  /**
+   * Check if user has access to features (LEGACY - auto-grants on errors)
    */
   static async checkAccess(userId) {
     try {

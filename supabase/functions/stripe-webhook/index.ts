@@ -13,7 +13,7 @@ const logStep = (step: string, details?: any) => {
 };
 
 const stripe = new Stripe(Deno.env.get("STRIPE_SECRET_KEY") || "", {
-  apiVersion: "2025-08-27.basil"
+  apiVersion: "2025-09-30.clover"
 });
 
 const supabaseClient = createClient(
@@ -82,8 +82,8 @@ async function handleSubscriptionChange(subscription: Stripe.Subscription) {
       organization_id: orgMember.organization_id,
       plan_id: planId,
       status: status,
-      current_period_start: new Date(subscription.current_period_start * 1000).toISOString(),
-      current_period_end: new Date(subscription.current_period_end * 1000).toISOString(),
+      current_period_start: new Date((subscription as any).current_period_start * 1000).toISOString(),
+      current_period_end: new Date((subscription as any).current_period_end * 1000).toISOString(),
       stripe_customer_id: subscription.customer as string,
       stripe_subscription_id: subscription.id,
       updated_at: new Date().toISOString()
@@ -144,7 +144,7 @@ async function handlePaymentEvent(invoice: Stripe.Invoice) {
     logStep("Processing payment event", { 
       invoiceId: invoice.id, 
       status: invoice.status,
-      paid: invoice.paid 
+      paid: (invoice as any).paid || false 
     });
 
     // Get customer details
@@ -178,7 +178,7 @@ async function handlePaymentEvent(invoice: Stripe.Invoice) {
     }
 
     // Log payment event
-    const eventType = invoice.paid ? 'payment_succeeded' : 'payment_failed';
+    const eventType = (invoice as any).paid ? 'payment_succeeded' : 'payment_failed';
     await supabaseClient
       .from('billing_events')
       .insert({
