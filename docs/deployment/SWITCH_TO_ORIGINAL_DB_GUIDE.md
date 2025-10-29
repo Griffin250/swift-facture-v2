@@ -2,7 +2,7 @@
 
 ## Complete Migration Guide
 
-This guide will help you switch from the Lovable Cloud database back to your original Supabase database (`rlbhtujnuopelxxgssni`).
+This guide will help you switch from the Lovable Cloud database back to your original Supabase database (`<YOUR_PROJECT_ID>`).
 
 ---
 
@@ -21,9 +21,9 @@ Before proceeding, backup any data from the Lovable Cloud database that you want
 Update your `.env` file to point to your original database:
 
 ```env
-VITE_SUPABASE_URL=https://rlbhtujnuopelxxgssni.supabase.co
+VITE_SUPABASE_URL=https://<YOUR_PROJECT_ID>.supabase.co
 VITE_SUPABASE_PUBLISHABLE_KEY=[Your original anon/public key]
-VITE_SUPABASE_PROJECT_ID=rlbhtujnuopelxxgssni
+VITE_SUPABASE_PROJECT_ID=<YOUR_PROJECT_ID>
 ```
 
 **Note:** You'll need your original anon/public key from your Supabase dashboard.
@@ -35,7 +35,7 @@ VITE_SUPABASE_PROJECT_ID=rlbhtujnuopelxxgssni
 Update `supabase/config.toml`:
 
 ```toml
-project_id = "rlbhtujnuopelxxgssni"
+project_id = "<YOUR_PROJECT_ID>"
 
 [functions]
 enabled = true
@@ -909,7 +909,7 @@ In your Supabase dashboard → Authentication → Settings:
 After updating your environment variables, deploy your edge functions to your original database:
 
 ```bash
-npx supabase link --project-ref rlbhtujnuopelxxgssni
+npx supabase link --project-ref <YOUR_PROJECT_ID>
 npx supabase functions deploy create-checkout
 npx supabase functions deploy check-subscription
 npx supabase functions deploy customer-portal
@@ -922,7 +922,7 @@ npx supabase functions deploy customer-portal
 If you're using Stripe webhooks, update the webhook endpoint in Stripe Dashboard to point to your original Supabase project:
 
 ```
-https://rlbhtujnuopelxxgssni.supabase.co/functions/v1/stripe-webhook
+https://<YOUR_PROJECT_ID>.supabase.co/functions/v1/stripe-webhook
 ```
 
 ---

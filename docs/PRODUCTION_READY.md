@@ -69,7 +69,7 @@
 ```bash
 # Update .env for production
 VITE_SUPABASE_URL=your_production_supabase_url
-STRIPE_SECRET_KEY=sk_live_your_live_stripe_key  # Switch to live keys
+STRIPE_SECRET_KEY=<YOUR_LIVE_STRIPE_SECRET_KEY>  # Switch to live keys
 ```
 
 ### 2. **Database Migration**

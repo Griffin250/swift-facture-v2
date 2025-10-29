@@ -2,8 +2,8 @@
 
 ## 📋 Migration Overview
 
-**Source Database (Lovable Cloud)**: `kvvqkzwrkselznrnqcbi`
-**Target Database (Your Original)**: `rlbhtujnuopelxxgssni`
+**Source Database (Lovable Cloud)**: `LOVABLE_CLOUD`
+**Target Database (Your Original)**: `<YOUR_ORIGINAL_PROJECT_ID>`
 
 **Current Data to Migrate**:
 - ✅ **12 registered users** with profiles
@@ -245,20 +245,20 @@ Update your `.env` file:
 ```env
 # OLD VALUES (Lovable Cloud - COMMENT OUT)
 # VITE_SUPABASE_URL=https://kvvqkzwrkselznrnqcbi.supabase.co
-# VITE_SUPABASE_PUBLISHABLE_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+# VITE_SUPABASE_PUBLISHABLE_KEY=<YOUR_PUBLISHABLE_KEY>
 # VITE_SUPABASE_PROJECT_ID=kvvqkzwrkselznrnqcbi
 
 # NEW VALUES (Your Original Database)
-VITE_SUPABASE_URL=https://rlbhtujnuopelxxgssni.supabase.co
+VITE_SUPABASE_URL=https://<YOUR_PROJECT_ID>.supabase.co
 VITE_SUPABASE_PUBLISHABLE_KEY=[YOUR_ORIGINAL_ANON_KEY]
-VITE_SUPABASE_PROJECT_ID=rlbhtujnuopelxxgssni
+VITE_SUPABASE_PROJECT_ID=<YOUR_PROJECT_ID>
 
 # Keep service role key from your original project
 SUPABASE_SERVICE_ROLE_KEY=[YOUR_ORIGINAL_SERVICE_ROLE_KEY]
 ```
 
 **⚠️ Important**: Get your original keys from your Supabase project dashboard:
-- Go to: https://supabase.com/dashboard/project/rlbhtujnuopelxxgssni/settings/api
+- Go to: https://supabase.com/dashboard/project/<YOUR_PROJECT_ID>/settings/api
 - Copy "anon public" key for `VITE_SUPABASE_PUBLISHABLE_KEY`
 - Copy "service_role" key for `SUPABASE_SERVICE_ROLE_KEY`
 
@@ -269,7 +269,7 @@ SUPABASE_SERVICE_ROLE_KEY=[YOUR_ORIGINAL_SERVICE_ROLE_KEY]
 Update `supabase/config.toml`:
 
 ```toml
-project_id = "rlbhtujnuopelxxgssni"
+project_id = "<YOUR_PROJECT_ID>"
 
 [functions]
 enabled = true
@@ -297,7 +297,7 @@ verify_jwt = true
 
 ## Step 2.3: Create Complete Database Schema
 
-Run this SQL in your **ORIGINAL** Supabase database (rlbhtujnuopelxxgssni) SQL Editor.
+Run this SQL in your **ORIGINAL** Supabase database (<YOUR_PROJECT_ID>) SQL Editor.
 
 ### Part 1: Create Enums
 
@@ -1350,7 +1350,7 @@ CREATE POLICY "Users can delete their own avatar"
 
 ## Step 2.5: Configure Authentication Settings
 
-In your **original** Supabase dashboard (https://supabase.com/dashboard/project/rlbhtujnuopelxxgssni):
+In your **original** Supabase dashboard (https://supabase.com/dashboard/project/<YOUR_PROJECT_ID>):
 
 1. Go to **Authentication** → **Settings**
 2. Configure:
@@ -1373,8 +1373,8 @@ In your **original** Supabase dashboard (https://supabase.com/dashboard/project/
 
 ```bash
 # Using Supabase CLI
-supabase db remote --project-ref rlbhtujnuopelxxgssni \
-  --db-url "postgresql://postgres:[YOUR-PASSWORD]@db.rlbhtujnuopelxxgssni.supabase.co:5432/postgres" \
+supabase db remote --project-ref <YOUR_PROJECT_ID> \
+  --db-url "postgresql://postgres:[YOUR-PASSWORD]@db.<YOUR_PROJECT_ID>.supabase.co:5432/postgres" \
   seed users_export.sql
 ```
 
@@ -1632,7 +1632,7 @@ ALTER TABLE public.activity_logs ENABLE TRIGGER ALL;
 # Upload all avatars maintaining structure
 cd storage_backup/avatars
 for dir in */; do
-  supabase storage upload avatars "$dir" --project-ref rlbhtujnuopelxxgssni
+  supabase storage upload avatars "$dir" --project-ref <YOUR_PROJECT_ID>
 done
 ```
 
@@ -1644,7 +1644,7 @@ done
 
 ```bash
 # Link to your original Supabase project
-npx supabase link --project-ref rlbhtujnuopelxxgssni
+npx supabase link --project-ref <YOUR_PROJECT_ID>
 
 # Deploy edge functions
 npx supabase functions deploy create-checkout
@@ -1667,7 +1667,7 @@ In your original Supabase project:
 1. Go to Stripe Dashboard → **Developers** → **Webhooks**
 2. Update webhook endpoint URL to:
    ```
-   https://rlbhtujnuopelxxgssni.supabase.co/functions/v1/stripe-webhook
+   https://<YOUR_PROJECT_ID>.supabase.co/functions/v1/stripe-webhook
    ```
 3. Update webhook signing secret in your database
 

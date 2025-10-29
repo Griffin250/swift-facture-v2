@@ -10,8 +10,8 @@ From your NEW Supabase project dashboard:
 1. Go to Settings → API
 2. Copy these values:
    - **Project URL**: `https://[new-project-id].supabase.co`
-   - **anon public key**: `eyJ...` (long key)
-   - **service_role key**: `eyJ...` (keep secret!)
+   - **anon public key**: `<YOUR_ANON_KEY>` (long key)
+   - **service_role key**: `<YOUR_SERVICE_ROLE_KEY>` (keep secret!)
 
 ---
 
@@ -26,7 +26,7 @@ VITE_SUPABASE_URL=https://your-new-project-id.supabase.co
 VITE_SUPABASE_PUBLISHABLE_KEY=your-new-anon-key
 
 # Optional: Add service role for admin operations
-SUPABASE_SERVICE_ROLE_KEY=your-service-role-key
+SUPABASE_SERVICE_ROLE_KEY=<YOUR_SERVICE_ROLE_KEY>
 ```
 
 #### Update Supabase Config
@@ -46,7 +46,7 @@ project_id = "your-new-project-id"
 cd d:\SwiftFacture
 
 # Link to your new project
-npx supabase link --project-ref rlbhtujnuopelxxgssni
+npx supabase link --project-ref <YOUR_PROJECT_ID>
 
 # Push all migrations to create the database structure
 npx supabase db push

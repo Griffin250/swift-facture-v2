@@ -97,13 +97,13 @@ swift-facture-v2/
 ### **Environment Variables**
 ```bash
 # Supabase Configuration
-VITE_SUPABASE_URL=your_supabase_url
-VITE_SUPABASE_ANON_KEY=your_anon_key
-SUPABASE_SERVICE_ROLE_KEY=your_service_key
+VITE_SUPABASE_URL=<YOUR_SUPABASE_URL>
+VITE_SUPABASE_ANON_KEY=<YOUR_SUPABASE_ANON_KEY>
+SUPABASE_SERVICE_ROLE_KEY=<YOUR_SERVICE_ROLE_KEY>
 
 # Stripe Configuration  
-STRIPE_SECRET_KEY=sk_live_your_live_key
-STRIPE_WEBHOOK_SECRET=whsec_your_webhook_secret
+STRIPE_SECRET_KEY=<YOUR_STRIPE_SECRET_KEY>
+STRIPE_WEBHOOK_SECRET=<YOUR_WEBHOOK_SECRET>
 ```
 
 ### **Build & Deploy**

@@ -4,7 +4,7 @@
 
 ### **The Problem:**
 - Your **actual database** is at: `kvvqkzwrkselznrnqcbi.supabase.co`
-- We've been **deploying functions** to: `rlbhtujnuopelxxgssni.supabase.co`
+- We've been **deploying functions** to: `<OLD_PROJECT_ID>.supabase.co`
 - **Your data is SAFE** - it's just in the correct project!
 
 ### **Evidence:**
@@ -14,7 +14,7 @@ VITE_SUPABASE_PROJECT_ID="kvvqkzwrkselznrnqcbi"
 VITE_SUPABASE_URL="https://kvvqkzwrkselznrnqcbi.supabase.co"
 
 # Wrong project we've been using:
-rlbhtujnuopelxxgssni.supabase.co
+<OLD_PROJECT_ID>.supabase.co
 ```
 
 ---
@@ -47,8 +47,8 @@ npx supabase secrets set STRIPE_WEBHOOK_SECRET=YOUR_STRIPE_WEBHOOK_SECRET
 
 ### **Step 3: Update Stripe Webhook URL**
 ```bash
-# OLD (wrong): https://rlbhtujnuopelxxgssni.supabase.co/functions/v1/stripe-webhook
-# NEW (correct): https://kvvqkzwrkselznrnqcbi.supabase.co/functions/v1/stripe-webhook
+# OLD (wrong): https://<OLD_PROJECT_ID>.supabase.co/functions/v1/stripe-webhook
+# NEW (correct): https://<NEW_PROJECT_ID>.supabase.co/functions/v1/stripe-webhook
 
 # Update in Stripe Dashboard:
 # 1. Go to https://dashboard.stripe.com/webhooks
@@ -104,10 +104,10 @@ npx supabase db push --project-ref kvvqkzwrkselznrnqcbi
 ### **Action 4: Verify Function URLs**
 ```bash
 # Your correct function URLs should be:
-https://kvvqkzwrkselznrnqcbi.supabase.co/functions/v1/create-checkout
-https://kvvqkzwrkselznrnqcbi.supabase.co/functions/v1/check-subscription
-https://kvvqkzwrkselznrnqcbi.supabase.co/functions/v1/customer-portal
-https://kvvqkzwrkselznrnqcbi.supabase.co/functions/v1/stripe-webhook
+https://<YOUR_PROJECT_ID>.supabase.co/functions/v1/create-checkout
+https://<YOUR_PROJECT_ID>.supabase.co/functions/v1/check-subscription
+https://<YOUR_PROJECT_ID>.supabase.co/functions/v1/customer-portal
+https://<YOUR_PROJECT_ID>.supabase.co/functions/v1/stripe-webhook
 ```
 
 ---
